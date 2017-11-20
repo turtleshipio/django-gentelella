@@ -9,4 +9,5 @@ urlpatterns = [
 
     # The home page
     url(r'^$', views.index, name='index'),
+    url('upload_bulk', views.upload_bulk_orders, name='bulk'),
 ]
