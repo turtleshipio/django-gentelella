@@ -32,57 +32,48 @@
         <div class="col-md-12">
           <div class="x_panel">
 
-              <!--<ul class="nav navbar-right panel_toolbox">
-                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Settings 1</a>
-                    </li>
-                    <li><a href="#">Settings 2</a>
-                    </li>
-                  </ul>
-                </li>
-                <li><a class="close-link"><i class="fa fa-close"></i></a>
-                </li>
-              </ul>
-              <div class="clearfix"></div>
-            </div>
-            <div class="x_content">
-
-              <p>Simple table with project listing with progress and editing options</p>-->
-
               <!-- start project list -->
               <table class="table table-striped projects">
                 <thead class="text-center">
                   <tr>
                     <th><h4 class="text-center">주문번호</h4></th>
                     <th><h4 class="text-center">도매명</h4></th>
+                    <th><h4 class="text-center">수량</h4></th>
                     <th><h4 class="text-center">결제금액</h4></th>
                     <th><h4 class="text-center">상태</h4></th>
                     <th><h4 class="text-center">수정</h4></th>
                   </tr>
                 </thead>
                 <tbody class="text-center">
-                  <tr >
-                    <td class="text-center">91092</td>
-                    <td a href="index.html" class="text-center">
-                      <a href="index.html"><strong>몰디브</strong></a>
-                      <br />
-                      <small>01.01.2015</small>
-                    </td>
-                    <td class="text-center">
-                      <p>92,000</p>
-                    </td>
-                    <td>
-                      <button type="button" class="btn btn-success btn-xs">주문승인</button>
-                    </td>
-                    <td>
-                      <a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> 수정 </a>
-                      <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 삭제 </a>
-                    </td>
-                  </tr>
+                  {%  for order in orders %}
+                      <tr class="text-center">
+                        <td class="text-center">{{  order.order_id }}</td>
+                        <td class="text-center">
+                          <a><strong>{{  order.ws_name }}</strong></a>
+                          <br />
+                          <small>{{  order.created_time }}</small>
+                        </td>
+                      <td>
+                          <p>{{  order.count }}</p>
+                      </td>
+                        <td class="text-center">
+                          <p>{{  order.price }}</p>
+                        </td>
+                        <td>
+                            {%  if order.status == "approved" %}
+                                <button type="button" class="btn btn-success btn-xs">승인완료</button>
+                            {% elif order.status == "onwait" %}
+                                <button type="button" class="btn btn-warning btn-xs">승인대기</button>
+                            {%  elif order.status == "error" %}
+                                <button type="button" class="btn btn-danger btn-xs">주문실</button>
+                            {%  endif %}
+                        </td>
+                        <td>
+                          <a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> 수정 </a>
+                          <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 삭제 </a>
+                        </td>
+                      </tr>
+                  {%  endfor %}
 
                 </tbody>
               </table>

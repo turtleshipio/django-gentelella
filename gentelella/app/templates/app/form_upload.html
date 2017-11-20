@@ -25,12 +25,13 @@
 
             <div class="x_content">
               <p>업로드 전 주문서 양식을 한번 더 확인해주세요</p>
-              <form action="/upload_bulk/" class="dropzone" method="post">
+              <form action="/upload_bulk/" method="post" >
                 {% csrf_token %}
               <br />
               <br />
               <br />
               <br />
+                  <input type="file" ID="fileSelect" accept=".xlsx, .xls, .csv"/>
               <input type="submit" value="Submit" />
               </form>
 
