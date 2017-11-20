@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^$', base.index, name='index'),
     url(r'^order_list', order_list, name="order_list"),
     url(r'^upload_bulk', upload.bulk_orders, name='bulk'),
+    url(r'^stock', base.index, name='stock'),
 ]
