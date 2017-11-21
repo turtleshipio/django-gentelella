@@ -6,8 +6,9 @@
 *static*
 *venv*
 venv/
+gentelella/.*
 gentelella/*.idea/
-gentelella/.idea/
+gentelella/.idea/*
 *.pyc
 *.idea/
 idea/

@@ -13,10 +13,8 @@ class OrderListView(generic.ListView):
     template_name = "app/order_list.html"
     paginate_by = 20
 
-
-
     def get_context_data(self, **kwargs):
-        orders = Orders.objects.filter(retailer_idx=0, created_time__gte=getYesterdayDateAt11pm(), is_deleted='false')
+        orders = Orders.objects.filter(retailer_idx=0, is_deleted='false')
         paginator = Paginator(orders, self.paginate_by)
         page = self.request.GET.get('page')
         context = super(OrderListView, self).get_context_data(**kwargs)
