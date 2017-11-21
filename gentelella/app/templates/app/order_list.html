@@ -39,13 +39,15 @@
                     <th><h4 class="text-center">주문번호</h4></th>
                     <th><h4 class="text-center">도매명</h4></th>
                     <th><h4 class="text-center">수량</h4></th>
-                    <th><h4 class="text-center">결제금액</h4></th>
+                    <th><h4 class="text-center">총 결제금액</h4></th>
                     <th><h4 class="text-center">상태</h4></th>
                     <th><h4 class="text-center">수정</h4></th>
                   </tr>
                 </thead>
                 <tbody class="text-center">
                   {%  for order in orders %}
+                  <form action="/delete_order/" method="post">
+                      {% csrf_token %}
                       <tr class="text-center">
                         <td class="text-center">{{  order.order_id }}</td>
                         <td class="text-center">
@@ -54,10 +56,11 @@
                           <small>{{  order.created_time }}</small>
                         </td>
                       <td>
-                          <p>{{  order.count }}</p>
+                          <p>{{  order.count }}개</p>
                       </td>
                         <td class="text-center">
-                          <p>{{  order.price }}</p>
+                            {% load humanize %}
+                          <p>{{  order.price|intcomma}}원</p>
                         </td>
                         <td>
                             {%  if order.status == "approved" %}
@@ -65,16 +68,40 @@
                             {% elif order.status == "onwait" %}
                                 <button type="button" class="btn btn-warning btn-xs">승인대기</button>
                             {%  elif order.status == "error" %}
-                                <button type="button" class="btn btn-danger btn-xs">주문실</button>
+                                <button type="button" class="btn btn-danger btn-xs">주문실패</button>
                             {%  endif %}
                         </td>
                         <td>
-                          <a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> 수정 </a>
-                          <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 삭제 </a>
+
+
+                                  <a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> 수정 </a>
+                                  <input type="hidden" name="order_id" value="{{order.order_id}}">
+                                  <button type="submit" onclick="return confirm('정말로 삭제하시겠습니까?')" class="btn btn-danger btn-xs" value="삭제"><i class="fa fa-trash-o"></i> 삭제 </button>
+                            </form>
+
                         </td>
                       </tr>
                   {%  endfor %}
+                  {% if is_paginated %}
+                  <ul class="pagination">
+                      {% if page_obj.has_previous %}
+                      <li>
+                          <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
+                      </li>
+                      {% endif %}
+                      <li class="">
+                          <span>페이지 {{ page_obj.number}} 중 {{ page_obj.paginator.num_pages }}</span>
+                      </li>
+                      {% if page_obj.has_next %}
+                      <li>
+                          <span><a href="?page={{page_obj.next_page_number }}">다음</a></span>
+                      </li>
+                      {% endif %}
 
+                  </ul>
+                    {% else %}
+                    <p>주문내역이 아직 없습니다.</p>
+                  {% endif %}
                 </tbody>
               </table>
               <!-- end project list -->

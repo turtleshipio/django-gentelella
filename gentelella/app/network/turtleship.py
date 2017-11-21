@@ -1,6 +1,9 @@
-import requests
 import json
-from app.models.order import Order
+
+import requests
+
+from app.order import Order
+
 
 class APIService(object):
 

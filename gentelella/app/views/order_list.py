@@ -1,12 +1,34 @@
 from django.shortcuts import render
 from app.network.turtleship import APIService
+from django.views import generic
+from app.models import Orders
+from django.core.paginator import  Paginator, EmptyPage, PageNotAnInteger
+from app.utils import getYesterdayDateAt11pm
 
 
-def order_list(request):
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTg5MzM3NTEsInVzZXJuYW1lIjoic3l1bSIsImlhdCI6MTUxMTE1Nzc1MSwicGhvbmUiOiIwMTA4ODk1ODQ1NCIsInJldGFpbGVyX2lkeCI6IjAifQ.zlSudSCSfDt4zEF5xSoKA8C5OJq5s_KhuIz0Oqcp3PI"
-    service = APIService(token = token, prod=False, version=0)
 
-    orders = service.get_orders_by_retailer_name()
-    context = {'orders': orders}
+class OrderListView(generic.ListView):
+    model = Orders
+    context_object_name = 'orders'
+    template_name = "app/order_list.html"
+    paginate_by = 20
 
-    return render(request, 'app/projects.html', context)
+
+
+    def get_context_data(self, **kwargs):
+        orders = Orders.objects.filter(retailer_idx=0, created_time__gte=getYesterdayDateAt11pm(), is_deleted='false')
+        paginator = Paginator(orders, self.paginate_by)
+        page = self.request.GET.get('page')
+        context = super(OrderListView, self).get_context_data(**kwargs)
+
+        try:
+            paged_orders = paginator.page(page)
+        except PageNotAnInteger:
+            paged_orders = paginator.page(1)
+        except EmptyPage:
+            paged_orders = paginator.page(paginator.num_pages)
+
+        context['orders'] = paged_orders
+
+        return context
+
