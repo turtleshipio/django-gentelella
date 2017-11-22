@@ -1,11 +1,30 @@
 {% extends "app/base_site.html" %}
 
-{% block title %} Login {% endblock title %}
+{% block title %} 터틀체인 - 로그인 {% endblock title %}
+<head>
+   <script>
+ function numbersOnly(event) {
+			event = event || window.event;
+			var keyID = (event.which) ? event.which : event.keyCode;
+			if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) )
+			{
+				return;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+</script>
+</head>
 
 {% block stylesheets %}
   {{ block.super }}
   <!-- Animate.css -->
   <link href="/static/vendors/animate.css/animate.min.css" rel="stylesheet">
+
+
 {% endblock stylesheets %}
 
 {% block body_class %}login{% endblock body_class %}
@@ -18,32 +37,33 @@
     <div class="login_wrapper">
       <div class="animate form login_form">
         <section class="login_content">
-          <form>
-            <h1>Login Form</h1>
+          <form action="/login/" method="post">
+              {% csrf_token %}
+            <h1>터틀체인</h1>
             <div>
-              <input type="text" class="form-control" placeholder="Username" required="" />
+              <input name="username" id ="username" type="text" class="form-control" placeholder="아이디" required="" />
             </div>
             <div>
-              <input type="password" class="form-control" placeholder="Password" required="" />
+              <input name="password" type="password" class="form-control" placeholder="비밀번호" required="" />
             </div>
             <div>
-              <a class="btn btn-default submit" href="index.html">Log in</a>
-              <a class="reset_pass" href="#">Lost your password?</a>
+              <input type="submit" class="btn btn-info submit" value="로그인하기">
+              <a class="reset_pass" href="#">비밀번호를 잊으셨나요?</a>
             </div>
 
             <div class="clearfix"></div>
 
             <div class="separator">
-              <p class="change_link">New to site?
-                <a href="#signup" class="to_register"> Create Account </a>
+              <p class="change_link">터틀체인이 처음이신가요?
+                <a href="#signup" class="to_register"> 여기를 클릭하세요. </a>
               </p>
 
               <div class="clearfix"></div>
               <br />
 
               <div>
-                <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
-                <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                <h2>(주) 거북선컴퍼니</h2>
+                <p>터틀체인은 (주)거북선컴퍼니의 동대문 주문 솔루션입니다</p>
               </div>
             </div>
           </form>
@@ -52,34 +72,55 @@
 
       <div id="register" class="animate form registration_form">
         <section class="login_content">
-          <form>
-            <h1>Create Account</h1>
+          <form class="form-inline" method="post" action="/signup/">
+              {% csrf_token %}
+            <h1>터틀체인</h1>
             <div>
-              <input type="text" class="form-control" placeholder="Username" required="" />
+                    <input type = "text" name="username" class="form-control" placeholder="아이디: 영문 6자 이상, 12자 이하" minlength="6" maxlength="12" required/>
+
+            </div>
+              <div>
+                    <input type = "text" name="name" class="form-control" placeholder="이름" minlength="2" maxlength="5" required/>
+
             </div>
             <div>
-              <input type="email" class="form-control" placeholder="Email" required="" />
+              <input type="text" name="phone" class="form-control" placeholder="전화번호:  띄어쓰기 없이 써주세요" required=""  onkeydown="return numbersOnly(event)" maxlength="11" required/>
             </div>
+                 <script>
+ function numbersOnly(event) {
+			event = event || window.event;
+			var keyID = (event.which) ? event.which : event.keyCode;
+			if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 )
+			{
+				return;
+			}				return false;
+			else
+			{
+
+			}
+		}
+
+</script>
             <div>
-              <input type="password" class="form-control" placeholder="Password" required="" />
+              <input type="password" name="password" class="form-control" placeholder="비밀번호: 영문, 숫자 조합 8자리 이상" minlength="8" required />
             </div>
-            <div>
-              <a class="btn btn-default submit" href="index.html">Submit</a>
+            <div >
+              <input type="submit" class="btn btn-info submit" value="로그인하기">
             </div>
 
             <div class="clearfix"></div>
 
             <div class="separator">
-              <p class="change_link">Already a member ?
-                <a href="#signin" class="to_register"> Log in </a>
+              <p class="change_link">이미 회원이신가요?
+                <a href="#signin" class="to_register"> 로그인하기 </a>
               </p>
 
               <div class="clearfix"></div>
               <br />
 
               <div>
-                <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
-                <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                <h3> (주) 거북선컴퍼니</h3>
+                <p>터틀체인은 (주)거북선컴퍼니의 동대문 주문 솔루션입니다.</p>
               </div>
             </div>
           </form>
@@ -88,4 +129,12 @@
     </div>
   </div>
 {% endblock body %}
+
+<script type="text/javascript">
+  $('#phone').keypress(function (event) {
+  if (event.which && (event.which <= 47 || event.which >= 58) && event.which != 8){
+      event.preventDefault();
+      }
+   });
+</script>
 

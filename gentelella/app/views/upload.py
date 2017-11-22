@@ -9,6 +9,7 @@ def bulk_orders(request):
     context = {}
     template = loader.get_template('app/form_upload.html')
     if request.method == "POST":
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!")
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
             file = request.FILES['docfile']

@@ -83,6 +83,8 @@ class RetailUser(models.Model):
         managed = False
         db_table = 'retail_user'
 
+    def __str__(self):
+        return self.name
 
 class User(models.Model):
     user_id = models.BigAutoField(primary_key=True)

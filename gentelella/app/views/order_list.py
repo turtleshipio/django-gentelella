@@ -6,7 +6,6 @@ from django.core.paginator import  Paginator, EmptyPage, PageNotAnInteger
 from app.utils import getYesterdayDateAt11pm
 
 
-
 class OrderListView(generic.ListView):
     model = Orders
     context_object_name = 'orders'

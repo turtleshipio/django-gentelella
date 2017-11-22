@@ -8,7 +8,10 @@ urlpatterns = [
     # Avoid using your .html in your resources.
     # Or create a separate django app.
     url(r'^.*\.html', base.gentella_html, name='gentella'),
-    url(r'^$', base.index, name='index'),
+    url(r'^$', base.login, name='login'),
+    url(r'^login', base.login, name='login'),
+    url(r'^signup', base.signup, name='signup'),
+    url(r'^home', base.index, name='index'),
     url(r'^order_list', OrderListView.as_view(), name="order_list"),
     url(r'^upload_bulk', upload.bulk_orders, name='bulk'),
     url(r'^credits', CreditListView.as_view(), name='credits'),
