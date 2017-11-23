@@ -22,6 +22,7 @@
 {% block stylesheets %}
   {{ block.super }}
   <!-- Animate.css -->
+
   <link href="/static/vendors/animate.css/animate.min.css" rel="stylesheet">
 
 
@@ -36,7 +37,14 @@
 
     <div class="login_wrapper">
       <div class="animate form login_form">
+           {% if login_error %}
+            <div class="alert alert-danger alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>로그인 실패  </strong>다시 시도해주세요.
+            </div>
+            {% endif %}
         <section class="login_content">
+
           <form action="/login/" method="post">
               {% csrf_token %}
             <h1>터틀체인</h1>
@@ -72,6 +80,12 @@
 
       <div id="register" class="animate form registration_form">
         <section class="login_content">
+            {% if signup_error %}
+            <div class="alert alert-danger alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>회원가입 실패</strong>  다시 시도해주세요.
+            </div>
+            {% endif %}
           <form class="form-inline" method="post" action="/signup/">
               {% csrf_token %}
             <h1>터틀체인</h1>

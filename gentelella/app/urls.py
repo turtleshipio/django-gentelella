@@ -11,9 +11,10 @@ urlpatterns = [
     url(r'^$', base.login, name='login'),
     url(r'^login', base.login, name='login'),
     url(r'^signup', base.signup, name='signup'),
-    url(r'^home', base.index, name='index'),
+    url(r'^home', base.home, name='home'),
     url(r'^order_list', OrderListView.as_view(), name="order_list"),
     url(r'^upload_bulk', upload.bulk_orders, name='bulk'),
     url(r'^credits', CreditListView.as_view(), name='credits'),
-    url(r'^delete_order', base.delete, name='delete_order'),
+    url(r'^delete_order', base.delete_order, name='delete_order'),
+    url(r'^logout', base.logout, name='logout'),
 ]
