@@ -51,13 +51,13 @@ def get_context_from_token(token):
     return context
 
 
-def get_retail_user_from_token(token):
+def get_retail_user_from_token(decoded_token):
 
     retail_user = {
-        'username': token['username'],
-        'retailer_id': token['retailer_id'],
-        'phone': token['phone'],
-        'name': token['name'],
+        'username': decoded_token['username'],
+        'retailer_id': decoded_token['retailer_id'],
+        'phone': decoded_token['phone'],
+        'name': decoded_token['name'],
     }
     return retail_user
 

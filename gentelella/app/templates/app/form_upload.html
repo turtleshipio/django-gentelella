@@ -12,6 +12,12 @@
   <div class="right_col" role="main">
     <div class="">
       <div class="page-title">
+        {% if request.session.msg %}
+            <div class="alert alert-danger alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>업로드 실패  </strong>{{request.session.msg}}
+            </div>
+            {% endif %}
         <div class="title_left">
           <h3>대량주문서 업로드 </h3>
         </div>
@@ -31,7 +37,7 @@
               <br />
               <br />
               <br />
-                  <input type="file" ID="fileSelect" value="파일을 선택해주세요" accept=".xlsx, .xls, .csv"/>
+                  <input type="file" name="excel_file" ID="fileSelect" value="파일을 선택해주세요" accept=".xlsx, .xls, .csv"/>
               </div>
           </div>
             <input type="submit" value="업로드하기" />

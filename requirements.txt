@@ -3,3 +3,5 @@ requests
 pytz
 mysqlclient
 passlib
+PyJWT
+xlrd

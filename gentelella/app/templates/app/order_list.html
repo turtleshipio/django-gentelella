@@ -29,13 +29,22 @@
       <div class="clearfix"></div>
 
       <div class="row">
-        <div class="col-md-12">
+
+          <div class="col-md-12">
           <div class="x_panel">
 
+             <div class="pull-right">
+             <button type="submit"
+                    onclick="return confirm('정말로 삭제하시겠습니까?')"
+                    class="btn btn-danger btn-md" value="삭제">
+                <i class="fa fa-trash-o"></i> 삭제
+            </button>
+            </div>
               <!-- start project list -->
               <table class="table table-striped projects">
                 <thead class="text-center">
                   <tr>
+                    <th><h4 class="text-center">선택</h4></th>
                     <th><h4 class="text-center">주문번호</h4></th>
                     <th><h4 class="text-center">도매명</h4></th>
                     <th><h4 class="text-center">수량</h4></th>
@@ -49,6 +58,10 @@
                   <form action="/delete_order/" method="post">
                       {% csrf_token %}
                       <tr class="text-center">
+                          <td class="text-center">
+                              <input type="checkbox" class="custom-control-input">
+        <span class="custom-control-indicator"></span>
+                          </td>
                         <td class="text-center">{{  order.order_id }}</td>
                         <td class="text-center">
                           <a><strong>{{  order.ws_name }}</strong></a>
@@ -82,6 +95,7 @@
                         </td>
                       </tr>
                   {%  endfor %}
+
                   {% if is_paginated %}
                   <ul class="pagination">
                       {% if page_obj.has_previous %}
