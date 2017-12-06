@@ -18,6 +18,13 @@ class NotifyListView(generic.ListView):
     paginate_by = 10
 
 
+    def get(self, request, notify_id):
+        orders = Orders.objects.filter(notify_id=notify_id).order_by("order_id")
+        paginator = Paginator(orders, self.paginate_by)
+        page = self.request.GET.get('page')
+
+        return render(request, self.template_name, context={'orders': orders})
+
 
     def post(self, request, *args, **kwargs):
         print("#############################")
@@ -32,7 +39,7 @@ class NotifyListView(generic.ListView):
         orders = Orders.objects.filter(notify_id=notify_id).order_by("order_id")
         paginator = Paginator(orders, self.paginate_by)
         page = self.request.GET.get('page')
-
+        return render(request, self.template_name, context={'orders': orders})
 
         for order in orders:
             print("#############################")

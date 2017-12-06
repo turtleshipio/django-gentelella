@@ -84,8 +84,8 @@ class UploadManager:
                 if ws_name in notifies:
                     notify_id = notifies[ws_name]
                 else:
-                    #notifies[ws_name] = self.get_uuid(10)
-                    notifies[ws_name] = randint(0,9999)
+                    notifies[ws_name] = self.get_uuid(10)
+                    #notifies[ws_name] = randint(0,9999)
                     notify_id = notifies[ws_name]
 
                 order = Orders(
