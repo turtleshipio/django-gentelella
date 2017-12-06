@@ -3,6 +3,7 @@ from app.models import Orders, Notify
 from django.db import transaction
 import random
 import string
+from random import randint
 
 class UploadManager:
 
@@ -83,7 +84,8 @@ class UploadManager:
                 if ws_name in notifies:
                     notify_id = notifies[ws_name]
                 else:
-                    notifies[ws_name] = self.get_uuid(10)
+                    #notifies[ws_name] = self.get_uuid(10)
+                    notifies[ws_name] = randint(0,1000)
                     notify_id = notifies[ws_name]
 
                 order = Orders(
