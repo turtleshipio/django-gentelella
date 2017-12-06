@@ -13,7 +13,8 @@ class OrderListView(generic.ListView):
     model = Orders
     context_object_name = 'orders'
     template_name = "app/order_list.html"
-    paginate_by = 20
+    paginate_by = 10
+
 
     @method_decorator(require_token())
     def dispatch(self, *args, **kwargs):
@@ -22,8 +23,9 @@ class OrderListView(generic.ListView):
     def get_context_data(self, **kwargs):
         token = self.request.session['token']
         token = utils.get_decoded_token(token)
-
-        orders = Orders.objects.filter(retailer_id=token['retailer_id'], is_deleted='false').order_by('-created_time')
+        print(token['retailer_id'])
+        orders = Orders.objects.filter(retailer_id=3, is_deleted='false').order_by('-order_id')
+        print(orders)
         paginator = Paginator(orders, self.paginate_by)
         page = self.request.GET.get('page')
         context = super(OrderListView, self).get_context_data(**kwargs)

@@ -1,0 +1,22 @@
+
+{% block title %} Projects {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+  <div class="container">
+      <form action="/notify_list/" method="post">
+           <div class="input-group">
+              <input name="notify_id" type="text" class="form-control" placeholder="주문번호">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">검색하기</button>
+              </span>
+      </form>
+  </div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super }}
+{% endblock javascripts %}

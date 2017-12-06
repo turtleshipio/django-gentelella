@@ -31,6 +31,12 @@ def logout(request):
         return redirect('/')
 
 
+def notify(request):
+
+    if request.method=="GET":
+        return render(request, 'app/notify.html')
+
+
 
 
 @require_http_methods(['GET', 'POST'])

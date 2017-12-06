@@ -113,7 +113,7 @@ class Orders(models.Model):
     retailer = models.ForeignKey(Retailer, on_delete=models.DO_NOTHING, null=True)
     ws_name = models.CharField(max_length=100, blank=True, null=True)
     status = models.CharField(max_length=10, blank=True, null=True)
-    phone = models.CharField(max_length=12)
+    ws_phone = models.CharField(max_length=12)
     product_name = models.CharField(max_length=50)
     sizencolor = models.CharField(db_column='sizeNcolor', max_length=1024)  # Field name made lowercase.
     option2 = models.CharField(max_length=1024, blank=True, null=True)
@@ -154,7 +154,21 @@ class Orders(models.Model):
     marketing_channel = models.CharField(max_length=30, blank=True, null=True)
     buyer_order_count = models.IntegerField()
     retailer_product_code = models.CharField(max_length=30, blank=True, null=True)
+    notify_id = models.CharField(max_length=100, default="")
 
     class Meta:
         managed = False
         db_table = 'orders'
+
+
+class Notify(models.Model):
+
+    notify_id = models.CharField(primary_key=True, max_length=20)
+    ws_name = models.CharField(max_length=100)
+    retailer_id = models.BigIntegerField()
+    prd1 = models.CharField(max_length=100)
+    prd_count = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'notify'

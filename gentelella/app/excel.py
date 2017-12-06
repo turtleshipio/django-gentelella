@@ -1,6 +1,8 @@
 import xlrd
-from app.models import Orders
+from app.models import Orders, Notify
 from django.db import transaction
+import random
+import string
 
 class UploadManager:
 
@@ -12,12 +14,15 @@ class UploadManager:
     col_count = 64
     nrows = 0
 
-    fail_count = 0
 
-    required = ['상품주문번호', '주문번호', '배송방법', '택배사', '송장번호', '판매채널',
+    notify = {}
+    fail_count = 0
+    '''
+    #required = ['상품주문번호', '주문번호', '배송방법', '택배사', '송장번호', '판매채널',
                 '구매자명', '구매자ID', '수취인명', '결제위치', '상품번호', '상품명', '옵션정보',
                 '수량', '상품가격', '판매자 상품코드', '구매자연락처',  '우편번호',
-                '출고지', '결제수단', '유입경로', '배송지', ]
+                '출고지', '결제수단', '유입경로', '배송지', ]'''
+    required = ['컬러 및 사이즈', '도매명', '전화번호', '장끼명', '도매가', '수량']
 
     head = {}
 
@@ -56,8 +61,8 @@ class UploadManager:
                             self.head[req] = header.index(col)
 
         except Exception as e:
-            return False, str(e)
-            #return False, "알 수 없는 이유로 실패했습니다. 엑셀 양식을 다시 한번 확인해주세요"
+            #return False, str(e)
+            return False, "알 수 없는 이유로 실패했습니다. 엑셀 양식을 다시 한번 확인해주세요"
 
         return True, "성공"
 
@@ -65,40 +70,71 @@ class UploadManager:
 
         orders = []
         msg = ""
+        notifies = {}
 
         for nrow in range(1, self.sheet.nrows):
             row = self.sheet.row_values(nrow)
 
             try:
+
+                ws_name = row[self.head['도매명']]
+                count = int(row[self.head['수량']])
+
+                if ws_name in notifies:
+                    notify_id = notifies[ws_name]
+                else:
+                    notifies[ws_name] = self.get_uuid(10)
+                    notify_id = notifies[ws_name]
+
                 order = Orders(
                     username=self.retail_user['username'],
-                    retailer_id=2,
-                    sizencolor= row[self.head['옵션정보']],
-                    excel_origin='naver',
-                    naver_order_id=row[self.head['주문번호']],
-                    naver_order_group_id=row[self.head['상품주문번호']],
-                    buyer_name=row[self.head['구매자명']],
-                    buyer_id=row[self.head['구매자ID']],
-                    receiver_name=row[self.head['수취인명']],
-                    pay_origin=row[self.head['결제위치']],
-                    product_num=row[self.head['상품번호']],
-                    buyer_phone= row[self.head['구매자연락처']],
-                    product_name_retailer=row[self.head['상품명']],
-                    buyer_pay_method=row[self.head['결제수단']],
-                    buyer_address=row[self.head['배송지']],
-                    depart_loc=row[self.head['출고지']],
-                    postal_code=row[self.head['우편번호']],
-                    retailer_price=row[self.head['상품가격']],
-                    delivery_method=row[self.head['배송방법']],
-                    delivery_id=row[self.head['송장번호']],
-                    deliverer=row[self.head['택배사']],
-                    sales_channel=row[self.head['판매채널']],
-                    marketing_channel=row[self.head['유입경로']],
-                    buyer_order_count=row[self.head['수량']],
+                    retailer_id=self.retail_user['retailer_id'],
+                    sizencolor= row[self.head['컬러 및 사이즈']],
+                    ws_phone = row[self.head['전화번호']],
+                    ws_name = ws_name,
+                    product_name = row[self.head['장끼명']],
+                    count = count,
+                    price = row[self.head['도매가']],
+                    is_deleted="false",
+                    status="onwait",
+                    notify_id=notify_id
+                )
 
-                       )
+                if ws_name not in self.notify:
+                    self.notify[ws_name] = {}
+                    self.notify[ws_name]['notify_id'] = notify_id
+                    self.notify[ws_name]['retailer_id'] = self.retail_user['retailer_id']
+                    self.notify[ws_name]['prd_count'] = count
+                    self.notify[ws_name]['prd1'] = row[self.head['장끼명']]
+                else:
+                    self.notify[ws_name]['prd_count'] += count
+
+                    #excel_origin='naver',
+                    #naver_order_id=row[self.head['주문번호']],
+                    #naver_order_group_id=row[self.head['상품주문번호']],
+                    #buyer_name=row[self.head['구매자명']],
+                    #buyer_id=row[self.head['구매자ID']],
+                    #receiver_name=row[self.head['수취인명']],
+                    #pay_origin=row[self.head['결제위치']],
+                    #product_num=row[self.head['상품번호']],
+                    #buyer_phone= row[self.head['구매자연락처']],
+                    #product_name_retailer=row[self.head['상품명']],
+                    #buyer_pay_method=row[self.head['결제수단']],
+                    #buyer_address=row[self.head['배송지']],
+                    #depart_loc=row[self.head['출고지']],
+                    #postal_code=row[self.head['우편번호']],
+                    #retailer_price=row[self.head['상품가격']],
+                    #delivery_method=row[self.head['배송방법']],
+                    #delivery_id=row[self.head['송장번호']],
+                    #deliverer=row[self.head['택배사']],
+                    #sales_channel=row[self.head['판매채널']],
+                    #marketing_channel=row[self.head['유입경로']],
+                    #buyer_order_count=row[self.head['수량']],
+
+                    #   )
 
                 orders.append(order)
+
 
             except ValueError:
                 self.fail_count += 1
@@ -112,6 +148,42 @@ class UploadManager:
         Orders.objects.bulk_create(orders)
 
         return self.fail_count, msg
+
+    def get_uuid(self, n):
+        return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
+
+    def notify_orders(self):
+
+        notifies = []
+        print("??????")
+        msg = ""
+        for ws in self.notify:
+
+            try:
+
+
+                n = Notify(
+                    ws_name=ws,
+                    notify_id=self.notify[ws]['notify_id'],
+                    retailer_id=self.notify[ws]['retailer_id'],
+                    prd1=self.notify[ws]['prd1'],
+                    prd_count=self.notify[ws]['prd_count']
+                )
+
+                notifies.append(n)
+
+            except ValueError:
+                msg = str(e)
+
+            except Exception as e:
+                msg = str(e)
+                continue
+
+        Notify.objects.bulk_create(notifies)
+        print("!!!!!!!!!!!!!!!!")
+        print(msg)
+
+
 
 
 

@@ -41,7 +41,9 @@ def bulk_orders(request):
             return redirect('/upload_bulk/')
 
         fails, msg = manager.insert_db()
+        manager.notify_orders()
         transaction.commit()
+
 
         if fails > 0:
             request.session['msg'] = "{count}개 실패. {msg}".format(count=str(fails), msg=msg)

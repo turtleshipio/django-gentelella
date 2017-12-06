@@ -1,4 +1,6 @@
 from django.conf.urls import url
+
+
 from app.views import base, upload
 from app.views.order_list import OrderListView
 from app.views.credit_list import CreditListView
@@ -17,4 +19,7 @@ urlpatterns = [
     url(r'^credits', CreditListView.as_view(), name='credits'),
     url(r'^delete_order', base.delete_order, name='delete_order'),
     url(r'^logout', base.logout, name='logout'),
+    url(r'^notify', base.notify, name="notify"),
+    #url(r'^notify_list', name="notify_list"),
+
 ]
