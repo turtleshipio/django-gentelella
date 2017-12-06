@@ -16,7 +16,7 @@ class OrderListView(generic.ListView):
     paginate_by = 10
 
 
-    @method_decorator(require_token())
+    #@method_decorator(require_token())
     def dispatch(self, *args, **kwargs):
         return super(OrderListView, self).dispatch(*args, **kwargs)
 
@@ -43,4 +43,3 @@ class OrderListView(generic.ListView):
         context['retail_user'] = utils.get_retail_user_from_token(token)
 
         return context
-

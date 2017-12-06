@@ -4,6 +4,7 @@ from django.conf.urls import url
 from app.views import base, upload
 from app.views.order_list import OrderListView
 from app.views.credit_list import CreditListView
+from app.views.notify_list import NotifyListView
 
 urlpatterns = [
     # Matches any html file - to be used for gentella
@@ -20,6 +21,6 @@ urlpatterns = [
     url(r'^delete_order', base.delete_order, name='delete_order'),
     url(r'^logout', base.logout, name='logout'),
     url(r'^notify', base.notify, name="notify"),
-    #url(r'^notify_list', name="notify_list"),
+    url(r'^list', NotifyListView.as_view(), name="notify_list"),
 
 ]
