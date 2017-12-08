@@ -25,7 +25,7 @@ class OrderListView(generic.ListView):
         token = utils.get_decoded_token(token)
         print(token['retailer_id'])
         orders = Orders.objects.filter(retailer_id=3, is_deleted='false').order_by('-order_id')
-        print(orders)
+
         paginator = Paginator(orders, self.paginate_by)
         page = self.request.GET.get('page')
         context = super(OrderListView, self).get_context_data(**kwargs)

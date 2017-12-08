@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 class KakaoSender:
@@ -19,7 +20,7 @@ class KakaoSender:
      주문요청을 승인하시겠습니까?'
     smsKind = 'S'
     msgSms = msg
-    smsSender = '821088958454'
+    smsSender = '01088958454'
     reserveDt = '00000000000000'
     button1 = {
         'name' : '주문확인',
@@ -27,9 +28,41 @@ class KakaoSender:
         'url_mobile' : 'https://api.turtleship.io/turtlechain/v0/orderList'
     }
 
+    sms_msg = ""
+    path = "v1/sender/send"
+    headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+
     def set_msg(self, order_id, retailer, prd1, prd_count):
 
         self.msg = self.msg.format(order_id=order_id, retailer=retailer, prd1=prd1, prd_count=prd_count)
+
+    def set_sms(self, sms_msg):
+        self.sms_msg = sms_msg
+
+    def send_sms(self, sms_msg, phone):
+        url = self.target_url['prod'] + self.path
+        print("?????????????????????????")
+        print(url)
+        d = [{
+            'userId' : self.userId,
+            'message_type' : self.message_type,
+            'phn' : phone,
+            'profile' : self.profile,
+            'tmplId' : self.tmplId, 
+            'msg' : sms_msg,
+            'smsKind' : 'L',
+            'msgSms' : sms_msg,
+            'smsSender' : '01088958454',
+            'smsLmsTit' : '[터틀체인 주문관리]',
+            'smsOnly' : 'Y',
+
+        }]
+
+        print(d)
+
+        response = requests.post(url, headers=self.headers, data=json.dumps(d))
+        #print(response.request.data)
+        return response.text
 
     def send_msg(self, prod=True):
 
@@ -48,8 +81,41 @@ class KakaoSender:
         }
 
         url = self.target_url['prod'] if prod else self.target_url['dev']
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print(url)
 
-        requests.post(urlheaders=headers, data=data, url=url)
+
+        try:
+            response = requests.post(urlheaders=headers, data=data, url=url)
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print(response.text)
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+        except Exception as e:
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print(str(e))
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 
 

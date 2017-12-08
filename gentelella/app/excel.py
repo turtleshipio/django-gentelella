@@ -4,6 +4,7 @@ from django.db import transaction
 import random
 import string
 from random import randint
+import requests
 
 class UploadManager:
 
@@ -159,6 +160,10 @@ class UploadManager:
         notifies = []
         print("??????")
         msg = ""
+
+
+
+
         for ws in self.notify:
 
             try:
