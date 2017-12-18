@@ -1,8 +1,10 @@
 from django import forms
+from django import db
+from django.forms import ModelForm
+from app import models
 
 
 class DocumentForm(forms.Form):
-
     docfile = forms.FileField(
         label='엑셀파일을 업로드해주세요',
         help_text='max. 42 megabytes'
@@ -23,3 +25,8 @@ class SignUpForm(forms.Form):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField()
+
+
+class CreditForm(forms.Form):
+
+    choice = forms.CharField()

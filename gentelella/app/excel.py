@@ -24,7 +24,7 @@ class UploadManager:
                 '구매자명', '구매자ID', '수취인명', '결제위치', '상품번호', '상품명', '옵션정보',
                 '수량', '상품가격', '판매자 상품코드', '구매자연락처',  '우편번호',
                 '출고지', '결제수단', '유입경로', '배송지', ]'''
-    required = ['컬러 및 사이즈', '도매명', '전화번호', '장끼명', '도매가', '수량']
+    required = ['사이즈 및 컬러', '도매명', '전화번호', '장끼명', '도매가', '수량']
 
     head = {}
 
@@ -92,10 +92,11 @@ class UploadManager:
                 order = Orders(
                     username=self.retail_user['username'],
                     retailer_id=self.retail_user['retailer_id'],
-                    sizencolor= row[self.head['컬러 및 사이즈']],
+                    sizencolor= row[self.head['사이즈 및 컬러']],
                     ws_phone = row[self.head['전화번호']],
                     ws_name = ws_name,
                     product_name = row[self.head['장끼명']],
+                    building =row[self.head['상가']],
                     count = count,
                     price = row[self.head['도매가']],
                     is_deleted="false",

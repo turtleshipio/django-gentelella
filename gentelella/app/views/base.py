@@ -2,7 +2,7 @@ from django.template import loader
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 
-from app.models import Orders, RetailUser
+from app.models import Orders, RetailUser, OrderConfirm
 from django.shortcuts import redirect, render
 from app.forms import *
 from app.backend import RetailUserBackend
@@ -47,12 +47,14 @@ def login(request):
 
         if form.is_valid():
 
-            username = form.cleaned_data['username']
+            username = form.cleaned_data['username']s
             password = form.cleaned_data['password']
 
             try:
                 retail_user = RetailUser.objects.exclude(retailer_id=-1).get(username=username)
                 pwd_valid = sha256_crypt.verify(password, retail_user.password)
+                print(password)
+                print(retail_user.password)
                 context['retail_user'] = retail_user
                 if pwd_valid:
                     token = utils.issue_token(username, retail_user.phone, retail_user.retailer_id, retail_user.name)
@@ -143,3 +145,30 @@ def delete_order(request):
 
     return render(request, 'app/index.html')
 
+
+@require_http_methods(["POST"])
+def order_confirm(request):
+
+    if request.method == 'POST':
+
+        form = CreditForm(request.POST)
+
+        if form.is_valid():
+
+            choice_list = request.POST.getlist('choice')
+
+            choices = []
+
+            for choice in choice_list:
+                c = choice.split('.')
+                oc = OrderConfirm(
+                    order_id=c[0],
+                    ws_status =c[1],
+                )
+                choices.append(oc)
+
+            OrderConfirm.objects.bulk_create(choices)
+
+            return redirect('/')
+
+        return redirect('/')

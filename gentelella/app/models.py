@@ -9,6 +9,16 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+class OrderConfirm(models.Model):
+    order_id = models.BigAutoField(primary_key=True)
+    ws_status = models.CharField(max_length=10, blank=True, null=True)
+    pick_status = models.CharField(max_length=10, blank=True, null=True)
+    updated_time = models.DateTimeField()
+    created_time = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'order_confirm'
 
 class Credits(models.Model):
     credit_id = models.BigAutoField(primary_key=True)
@@ -155,6 +165,7 @@ class Orders(models.Model):
     buyer_order_count = models.IntegerField()
     retailer_product_code = models.CharField(max_length=30, blank=True, null=True)
     notify_id = models.CharField(max_length=100, default="")
+    building = models.CharField(max_length=100, default="")
 
     class Meta:
         managed = False

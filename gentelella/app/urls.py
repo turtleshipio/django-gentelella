@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^credits', CreditListView.as_view(), name='credits'),
     url(r'^delete_order', base.delete_order, name='delete_order'),
     url(r'^logout', base.logout, name='logout'),
-    url(r'^notify', base.notify, name="notify"),
-    url(r'^list/(?P<notify_id>\w{1,50})/$', NotifyListView.as_view(), name="notify_list"),
-
+    #url(r'^notify', base.notify, name="notify"),
+    url(r'^notify/(?P<notify_id>\w{1,50})/$', NotifyListView.as_view(), name="notify_list"),
+    url(r'^order_confirm', base.order_confirm, name='order_confirm')
 ]

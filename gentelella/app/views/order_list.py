@@ -30,6 +30,7 @@ class OrderListView(generic.ListView):
         page = self.request.GET.get('page')
         context = super(OrderListView, self).get_context_data(**kwargs)
 
+
         context['token'] = utils.get_decoded_token(token)
 
         try:
