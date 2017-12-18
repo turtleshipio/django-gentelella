@@ -47,14 +47,17 @@ def login(request):
 
         if form.is_valid():
 
-            username = form.cleaned_data['username']s
+            username = form.cleaned_data['username']
             password = form.cleaned_data['password']
 
             try:
                 retail_user = RetailUser.objects.exclude(retailer_id=-1).get(username=username)
-                pwd_valid = sha256_crypt.verify(password, retail_user.password)
+
+                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 print(password)
+
                 print(retail_user.password)
+                pwd_valid = sha256_crypt.verify(password, retail_user.password)
                 context['retail_user'] = retail_user
                 if pwd_valid:
                     token = utils.issue_token(username, retail_user.phone, retail_user.retailer_id, retail_user.name)
