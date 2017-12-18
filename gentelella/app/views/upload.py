@@ -60,8 +60,8 @@ def bulk_orders(request):
             return redirect('/upload_bulk/')
 
         fails, msg = manager.insert_db()
-       #manager.notify_orders()
-        #transaction.commit()
+        #manager.notify_orders()
+        transaction.commit()
 
         #sender = KakaoSender()
         #print("??????????????????????????")
