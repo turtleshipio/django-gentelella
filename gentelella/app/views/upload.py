@@ -27,9 +27,12 @@ def bulk_orders(request):
     retail_user = utils.get_retail_user_from_token(decoded_token)
 
     if request.method == "GET":
+
         return render(request, 'app/form_upload.html', context=context)
 
     if request.method == "POST":
+
+        request.session['msg'] = None
         transaction.set_autocommit(False)
         file = request.FILES['excel_file']
 

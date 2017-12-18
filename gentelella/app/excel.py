@@ -49,12 +49,26 @@ class UploadManager:
             if self.sheet_name != self.book.sheet_names()[0]:
                 return False, "엑셀시트의 이름은 \"발주발송관리\"여야만 합니다."
 
+
+
             header = self.sheet.row_values(0)
             required = self.required
+
+            print("**************************")
+            print(header)
+
             diff = set(required) - set(header)
+            print("**************************")
+            print(diff)
 
             if diff != set():
-                cols = ', '.join([diff])
+                diff = list(diff)
+                cols = ', '.join(diff)
+                print("**************************")
+                print("**************************")
+                print("**************************")
+                print("**************************")
+                print(cols)
                 return False, "아래의 열 이름들을 확인해주세요\n{cols}".format(cols=cols)
             else:
                 for req in required:
@@ -63,8 +77,8 @@ class UploadManager:
                             self.head[req] = header.index(col)
 
         except Exception as e:
-            #return False, str(e)
-            return False, "알 수 없는 이유로 실패했습니다. 엑셀 양식을 다시 한번 확인해주세요"
+            return False, str(e)
+            #return False, "알 수 없는 이유로 실패했습니다. 엑셀 양식을 다시 한번 확인해주세요"
 
         return True, "성공"
 

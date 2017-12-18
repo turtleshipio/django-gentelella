@@ -129,6 +129,8 @@ class Orders(models.Model):
     option2 = models.CharField(max_length=1024, blank=True, null=True)
     price = models.IntegerField(null=True, blank=True)
     count = models.IntegerField(null=True, blank=True)
+    floor = models.CharField(max_length=30, blank=True, default="")
+    location = models.CharField(max_length=30, blank=True, default="")
     oos = models.CharField(max_length=30, blank=True, null=True)
     request = models.CharField(max_length=1024, blank=True, null=True)
     internal_name = models.CharField(max_length=1024, blank=True, null=True)
