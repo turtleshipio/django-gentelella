@@ -53,7 +53,8 @@ class UploadManager:
 
             header = self.sheet.row_values(0)
             for h in header:
-                h = h.replace(" ", "")
+                h.strip()
+                
             required = self.required
 
             print("**************************")
