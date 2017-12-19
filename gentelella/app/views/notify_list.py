@@ -54,12 +54,6 @@ class NotifyListView(SingleObjectMixin, FormView):
         return context
 
     def post(self, request, *args, **kwargs):
-        print("#############################")
-        print("#############################")
-        print("#############################")
-        print("#############################")
-        print("#############################")
-        print("#############################")
 
 
         notify_id = self.request.POST.get('notify_id', "")
@@ -68,25 +62,7 @@ class NotifyListView(SingleObjectMixin, FormView):
         page = self.request.GET.get('page')
         return render(request, self.template_name, context={'orders': orders})
 
-        for order in orders:
-            print("#############################")
-            print("#############################")
-            print("#############################")
-            print("#############################")
-            print("#############################")
-            print("#############################")
-            print(order.product_name)
-            print(order.count)
 
-
-        """ 
-        try:
-            paged_credits = paginator.page(page)
-        except PageNotAnInteger:
-            paged_credits = paginator.page(1)
-        except EmptyPage:
-            paged_credits = paginator.page(paginator.num_pages)
-            """
 
         #   self.context['orders'] = orders
         print(orders)

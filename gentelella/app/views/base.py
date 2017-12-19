@@ -160,17 +160,19 @@ def order_confirm(request):
 
             choice_list = request.POST.getlist('choice')
 
-            choices = []
-
+            choices = {}
             for choice in choice_list:
                 c = choice.split('.')
-                oc = OrderConfirm(
-                    order_id=c[0],
-                    ws_status =c[1],
-                )
-                choices.append(oc)
+                order_id = c[0]
+                status = c[1]
+                if status in choices:
+                    choices[status].append(order_id)
+                else:
+                    choices[status] = [order_id]
 
-            OrderConfirm.objects.bulk_create(choices)
+            for choice in choices:
+                Orders.objects.filter(pk__in=choices[choice]).update(status=choice)
+
 
             return redirect('/')
 
