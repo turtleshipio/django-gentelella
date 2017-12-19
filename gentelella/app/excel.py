@@ -94,27 +94,27 @@ class UploadManager:
             try:
 
                 ws_name = row[self.head['도매명']]
-                count = int(row[self.head['수량']])
+                #count = int(row[self.head['수량']])
 
                 if ws_name in notifies:
                     notify_id = notifies[ws_name]
                 else:
-                    notifies[ws_name] = self.get_uuid(10)
+                    notifies[ws_name] = self.get_uuid(20)
                     #notifies[ws_name] = randint(0,9999)
                     notify_id = notifies[ws_name]
 
                 order = Orders(
                     username=self.retail_user['username'],
                     retailer_id=self.retail_user['retailer_id'],
-                    sizencolor= row[self.head['사이즈 및 컬러']],
+                    #sizencolor= row[self.head['사이즈 및 컬러']],
                     ws_phone = row[self.head['전화번호']],
                     ws_name = ws_name,
-                    product_name = row[self.head['장끼명']],
+                    #product_name = row[self.head['장끼명']],
                     building =row[self.head['상가']],
                     floor=row[self.head['층']],
                     location=row[self.head['호수']],
-                    count = count,
-                    price = row[self.head['도매가']],
+                    #count = count,
+                    #price = row[self.head['도매가']],
                     is_deleted="false",
                     status="onwait",
                     notify_id=notify_id
