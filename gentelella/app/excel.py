@@ -98,7 +98,12 @@ class UploadManager:
 
                 ws_name = row[self.head['도매명']]
                 count = row[self.head['수량']]
-                count = int(count) if count.isdigit() else count
+                if type(count)  == str:
+                    count = int(count) if count.isdigit() else count
+                elif type(count) == int:
+                    continue
+                elif type(count) == float:
+                    count = int(count)
 
 
                 if ws_name in notifies:
