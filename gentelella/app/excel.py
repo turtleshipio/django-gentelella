@@ -159,7 +159,7 @@ class UploadManager:
                 orders.append(order)
 
 
-            except ValueError:
+            except ValueError as e:
                 self.fail_count += 1
                 msg = str(e)
 
