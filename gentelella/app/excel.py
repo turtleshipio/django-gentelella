@@ -132,7 +132,8 @@ class UploadManager:
                     self.notify[ws_name]['prd_count'] = count
                     self.notify[ws_name]['prd1'] = row[self.head['장끼명']]
                 else:
-                    self.notify[ws_name]['prd_count'] += count
+                    if type(count) == int:
+                        self.notify[ws_name]['prd_count'] += count
 
                     #excel_origin='naver',
                     #naver_order_id=row[self.head['주문번호']],
