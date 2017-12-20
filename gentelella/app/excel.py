@@ -24,7 +24,7 @@ class UploadManager:
                 '구매자명', '구매자ID', '수취인명', '결제위치', '상품번호', '상품명', '옵션정보',
                 '수량', '상품가격', '판매자 상품코드', '구매자연락처',  '우편번호',
                 '출고지', '결제수단', '유입경로', '배송지', ]'''
-    required = ['도매명','층', '전화번호', '상가',  '호수']
+    required = ['도매명','층', '전화번호', '상가',  '호수', '수량', '사이즈 및 컬러', '도매가']
 
     head = {}
 
@@ -97,7 +97,7 @@ class UploadManager:
             try:
 
                 ws_name = row[self.head['도매명']]
-                #count = int(row[self.head['수량']])
+                count = int(row[self.head['수량']])
 
                 if ws_name in notifies:
                     notify_id = notifies[ws_name]
@@ -116,7 +116,7 @@ class UploadManager:
                     building =row[self.head['상가']],
                     floor=row[self.head['층']],
                     location=row[self.head['호수']],
-                    #count = count,
+                    count = count,
                     #price = row[self.head['도매가']],
                     is_deleted="false",
                     status="onwait",
