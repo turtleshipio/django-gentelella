@@ -97,7 +97,9 @@ class UploadManager:
             try:
 
                 ws_name = row[self.head['도매명']]
-                count = int(row[self.head['수량']])
+                count = row[self.head['수량']]
+                count = int(count) if count.isdigit() else count
+
 
                 if ws_name in notifies:
                     notify_id = notifies[ws_name]
