@@ -52,9 +52,12 @@ class UploadManager:
 
 
             header = self.sheet.row_values(0)
+            print(type(header))
             for h in header:
-                h.strip()
-                
+                h = h.strip()
+
+            print(header[0])
+
             required = self.required
 
             print("**************************")

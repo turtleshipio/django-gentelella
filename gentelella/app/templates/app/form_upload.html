@@ -8,6 +8,10 @@
   <link href="/static/vendors/dropzone/dist/min/dropzone.min.css" rel="stylesheet">
 {% endblock stylesheets %}
 
+{% block extra_js%}
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+{% endblock %}
+
 {% block content %}
   <div class="right_col" role="main">
     <div class="">
@@ -31,7 +35,7 @@
 
             <div class="x_content">
               <p>업로드 전 주문서 양식을 한번 더 확인해주세요</p>
-              <form action="/upload_bulk/" method="post" enctype="multipart/form-data">
+              <form id ="bulk-upload" action="/upload_bulk/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
               <br />
               <br />
@@ -40,7 +44,7 @@
                   <input type="file" name="excel_file" ID="fileSelect" value="파일을 선택해주세요" accept=".xlsx, .xls, .csv"/>
               </div>
           </div>
-            <input type="submit" value="업로드하기" />
+            <input type="submit" value="업로드하기" data-toggle="modal" data-target="#modal" />
               </form>
 
 
