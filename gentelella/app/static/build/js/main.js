@@ -73,7 +73,7 @@ $('button#btn-confirm-upload').click(function(event){
 
 
     });
-    alert(orders.length);
+    
     $.ajax({
         url : "upload_bulk/",
         type : "POST",
