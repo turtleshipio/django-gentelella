@@ -129,6 +129,7 @@ def gentella_html(request):
     # Pick out the html file name from the url. And load that template.
     load_template = request.path.split('/')[-1]
     template = loader.get_template('app/' + load_template)
+
     return HttpResponse(template.render(context, request))
 
 

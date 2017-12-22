@@ -35,7 +35,7 @@
 
             <div class="x_content">
               <p>업로드 전 주문서 양식을 한번 더 확인해주세요</p>
-              <form id ="bulk-upload" action="/upload_bulk/" method="post" enctype="multipart/form-data">
+              <form id ="excel-modal" action="/modal_view/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
               <br />
               <br />
@@ -54,6 +54,57 @@
       </div>
     </div>
   </div>
+
+<!-- Modal -->
+<div class="modal fade" id="excel_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">주문 확인하기</h4>
+      </div>
+      <div class="modal-body">
+         <table class="table table-striped projects">
+                <thead class="text-center">
+                  <tr>
+                      <th><p class="text-center">상가</p></th>
+                      <th><p class="text-center">도매명</p></th>
+                      <th><p class="text-center">호수</p></th>
+                      <th><p class="text-center">층</p></th>
+                      <th><p class="text-center">전화번호</p></th>
+                      <th><p class="text-center">장끼명</p></th>
+                      <th><p class="text-center">사이즈 및 컬러</p></th>
+                      <th><p class="text-center">도매가</p></th>
+                      <th><p class="text-center">수량</p></th>
+
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                    <div class="form-group">
+                        <form action="/upload_excel" id="upload_excel" method="post">
+                          {% csrf_token %}
+
+                        <tr class="table-row">
+
+                            <td><p>{{order.product_name}}</p></td>
+                            <td><p>{{order.sizencolor}}</p></td>
+                            <td><p>{{order.count}}</p></td>
+                            <td><p>{{order.price}}</p></td>
+
+
+                        </tr>
+                        </form>
+                    </div>
+
+                  </tbody>
+         </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">다시 업로드하기</button>
+        <button type="button" class="btn btn-primary" id="btn-confirm-upload">주문 접수하기</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}
 
 {% block javascripts %}

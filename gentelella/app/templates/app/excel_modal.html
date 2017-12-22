@@ -1,0 +1,44 @@
+
+         <table class="table table-striped projects">
+                <thead class="text-center">
+                  <tr>
+                      <th><p class="text-center">상가</p></th>
+                      <th><p class="text-center">도매명</p></th>
+                      <th><p class="text-center">호수</p></th>
+                      <th><p class="text-center">층</p></th>
+                      <th><p class="text-center">전화번호</p></th>
+                      <th><p class="text-center">장끼명</p></th>
+                      <th><p class="text-center">사이즈 및 컬러</p></th>
+                      <th><p class="text-center">도매가</p></th>
+                      <th><p class="text-center">수량</p></th>
+
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                    <div class="form-group">
+                        <form action="/upload_bulk" id="upload-excel" method="post">
+                          <!-- {% csrf_token %}-->
+
+                        {% if orders %}
+                            {% for order in orders %}
+
+                        <tr class="table-row">
+                            <td><p name="building">{{order.building}}</p></td>
+                            <td><p name="ws_name">{{order.ws_name}}</p></td>
+                            <td><p name="location">{{order.location}}</p></td>
+                            <td><p name="floor">{{order.floor}}</p></td>
+                            <td><p name="ws_phone">{{order.ws_phone}}</p></td>
+                            <td><p name="product_name">{{order.product_name}}</p></td>
+                            <td><p name="sizencolor">{{order.sizencolor}}</p></td>
+                            <td><p name="price">{{order.price}}</p></td>
+                            <td><p name="count">{{order.count}}</p></td>
+
+                        </tr>
+                    {%  endfor %}
+                            {% endif %}
+                        </form>
+                    </div>
+
+                  </tbody>
+         </table>
+      </div>

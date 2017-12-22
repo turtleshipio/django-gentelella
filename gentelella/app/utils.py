@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 import pytz
 import jwt
 from app import config
+import random
+import string
 
 def getYesterdayDateAt11pm():
 
@@ -64,3 +66,7 @@ def get_retail_user_from_token(decoded_token):
 
 def get_decoded_token(token):
     return decode_token(token)
+
+
+def get_uuid(n):
+    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))

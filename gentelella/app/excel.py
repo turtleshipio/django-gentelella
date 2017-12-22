@@ -88,6 +88,88 @@ class UploadManager:
 
         return True, "성공"
 
+    def extract(self):
+
+        orders = []
+        msg = ""
+
+        nrow = self.sheet.nrows
+
+        for nrow in range(1, self.sheet.nrows):
+            row = self.sheet.row_values(nrow)
+
+            try:
+
+                count = row[self.head['수량']]
+                price = row[self.head['도매가']]
+                if type(count) == str:
+                    count = int(count) if count.isdigit() else count
+                elif type(count) == int:
+                    continue
+                elif type(count) == float:
+                    count = int(count)
+
+                if type(price) == str:
+                    price = int(price) if price.isdigit() else price
+                elif type(price) == int:
+                    continue
+                elif type(price) == float:
+                    price = int(price)
+
+
+                count = '%d' % int(count)
+                price = '%d' % int(price)
+
+
+                sizencolor = row[self.head['사이즈 및 컬러']]
+                ws_phone = row[self.head['전화번호']]
+                ws_name = row[self.head['도매명']]
+                product_name = row[self.head['장끼명']]
+                building = row[self.head['상가']]
+                floor = row[self.head['층']]
+                location = row[self.head['호수']]
+
+
+                order = {
+
+                    'sizencolor': sizencolor,
+                    'ws_phone': ws_phone,
+                    'ws_name': ws_name,
+                    'product_name': product_name,
+                    'building': building,
+                    'floor': floor,
+                    'location': location,
+                    'price': price,
+                    'count' : count
+                }
+
+                orders.append(order)
+                msg = "success!"
+
+
+            except ValueError as e:
+                msg = str(e)
+                continue
+
+            except Exception as e:
+                msg = str(e)
+                continue
+
+        success = True
+        if len(orders) < 1:
+            success = False
+
+        print("################")
+        print("################")
+        print(success)
+        print(msg)
+        print("################")
+
+
+        return orders, success, msg
+
+
+
     def insert_db(self):
 
         orders = []
@@ -107,6 +189,8 @@ class UploadManager:
                     continue
                 elif type(count) == float:
                     count = int(count)
+
+                count = '%d' % (count)
 
 
                 if ws_name in notifies:
@@ -173,6 +257,7 @@ class UploadManager:
             except ValueError as e:
                 self.fail_count += 1
                 msg = str(e)
+                continue
 
             except Exception as e:
                 self.fail_count += 1

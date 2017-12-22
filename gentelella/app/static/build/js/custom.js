@@ -1005,6 +1005,7 @@ function init_parsley() {
         }
     };
 
+
     try {
         hljs.initHighlightingOnLoad();
     } catch (err) {}
