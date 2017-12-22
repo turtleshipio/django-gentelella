@@ -132,6 +132,6 @@ def modal_view(request):
         if success:
             return render(request, 'app/excel_modal.html', context={'orders': orders})
         else:
-            return redirect('/upload_bulk')
+            return render(request, 'app/excel_modal.html', context={'orders': None})
 
 
