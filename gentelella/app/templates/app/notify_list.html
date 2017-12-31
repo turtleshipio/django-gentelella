@@ -68,6 +68,8 @@
                             <td><p>{{order.price}}</p></td>
 
 
+
+
                         </tr>
                     {%  endfor %}
 
@@ -76,6 +78,10 @@
               </table>
 
               <div class="col-md-4 text-center">
+
+                    {% if notify_id %}
+                        <input type="hidden" name="notify_id" value="{{notify_id}}">
+                    {% endif %}
                     <button type="submit" class="btn btn-primary center-block">미송확인</button>
               </div>
               </form>

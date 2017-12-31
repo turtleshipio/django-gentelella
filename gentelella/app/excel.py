@@ -202,6 +202,7 @@ class UploadManager:
 
                 order = Orders(
                     username=self.retail_user['username'],
+                    retailer_name = self.retail_user['retailer_name'],
                     retailer_id=self.retail_user['retailer_id'],
                     sizencolor= row[self.head['사이즈 및 컬러']],
                     ws_phone = row[self.head['전화번호']],

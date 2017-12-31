@@ -23,13 +23,14 @@ def decode_token(token):
         return None
 
 
-def issue_token(username, phone, retailer_id, name):
+def issue_token(username, phone, retailer_id,retailer_name, name):
 
     now = datetime.utcnow()
     payload = {
         'username': username,
         'phone': phone,
         'retailer_id': retailer_id,
+        'retailer_name' : retailer_name,
         'name': name,
         'iat': now,
         'exp': now + timedelta(5)
@@ -60,6 +61,7 @@ def get_retail_user_from_token(decoded_token):
         'retailer_id': decoded_token['retailer_id'],
         'phone': decoded_token['phone'],
         'name': decoded_token['name'],
+        'retailer_name' : decoded_token['retailer_name'],
     }
     return retail_user
 

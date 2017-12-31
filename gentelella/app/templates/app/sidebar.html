@@ -8,8 +8,8 @@
   <!-- menu profile quick info -->
   <div class="profile clearfix">
     <div class="profile_info">
-        {% if retail_user %}
-          <span>안녕하세요, <strong>{{ retail_user.name}}</strong>님</span>
+        {% if t_user is not None %}
+          <span>안녕하세요, <strong>{{ t_user.name}}</strong>님</span>
         {% else %}
           <span>안녕하세요, <strong>더제인</strong>님</span>
         {% endif %}
@@ -29,7 +29,7 @@
         <li><a href="/upload_bulk"><i class="fa fa-file-excel-o"></i> 대량주문 </a></li>
         <li><a href="/order_list"><i class="fa fa-desktop"></i> 주문내역 </a></li>
           <li><a href="/credits"><i class="fa fa-archive"></i> 미송확인 </a></li>
-        <li><a href="/logout"><i class="fa fa-sign-out"></i> 로그아웃 </a></li>
+        <li><a href="/temp"><i class="fa fa-sign-out"></i> 로그아웃 </a></li>
 
       </ul>
     </div>

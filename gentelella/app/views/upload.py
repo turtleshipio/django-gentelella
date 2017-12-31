@@ -6,7 +6,7 @@ from app.forms import DocumentForm
 from app.decorators import require_token
 from app import utils
 from app.excel import UploadManager
-from app.models import  Orders
+from app.models import  Orders, RetailerPickteam
 
 from django.db import transaction
 from app.kakao import KakaoSender
@@ -29,7 +29,20 @@ def bulk_orders(request):
 
     context = utils.get_context_from_token(utils.decode_token(token))
     retail_user = utils.get_retail_user_from_token(decoded_token)
-
+    retailer_name = retail_user['retailer_name']
+    context['retailer_name'] = retailer_name
+    rp = RetailerPickteam.objects.get(retailer_name=retailer_name)
+    pickteam_id = rp.pickteam_id
+    print("************************")
+    print("************************")
+    print("************************")
+    print(pickteam_id)
+    print("************************")
+    print("************************")
+    print("************************")
+    print("************************")
+    print("************************")
+    print("************************")
     if request.method == "GET":
 
         return render(request, 'app/form_upload.html', context=context)
@@ -66,7 +79,9 @@ def bulk_orders(request):
                     price=order_js['price'],
                     is_deleted="false",
                     status="onwait",
-                    notify_id=notify_id
+                    notify_id=notify_id,
+                    pickteam_id=pickteam_id
+
                 )
 
                 orders.append(order)

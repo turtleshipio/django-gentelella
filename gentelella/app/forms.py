@@ -25,6 +25,12 @@ class SignUpForm(forms.Form):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField()
+    acc_type = forms.ChoiceField()
+    #acc_type = form.cleaned_data['account-type']
+    print(":*******************************")
+    print(":*******************************")
+    print(":*******************************")
+    print(acc_type)
 
 
 class CreditForm(forms.Form):

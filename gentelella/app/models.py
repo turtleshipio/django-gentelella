@@ -9,6 +9,45 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+
+class TurtlechainUser:
+
+    username = ""
+    acc_type = ""
+    retailer_id = ""
+    retailer_name = ""
+    pickup_user_id = ""
+    pickteam_id = ""
+    name = ""
+
+    def __init__(self, obj):
+        print("*********************************")
+        print("*********************************")
+        print("*********************************")
+        print(obj)
+        print("*********************************")
+        print("*********************************")
+        if obj.__class__.__name__ == "RetailUser":
+            self.username = obj.username
+            self.acc_type = "retail"
+            self.retailer_id = obj.retailer_id
+            self.retailer_name = obj.retailer_name
+            self.name = obj.name
+        elif obj.__class__.__name__== "PickupUser":
+            print("*********************************")
+
+            self.username = obj.username
+            self.acc_type = "pickup"
+            self.pickteam_id = obj.pickteam_id
+            self.pickup_user_id = obj.pickup_user_id
+            self.name = obj.name
+
+        else:
+            raise ValueError
+
+
+
+
 class OrderConfirm(models.Model):
     order_id = models.BigAutoField(primary_key=True)
     ws_status = models.CharField(max_length=10, blank=True, null=True)
@@ -107,6 +146,7 @@ class RetailUser(models.Model):
     phone = models.CharField(max_length=12)
     updated_time = models.DateTimeField(blank=True, null=True)
     account_type = models.CharField(max_length=100, blank=True, null=True)
+    retailer_name = models.CharField(max_length=30, blank=True, default="")
     retailer = models.ForeignKey(Retailer, on_delete=models.DO_NOTHING)
 
     class Meta:
@@ -168,6 +208,7 @@ class Orders(models.Model):
     retailer_product_code = models.CharField(max_length=30, blank=True, null=True)
     notify_id = models.CharField(max_length=100, default="")
     building = models.CharField(max_length=100, default="")
+    pickteam_id = models.IntegerField()
 
     class Meta:
         managed = False
@@ -185,3 +226,50 @@ class Notify(models.Model):
     class Meta:
         managed = False
         db_table = 'notify'
+
+
+class RetailerPickteam(models.Model):
+    retailer_name = models.CharField(max_length=100, primary_key=True)
+    pickteam_id = models.BigIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'retailer_pickteam'
+
+class PickupUser(models.Model):
+    pickup_user_id = models.BigAutoField(primary_key=True)
+    username = models.CharField(unique=True, max_length=30)
+    password = models.CharField(max_length=512)
+    name = models.CharField(max_length=12, blank=True, null=True)
+    email = models.CharField(max_length=50, blank=True, null=True)
+    phone = models.CharField(max_length=12)
+    pickteam_id = models.BigIntegerField(blank=True, null=True)
+    updated_time = models.DateTimeField(blank=True, null=True)
+    account_type = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'pickup_user'
+
+class PickteamPickuser(models.Model):
+    user_id = models.BigIntegerField(primary_key=True)
+    pickteam_id = models.BigIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'pickteam_pickuser'
+
+class Pickteam(models.Model):
+    pickteam_id = models.BigIntegerField(primary_key=True)
+    pickteam_name = models.CharField(unique=True, max_length=20, blank=True, null=True)
+    business_number = models.CharField(unique=True, max_length=20, blank=True, null=True)
+    business_type = models.CharField(max_length=20, blank=True, null=True)
+    bank_account_num = models.CharField(max_length=20, blank=True, null=True)
+    bank = models.CharField(max_length=20, blank=True, null=True)
+    bank_holder_name = models.CharField(max_length=20, blank=True, null=True)
+    created_time = models.DateTimeField(blank=True, null=True)
+    retailer_id = models.BigIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'pickteam'

@@ -60,7 +60,7 @@ class NotifyListView(SingleObjectMixin, FormView):
         orders = Orders.objects.filter(notify_id=notify_id).order_by("order_id")
         paginator = Paginator(orders, self.paginate_by)
         page = self.request.GET.get('page')
-        return render(request, self.template_name, context={'orders': orders})
+        return render(request, self.template_name, context={'orders': orders, 'notify_id' : notify_id})
 
 
 
