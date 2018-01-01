@@ -129,6 +129,7 @@ class Retailer(models.Model):
     bank = models.CharField(max_length=20)
     bank_holder_name = models.CharField(max_length=20)
     created_time = models.DateTimeField(blank=True, null=True)
+    pickteam_id = models.IntegerField()
 
     class Meta:
         managed = False

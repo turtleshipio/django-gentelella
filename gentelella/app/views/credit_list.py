@@ -2,7 +2,7 @@ from django.shortcuts import render
 from app.network.turtleship import APIService
 from django.db.models import Sum
 from django.views import generic
-from app.models import Orders, Credits
+from app.models import *
 from django.core.paginator import  Paginator, EmptyPage, PageNotAnInteger
 from app.utils import getYesterdayDateAt11pm
 import logging
@@ -28,11 +28,20 @@ class CreditListView(generic.ListView):
 
         token = self.request.session['token']
         token = utils.get_decoded_token(token)
-        retailer_id = token['retailer_id']
 
-        credits = Credits.objects.filter(retailer_id=retailer_id, order_of_credits__oos='true')\
-            .annotate(amount=Sum('order_of_credits__price'))\
-            .order_by('created_time')
+        acc_type = token['acc_type']
+        retailer_id = []
+        if acc_type == "retailer":
+            retailer_id = retailer_id.append(token['retailer_id'])
+
+        if acc_type == "pickup":
+            pickteam_id = token['pickteam_id']
+            retailer_id = Retailer.objects.filter(pickteam_id=pickteam_id).values_list('retailer_id', flat=True)
+
+
+        credits = Credits.objects.filter(retailer_id=retailer_id, order_of_credits__oos='true') \
+            .annotate(amount=Sum('order_of_credits__price')) \
+            .order_by('-created_time')
 
         paginator = Paginator(credits, self.paginate_by)
         page = self.request.GET.get('page')
@@ -47,7 +56,7 @@ class CreditListView(generic.ListView):
             paged_credits = paginator.page(paginator.num_pages)
 
         context['credits'] = credits
-        context['retail_user'] = utils.get_retail_user_from_token(token)
+        context['t_user'] = utils.get_user_from_token(token)
 
         return context
 
