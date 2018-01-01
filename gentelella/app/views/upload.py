@@ -26,32 +26,37 @@ def bulk_orders(request):
 
     token = request.session['token']
     decoded_token = utils.decode_token(token)
+    context = utils.get_context_from_token(decoded_token)
+    t_user = utils.get_user_from_token(decoded_token)
+    context['t_user'] = t_user
 
-    context = utils.get_context_from_token(utils.decode_token(token))
-    retail_user = utils.get_retail_user_from_token(decoded_token)
-    retailer_name = retail_user['retailer_name']
-    context['retailer_name'] = retailer_name
-    rp = RetailerPickteam.objects.get(retailer_name=retailer_name)
-    pickteam_id = rp.pickteam_id
-    print("************************")
-    print("************************")
-    print("************************")
-    print(pickteam_id)
-    print("************************")
-    print("************************")
-    print("************************")
-    print("************************")
-    print("************************")
-    print("************************")
+    if t_user.acc_type == "retailer":
+        retail_user = utils.get_retail_user_from_token(decoded_token)
+        retailer_name = retail_user['retailer_name']
+        context['retailer_name'] = retailer_name
+
+    pickteam_id = t_user.pickteam_id
+
+
     if request.method == "GET":
-
+        context['order'] = None
+        context['retailer_name'] = None
         return render(request, 'app/form_upload.html', context=context)
 
     if request.method == "POST":
 
+
         if request.is_ajax():
 
-            orders_js = json.loads(request.body.decode('utf-8'))
+            data_js = json.loads(request.body.decode('utf-8'))
+
+            orders_js = data_js[0]['orders']
+            retailer_name = ""
+            try:
+                retailer_name = data_js[0]['retailer_name']
+            except:
+                pass
+
             notifies = {}
             orders = []
 
@@ -60,14 +65,22 @@ def bulk_orders(request):
                 ws_name = order_js['ws_name']
 
                 if ws_name in notifies:
-                    notify_id = notifies[ws_name]
+                    notify_id = notifies[ws_name]['notify_id']
+                    count = order_js['count']
+                    notifies[ws_name]['prd_count'] += int(count)
                 else:
-                    notifies[ws_name] = utils.get_uuid(20)
-                    notify_id = notifies[ws_name]
+                    notify = {}
+                    notify_id = utils.get_uuid(70)
+                    notify['notify_id'] = notify_id
+                    notify['prd_count'] = int(order_js['count'])
+                    notify['prd1'] = order_js['product_name']
+                    notify['phn'] = order_js['ws_phone']
+                    notifies[ws_name] = notify
+
+                username = t_user.username
 
                 order = Orders(
-                    username=retail_user['username'],
-                    retailer_id=retail_user['retailer_id'],
+                    username=username,
                     sizencolor=order_js['sizencolor'],
                     ws_phone=order_js['ws_phone'],
                     ws_name=ws_name,
@@ -80,15 +93,51 @@ def bulk_orders(request):
                     is_deleted="false",
                     status="onwait",
                     notify_id=notify_id,
-                    pickteam_id=pickteam_id
+                    pickteam_id=pickteam_id,
+                    retailer_name=retailer_name,
 
                 )
 
+
                 orders.append(order)
+            try:
+                Orders.objects.bulk_create(orders)
+            except Exception as e:
+                print(str(e))
+            finally:
 
-            Orders.objects.bulk_create(orders)
+                sender = KakaoSender()
 
-            return HttpResponse("Ok")
+                phones = ['01088958454']
+                for ws_name in notifies:
+                    notify_id = notifies[ws_name]['notify_id']
+                    order_id = notify_id[:7]
+                    prd1 = notifies[ws_name]['prd1']
+                    prd_count = int(notifies[ws_name]['prd_count']) - 1
+                    phn = notifies[ws_name]['phn']
+
+                    sender.set_msg(order_id=order_id, retailer_name=retailer_name,
+                                   prd1=prd1, prd_count=prd_count,
+                                   notify_id=notify_id)
+
+                    if phn not in phones:
+                        phones.append(phn)
+                    for phn in phones:
+                        print("!!!!!!!!!!!!!")
+                        print("!!!!!!!!!!!!!")
+                        print("!!!!!!!!!!!!!")
+                        print(phn)
+                        print("!!!!!!!!!!!!!")
+                        print("!!!!!!!!!!!!!")
+                        print("!!!!!!!!!!!!!")
+
+
+                        sender.send_kakao_msg(phn)
+                    sender.clear()
+                    phones = ['01088958454']
+
+
+                return HttpResponse("Ok")
 
 
         #request.session['msg'] = None
@@ -101,7 +150,7 @@ def bulk_orders(request):
 
 
         #success, msg = manager.validate()
-        #sender = KakaoSender()
+
         #print("??????????????????????????")
         #print(sender)
 
@@ -135,9 +184,23 @@ def bulk_orders(request):
 @require_token()
 @require_http_methods(['GET', 'POST'])
 def modal_view(request):
+
     if request.method == "POST":
 
+        token = request.session['token']
+        token = utils.get_decoded_token(token)
+
+        retailer_name = ""
+        if 'retailer_name' in request.POST:
+            retailer_name = request.POST['retailer_name']
+        if retailer_name == "":
+            retailer_name = token['retailer_name']
+
+        print(retailer_name)
+
         file = request.FILES['excel_file']
+
+
         manager = UploadManager()
         manager.set_file(file)
         manager.validate()
@@ -145,8 +208,9 @@ def modal_view(request):
         orders, success, msg = manager.extract()
 
         if success:
-            return render(request, 'app/excel_modal.html', context={'orders': orders})
+            return render(request, 'app/excel_modal.html', context={'orders': orders, 'retailer_name': retailer_name})
         else:
-            return render(request, 'app/excel_modal.html', context={'orders': None})
+            return render(request, 'app/excel_modal.html', context={'orders': None, 'retailer_name':None})
+
 
 

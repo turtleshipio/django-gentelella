@@ -52,11 +52,11 @@ class UploadManager:
 
 
             header = self.sheet.row_values(0)
-            print(type(header))
+
             for h in header:
                 h = h.strip()
 
-            print(header[0])
+
 
             required = self.required
 
@@ -70,11 +70,7 @@ class UploadManager:
             if diff != set():
                 diff = list(diff)
                 cols = ', '.join(diff)
-                print("**************************")
-                print("**************************")
-                print("**************************")
-                print("**************************")
-                print(cols)
+
                 return False, "아래의 열 이름들을 확인해주세요\n{cols}".format(cols=cols)
             else:
                 for req in required:
@@ -158,12 +154,6 @@ class UploadManager:
         success = True
         if len(orders) < 1:
             success = False
-
-        print("################")
-        print("################")
-        print(success)
-        print(msg)
-        print("################")
 
 
         return orders, success, msg
@@ -275,17 +265,12 @@ class UploadManager:
     def notify_orders(self):
 
         notifies = []
-        print("??????")
+
         msg = ""
-
-
-
 
         for ws in self.notify:
 
             try:
-
-
                 n = Notify(
                     ws_name=ws,
                     notify_id=self.notify[ws]['notify_id'],
@@ -304,8 +289,7 @@ class UploadManager:
                 continue
 
         Notify.objects.bulk_create(notifies)
-        print("!!!!!!!!!!!!!!!!")
-        print(msg)
+
 
 
 

@@ -2,12 +2,14 @@ from datetime import datetime, timedelta
 from app import config
 import jwt
 
-def issue_token(username, phone, pickup_user_id, name):
+def issue_token(username, phone, pickup_user_id, name, pickteam_id):
     now = datetime.utcnow()
     payload = {
         'username': username,
         'phone': phone,
         'pickup_user_id': pickup_user_id,
+        'pickteam_id' : pickteam_id,
+        'acc_type' : 'pickup',
         'name': name,
         'iat': now,
         'exp': now + timedelta(5)

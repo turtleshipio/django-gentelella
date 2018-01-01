@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from app.network.turtleship import APIService
 from django.views import generic
-from app.models import Orders
+from app.models import *
 from django.core.paginator import  Paginator, EmptyPage, PageNotAnInteger
 from app.utils import getYesterdayDateAt11pm
 from django.utils.decorators import method_decorator
@@ -23,8 +23,21 @@ class OrderListView(generic.ListView):
     def get_context_data(self, **kwargs):
         token = self.request.session['token']
         token = utils.get_decoded_token(token)
-        print(token['retailer_id'])
-        orders = Orders.objects.filter(retailer_id=token['retailer_id'], is_deleted='false').order_by('-order_id')
+
+        acc_type = token['acc_type']
+
+        orders = []
+        if acc_type == "retailer":
+            retailer_name = token['retailer_name']
+            orders = Orders.objects.filter(retailer_name=retailer_name).order_by('-order_id').values('order_id', 'ws_name', 'created_time','retailer_name',
+                                                                           'count', 'price', 'status')
+
+
+        if acc_type == "pickup":
+            pickteam_id = token['pickteam_id']
+            orders = Orders.objects.filter(pickteam_id=pickteam_id).order_by('-order_id').values('order_id', 'ws_name', 'created_time', 'count', 'retailer_name',
+                                                                 'price', 'status')
+
 
         paginator = Paginator(orders, self.paginate_by)
         page = self.request.GET.get('page')
@@ -41,6 +54,9 @@ class OrderListView(generic.ListView):
             paged_orders = paginator.page(paginator.num_pages)
 
         context['orders'] = paged_orders
-        context['retail_user'] = utils.get_retail_user_from_token(token)
+        t_user = utils.get_user_from_token(token)
+        context['t_user'] = t_user
+        print(t_user.acc_type)
+        #context['retail_user'] = utils.get_retail_user_from_token(token)
 
         return context

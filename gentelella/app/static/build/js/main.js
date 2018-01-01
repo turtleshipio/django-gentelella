@@ -56,7 +56,15 @@ $(function() {
 
 $('button#btn-confirm-upload').click(function(event){
 
+    var data= {};
+    var retailer_name = "";
+    retailer_name = $('h3[name=retailer_name]').text();
+    data.retailer_name = retailer_name;
+
+    console.log(data,retailer_name);
+
     var orders = [];
+
     $("tr.table-row").each(function(){
         var order = {}
         order['building'] = $(this).find('p[name*="building"]').text();
@@ -74,16 +82,16 @@ $('button#btn-confirm-upload').click(function(event){
 
     });
 
+    data.orders = orders
+
     $.ajax({
-        url : "upload_bulk/",
+        url : "/upload_bulk/",
         type : "POST",
         contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(orders),
+        data: JSON.stringify([data]),
         dataType: 'text',
         success : function(result){
-
-            window.location.href = "order_list/"
-
+            window.location.href = "/order_list/";
         }
 
 
@@ -94,7 +102,6 @@ $('form#excel-modal').on('submit', function(event){
     event.preventDefault();
     var formData = new FormData(this);
 
-
     console.log("form submitted!")  // sanity check
     create_post(formData);
 
@@ -103,23 +110,17 @@ $('form#excel-modal').on('submit', function(event){
 function create_post(formData) {
     console.log("create post is working!"); // sanity check
     $.ajax({
-        url : "modal_view/",
+        url : "/modal_view/",
         type : "POST",
         data : formData,
         processData : false,
         contentType: false,
         success : function(response, data){
 
-
             $('#excel_modal').find('.modal-body').html(response);
             $('#excel_modal').modal('show');
 
-
-
-        }
-
+        },
 
     });
-
-
 };

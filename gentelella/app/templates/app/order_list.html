@@ -45,12 +45,18 @@
                 <thead class="text-center">
                   <tr>
                     <th><h4 class="text-center">선택</h4></th>
-                    <th><h4 class="text-center">주문번호</h4></th>
+                    {% if t_user %}
+                      {% if t_user.acc_type == "pickup" %}
+                      <th><h4 class="text-center">소매명</h4></th>
+                      {% endif %}
+                      {% endif %}
+                      <th><h4 class="text-center">주문번호</h4></th>
                     <th><h4 class="text-center">도매명</h4></th>
                     <th><h4 class="text-center">수량</h4></th>
                     <th><h4 class="text-center">총 결제금액</h4></th>
                     <th><h4 class="text-center">상태</h4></th>
                     <th><h4 class="text-center">수정</h4></th>
+
                   </tr>
                 </thead>
                 <tbody class="text-center">
@@ -62,6 +68,11 @@
                               <input type="checkbox" class="custom-control-input">
         <span class="custom-control-indicator"></span>
                           </td>
+                          {% if t_user %}
+                      {% if t_user.acc_type == "pickup" %}
+                          <td class="text-center">{{ order.retailer_name }}</td>
+                          {% endif %}
+                          {% endif %}
                         <td class="text-center">{{  order.order_id }}</td>
                         <td class="text-center">
                           <a><strong>{{  order.ws_name }}</strong></a>

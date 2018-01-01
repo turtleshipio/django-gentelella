@@ -16,7 +16,7 @@
   <div class="right_col" role="main">
     <div class="">
       <div class="page-title">
-        {% if request.session.msg %}
+        {% if 'msg' in request.session %}
             <div class="alert alert-danger alert-dismissable fade in">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>업로드 실패  </strong>{{request.session.msg}}
@@ -41,10 +41,37 @@
               <br />
               <br />
               <br />
-                  <input type="file" name="excel_file" ID="fileSelect" value="파일을 선택해주세요" accept=".xlsx, .xls, .csv"/>
+
+                  <input type="file" name="excel_file" ID="fileSelect" value="파일을 선택해주세요" accept=".xlsx, .xls, .csv" required/>
               </div>
           </div>
-            <input type="submit" value="업로드하기" data-toggle="modal" data-target="#modal" />
+
+                 {% if t_user %}
+                  {% if t_user.acc_type == "pickup" %}
+            <div class="form-horizontal row">
+
+                   <div class="control-group ">
+                    <label for="retailer_name" class="control-label  col-sm-0.5 pull-left"><p class="text-info">소매명<i class="icon-star"></i></p></label>
+                    <div class="controls">
+                        <input type="text" name ="retailer_name" id="retailer_name"  class="span4" required>
+                    </div>
+                   </div>
+                    <br />
+                    <br />
+                    <br />
+                {% else %}
+                <input type="hidden" name="retailer_name" id="retailer_name" value="">
+            {% endif %}
+            {% endif %}
+                 </div>
+                <div row>
+                <input type="submit" value="업로드하기" data-toggle="modal" data-target="#modal" />
+                </div>
+
+
+
+
+
               </form>
 
 
@@ -63,6 +90,9 @@
         <h4 class="modal-title" id="myModalLabel">주문 확인하기</h4>
       </div>
       <div class="modal-body">
+          {% if retailer_name %}
+            <h6 class="modal-title" id="retailerNameLabel">{{retailer_name}}s</h6>
+          {% endif %}
          <table class="table table-striped projects">
                 <thead class="text-center">
                   <tr>
@@ -79,6 +109,8 @@
                   </tr>
                 </thead>
                 <tbody class="text-center">
+                {% block order %}
+                    {% if order  %}
                     <div class="form-group">
                         <form action="/upload_excel" id="upload_excel" method="post">
                           {% csrf_token %}
@@ -90,13 +122,16 @@
                             <td><p>{{order.count}}</p></td>
                             <td><p>{{order.price}}</p></td>
 
-
                         </tr>
                         </form>
                     </div>
+                    {% endif %}
+
 
                   </tbody>
+
          </table>
+          {% endblock order %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">다시 업로드하기</button>

@@ -35,14 +35,17 @@
     <a class="hiddenanchor" id="signup"></a>
     <a class="hiddenanchor" id="signin"></a>
 
+
     <div class="login_wrapper">
       <div class="animate form login_form">
-           {% if login_error %}
+            {% block login_error %}
+           {% if login_error !=  None %}
             <div class="alert alert-danger alert-dismissable fade in">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>로그인 실패  </strong>다시 시도해주세요.
             </div>
             {% endif %}
+          {% endblock %}
         <section class="login_content">
 
           <form action="/login" method="post">

@@ -1,21 +1,28 @@
 from django.template import loader
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
+from passlib.apps import custom_app_context as pwd_context
 
 from app.models import *
 from django.shortcuts import redirect, render
 from app.forms import *
 from app.backend import RetailUserBackend
-from passlib.hash import sha256_crypt
+#from passlib.hash import sha256_crypt
 from app import utils
 from app.decorators import require_token
-from app import pickup
+from app import pickup_utils
 @require_token()
 def home(request):
 
     try:
         token = request.session['token']
-        context = utils.get_context_from_token(utils.decode_token(token))
+        token = utils.decode_token(token)
+        context = utils.get_context_from_token(token)
+        context['home'] = None
+        context['content'] = None
+        context['t_user'] = utils.get_user_from_token(token)
+        context['login_error'] = None
+        context['signup_error'] = None
         return render(request, 'app/index.html', context=context)
     except KeyError:
         return redirect('/')
@@ -48,56 +55,50 @@ def temp(request):
 
     return render(request, 'app/alert.html')
 
+
 def retail_login(request, username, password):
 
     context = {}
 
     try:
         retail_user = RetailUser.objects.exclude(retailer_id=-1).get(username=username)
-        pwd_valid = sha256_crypt.verify(password, retail_user.password)
-        context['retail_user'] = retail_user
+        pwd_valid = pwd_context.verify(password, retail_user.password)
+
+        user = TurtlechainUser(retail_user)
+        context['t_user'] = user
+
         if pwd_valid:
             token = utils.issue_token(username, retail_user.phone, retail_user.retailer_id, retail_user.retailer_name,
                                       retail_user.name)
             request.session['token'] = token
-            return redirect('home')
+            return context
 
     except RetailUser.DoesNotExist:
         context['login_error'] = True
-        return render(request, 'app/login.html', context=context)
+        return context
     except ValueError:
         context['login_error'] = True
-        return render(request, 'app/login.html', context=context)
+        return context
+
+    return context
+
 
 
 def pickup_login(request, username, password):
 
     context = {}
-    print("&&&&&&&&&&&&&&&&&&&")
-    print("&&&&&&&&&&&&&&&&&&&")
+    context['login_error'] = ""
+    context['signup_error'] = ""
+
     try:
         pickup_user = PickupUser.objects.exclude(pickup_user_id=-1).get(username=username)
-        pwd_valid = sha256_crypt.verify(password, pickup_user.password)
-        print("&&&&&&&&&&&&&&&&&&&")
-        print(pwd_valid)
-        print("&&&&&&&&&&&&&&&&&&&")
+        pwd_valid = pwd_context.verify(password, pickup_user.password)
+
         user = TurtlechainUser(pickup_user)
-        user = {'name' : "hi"}
         context['t_user'] = user
-        print("&&&&&&&&&&&&&&&&&&&")
-        print("&&&&&&&&&&&&&&&&&&&")
-        print("&&&&&&&&&&&&&&&&&&&")
-        print(user['name'])
-        print("&&&&&&&&&&&&&&&&&&&")
-        print("&&&&&&&&&&&&&&&&&&&")
-        print("&&&&&&&&&&&&&&&&&&&")
-        print("&&&&&&&&&&&&&&&&&&&")
-        print("&&&&&&&&&&&&&&&&&&&")
-        print("&&&&&&&&&&&&&&&&&&&")
 
         if pwd_valid:
-            token = pickup.utils.issue_token(username,
-                                             pickup_user.phone,)
+            token = pickup_utils.issue_token(username, pickup_user.phone, pickup_user.pickup_user_id, pickup_user.name, pickup_user.pickteam_id)
             request.session['token'] = token
             return context
 
@@ -116,9 +117,12 @@ def pickup_login(request, username, password):
 
 @require_http_methods(['GET', 'POST'])
 def login(request):
+    context = {}
+    context['login_error'] = None
+    context['signup_error'] = None
 
     if request.method == "GET":
-        return render(request, 'app/login.html')
+        return render(request, 'app/login.html', context=context)
     if request.method == "POST":
 
         context = None
@@ -127,10 +131,10 @@ def login(request):
         acc_type = request.POST['account-type']
 
         if acc_type == "retail":
-            return retail_login(request, username, password)
+            context = retail_login(request, username, password)
 
         if acc_type == "pickup":
-            context =  pickup_login(request, username, password)
+            context = pickup_login(request, username, password)
 
         return render(request, 'app/index.html', context=context)
 
@@ -218,14 +222,7 @@ def order_confirm(request):
             choice_list = request.POST.getlist('choice')
             notify_id = request.POST.get('notify_id')
             context = {'notify_id' : notify_id}
-            print("&&&&&&&&&&&&&&&&&&&&&&")
-            print("&&&&&&&&&&&&&&&&&&&&&&")
-            print(context)
-            print("&&&&&&&&&&&&&&&&&&&&&&")
-            print("&&&&&&&&&&&&&&&&&&&&&&")
-            print("&&&&&&&&&&&&&&&&&&&&&&")
-            print("&&&&&&&&&&&&&&&&&&&&&&")
-            print("&&&&&&&&&&&&&&&&&&&&&&")
+
             choices = {}
 
             for choice in choice_list:

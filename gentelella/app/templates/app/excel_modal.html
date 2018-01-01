@@ -11,7 +11,9 @@
                       <th><p class="text-center">사이즈 및 컬러</p></th>
                       <th><p class="text-center">도매가</p></th>
                       <th><p class="text-center">수량</p></th>
-
+                      {% if retailer_name %}
+                      <h3 name="retailer_name">{{ retailer_name }}</h3>
+                      {% endif %}
                   </tr>
                 </thead>
                 <tbody class="text-center">

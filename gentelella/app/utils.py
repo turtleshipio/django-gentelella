@@ -4,6 +4,7 @@ import jwt
 from app import config
 import random
 import string
+from app.models import *
 
 def getYesterdayDateAt11pm():
 
@@ -31,6 +32,7 @@ def issue_token(username, phone, retailer_id,retailer_name, name):
         'phone': phone,
         'retailer_id': retailer_id,
         'retailer_name' : retailer_name,
+        'acc_type' : 'retailer',
         'name': name,
         'iat': now,
         'exp': now + timedelta(5)
@@ -42,19 +44,47 @@ def issue_token(username, phone, retailer_id,retailer_name, name):
 
 def get_context_from_token(token):
 
-    context = {
-        'retail_user': {
+    context = {}
+    if token['acc_type'] == "retailer":
+
+        context['retail_user'] = {
             'username': token['username'],
             'retailer_id': token['retailer_id'],
             'phone': token['phone'],
             'name': token['name'],
         }
-    }
+
+    if token['acc_type'] == 'pickup':
+
+        context['pickup_user'] = {
+            'username' : token['username'],
+            'pickteam_id' : token['pickteam_id'],
+            'phone' : token['phone'],
+            'name' : token['name'],
+        }
 
     return context
 
 
+def get_user_from_token(decoded_token):
+
+    t_user = None
+    username = decoded_token['username']
+    acc_type = decoded_token['acc_type']
+    print("**********************")
+    print(acc_type)
+
+    if acc_type == "retailer":
+        t_user = RetailUser.objects.get(username=username)
+    if acc_type == "pickup":
+        t_user = PickupUser.objects.get(username=username)
+
+    if t_user is not None:
+        t_user = TurtlechainUser(t_user)
+    return t_user
+
 def get_retail_user_from_token(decoded_token):
+
 
     retail_user = {
         'username': decoded_token['username'],

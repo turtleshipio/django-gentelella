@@ -21,20 +21,18 @@ class TurtlechainUser:
     name = ""
 
     def __init__(self, obj):
-        print("*********************************")
-        print("*********************************")
-        print("*********************************")
-        print(obj)
-        print("*********************************")
-        print("*********************************")
+
         if obj.__class__.__name__ == "RetailUser":
             self.username = obj.username
             self.acc_type = "retail"
             self.retailer_id = obj.retailer_id
             self.retailer_name = obj.retailer_name
             self.name = obj.name
+
+            rp = RetailerPickteam.objects.get(retailer_name=obj.retailer_name)
+            self.pickteam_id = rp.pickteam_id
+
         elif obj.__class__.__name__== "PickupUser":
-            print("*********************************")
 
             self.username = obj.username
             self.acc_type = "pickup"
@@ -209,6 +207,7 @@ class Orders(models.Model):
     notify_id = models.CharField(max_length=100, default="")
     building = models.CharField(max_length=100, default="")
     pickteam_id = models.IntegerField()
+    retailer_name = models.CharField(max_length=30, default="")
 
     class Meta:
         managed = False
