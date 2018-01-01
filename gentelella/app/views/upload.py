@@ -206,11 +206,12 @@ def modal_view(request):
         manager.validate()
 
         orders, success, msg = manager.extract()
-
+        print(msg)
+        print("???????????????????????")
         if success:
-            return render(request, 'app/excel_modal.html', context={'orders': orders, 'retailer_name': retailer_name})
+            return render(request, 'app/excel_modal.html', context={'orders': orders, 'retailer_name': retailer_name, 'msg':None})
         else:
-            return render(request, 'app/excel_modal.html', context={'orders': None, 'retailer_name':None})
+            return render(request, 'app/excel_modal.html', context={'orders': None, 'retailer_name':None, 'msg':msg})
 
 
 

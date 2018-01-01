@@ -24,7 +24,7 @@ class UploadManager:
                 '구매자명', '구매자ID', '수취인명', '결제위치', '상품번호', '상품명', '옵션정보',
                 '수량', '상품가격', '판매자 상품코드', '구매자연락처',  '우편번호',
                 '출고지', '결제수단', '유입경로', '배송지', ]'''
-    required = ['도매명','층', '전화번호', '상가',  '호수', '수량', '사이즈 및 컬러', '도매가', '장끼명']
+    required = ['도매명','층', '전화번호', '상가',  '호수', '수량', '사이즈', '컬러', '도매가', '장끼명']
 
     head = {}
 
@@ -65,6 +65,7 @@ class UploadManager:
 
             diff = set(required) - set(header)
             print("**************************")
+            print("diff should be an empty set()")
             print(diff)
 
             if diff != set():
@@ -98,12 +99,16 @@ class UploadManager:
 
                 count = row[self.head['수량']]
                 price = row[self.head['도매가']]
+                print("1111111111111111111")
+                print(type(count))
+                print(type(price))
                 if type(count) == str:
                     count = int(count) if count.isdigit() else count
                 elif type(count) == int:
                     continue
                 elif type(count) == float:
                     count = int(count)
+
 
                 if type(price) == str:
                     price = int(price) if price.isdigit() else price
@@ -112,23 +117,31 @@ class UploadManager:
                 elif type(price) == float:
                     price = int(price)
 
+                print("222222222")
+                print(type(count))
+                print(type(price))
+
 
                 count = '%d' % int(count)
                 price = '%d' % int(price)
 
 
-                sizencolor = row[self.head['사이즈 및 컬러']]
-                ws_phone = row[self.head['전화번호']]
-                ws_name = row[self.head['도매명']]
-                product_name = row[self.head['장끼명']]
-                building = row[self.head['상가']]
-                floor = row[self.head['층']]
-                location = row[self.head['호수']]
 
+
+
+                size = str(row[self.head['사이즈']])
+                color = str(row[self.head['컬러']])
+                ws_phone = str(row[self.head['전화번호']])
+                ws_name = str(row[self.head['도매명']])
+                product_name = str(row[self.head['장끼명']])
+                building = str(row[self.head['상가']])
+                floor = str(row[self.head['층']])
+                location = str(row[self.head['호수']])
+
+                sizencolor = ' '.join([size, color])
 
                 order = {
-
-                    'sizencolor': sizencolor,
+                    'sizencolor' : sizencolor,
                     'ws_phone': ws_phone,
                     'ws_name': ws_name,
                     'product_name': product_name,
@@ -148,6 +161,8 @@ class UploadManager:
                 continue
 
             except Exception as e:
+                print("exception while excel extracting")
+                print(row)
                 msg = str(e)
                 continue
 
