@@ -38,11 +38,12 @@
               <table class="table table-striped projects">
                 <thead class="text-center">
                   <tr>
-                      <th><p class="text-center">선택</p></th>
+
                       <th><p class="text-center">상품명</p></th>
                       <th><p class="text-center">사이즈 및 색상</p></th>
                       <th><p class="text-center">수량</p></th>
                       <th><p class="text-center">가격</p></th>
+                      <th><p class="text-center">선택</p></th>
                   </tr>
                 </thead>
 
@@ -56,16 +57,17 @@
                     {%  for order in orders %}
 
                         <tr>
+
+                            <td><p>{{order.product_name}}</p></td>
+                            <td><p>{{order.sizencolor}}</p></td>
+                            <td><p>{{order.count}}</p></td>
+                            <td><p>{{order.price}}</p></td>
                             <td> <select class="form-control col-2" name="choice" id="sel{{order.order_id}}">
                                     <option value="{{order.order_id}}.approved">확인</option>
                                     <option value="{{order.order_id}}.error">미송</option>
                                     <option value="{{order.order_id}}.error">주문오류</option>
                                   </select>
                             </td>
-                            <td><p>{{order.product_name}}</p></td>
-                            <td><p>{{order.sizencolor}}</p></td>
-                            <td><p>{{order.count}}</p></td>
-                            <td><p>{{order.price}}</p></td>
 
 
 
