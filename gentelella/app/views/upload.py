@@ -108,7 +108,7 @@ def bulk_orders(request):
 
                 sender = KakaoSender()
 
-                phones = ['01088958454']
+                phones = ['01036678070']
                 for ws_name in notifies:
                     notify_id = notifies[ws_name]['notify_id']
                     order_id = notify_id[:7]
@@ -134,7 +134,7 @@ def bulk_orders(request):
 
                         sender.send_kakao_msg(phn)
                     sender.clear()
-                    phones = ['01088958454']
+                    phones = ['01036678070']
 
 
                 return HttpResponse("Ok")
