@@ -21,6 +21,7 @@ def home(request):
         context['home'] = None
         context['content'] = None
         context['t_user'] = utils.get_user_from_token(token)
+        context['ws_perm'] = True
         context['login_error'] = None
         context['signup_error'] = None
         return render(request, 'app/index.html', context=context)
@@ -53,12 +54,15 @@ def notify_success(request):
 
 def temp(request):
 
-    return render(request, 'app/alert.html')
+    return render(request, 'app/tables_dynamic.html')
 
 
 def retail_login(request, username, password):
-
     context = {}
+    context['login_error'] = ""
+    context['signup_error'] = ""
+    context['content'] = ""
+    context['ws_perm'] = False
 
     try:
         retail_user = RetailUser.objects.exclude(retailer_id=-1).get(username=username)
@@ -89,6 +93,8 @@ def pickup_login(request, username, password):
     context = {}
     context['login_error'] = ""
     context['signup_error'] = ""
+    context['content'] = ""
+    context['ws_perm'] = False
 
     try:
         pickup_user = PickupUser.objects.exclude(pickup_user_id=-1).get(username=username)
@@ -109,6 +115,7 @@ def pickup_login(request, username, password):
         context['login_error'] = True
         return context
 
+    print(context['ws_perm'])
     return context
 
 
@@ -155,7 +162,7 @@ def signup(request):
             phone = form.cleaned_data['phone']
             password = form.cleaned_data['password']
 
-            enc_password = sha256_crypt.encrypt(password)
+            enc_password = pwd_context.encrypt(password)
             retail_user = \
                 RetailUser(username=username, name=name,
                            password=enc_password, phone=phone, retailer_id=-1)

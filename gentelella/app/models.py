@@ -103,6 +103,33 @@ class User(models.Model):
         managed = False
         db_table = 'user'
 
+class Ws(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    ws_name = models.CharField(max_length=30)
+    building_name = models.CharField(max_length=30)
+    location = models.CharField(max_length=30)
+    floor = models.CharField(max_length=30)
+    ws_phone = models.CharField(max_length=30)
+    updated_time = models.DateTimeField(blank=True, null=True)
+    org_id = models.BigIntegerField()
+    acc_type = models.CharField(max_length=30)
+
+    class Meta:
+        managed = False
+        db_table = 'ws'
+
+class Permissions(models.Model):
+    policy_name = models.CharField(primary_key=True, max_length=30)
+    username = models.CharField(max_length=100)
+    acc_type = models.CharField(max_length=30)
+    org_id = models.BigIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'permissions'
+
+
+
 
 class Wholesalers(models.Model):
     ws_id = models.BigAutoField(primary_key=True)

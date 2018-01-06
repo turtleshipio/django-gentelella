@@ -5,6 +5,7 @@ from app.views import base, upload
 from app.views.order_list import OrderListView
 from app.views.credit_list import CreditListView
 from app.views.notify_list import NotifyListView
+from app.views.manage_ws import ManageWSListView
 
 urlpatterns = [
     # Matches any html file - to be used for gentella
@@ -25,5 +26,6 @@ urlpatterns = [
     url(r'^temp', base.temp, name='temp'),
     #url(r'^notify', base.notify, name="notify"),
     url(r'^notify/(?P<notify_id>\w{1,90})/$', NotifyListView.as_view(), name="notify_list"),
-    url(r'^order_confirm/$', base.order_confirm, name='order_confirm')
+    url(r'^order_confirm/$', base.order_confirm, name='order_confirm'),
+    url(r'^manage_ws/$', ManageWSListView.as_view(), name='manage_ws'),
 ]
