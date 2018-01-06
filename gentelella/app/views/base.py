@@ -20,8 +20,16 @@ def home(request):
         context = utils.get_context_from_token(token)
         context['home'] = None
         context['content'] = None
-        context['t_user'] = utils.get_user_from_token(token)
-        context['ws_perm'] = True
+        user = utils.get_user_from_token(token)
+        context['t_user'] = user
+
+
+        if Permissions.objects.filter(org_id=user.org_id, policy_name="wholesale").exists():
+            context['ws_perm'] = True
+        else:
+            context['ws_perm'] = False
+
+
         context['login_error'] = None
         context['signup_error'] = None
         return render(request, 'app/index.html', context=context)
@@ -69,12 +77,15 @@ def retail_login(request, username, password):
         pwd_valid = pwd_context.verify(password, retail_user.password)
 
         user = TurtlechainUser(retail_user)
+        org_id = user.org_id
         context['t_user'] = user
 
         if pwd_valid:
             token = utils.issue_token(username, retail_user.phone, retail_user.retailer_id, retail_user.retailer_name,
                                       retail_user.name)
             request.session['token'] = token
+            if Permissions.objects.filter(org_id=org_id, policy_name="wholesale").exists():
+                context['ws_perm'] = True
             return context
 
     except RetailUser.DoesNotExist:
@@ -101,11 +112,16 @@ def pickup_login(request, username, password):
         pwd_valid = pwd_context.verify(password, pickup_user.password)
 
         user = TurtlechainUser(pickup_user)
+        org_id = user.org_id
         context['t_user'] = user
+
 
         if pwd_valid:
             token = pickup_utils.issue_token(username, pickup_user.phone, pickup_user.pickup_user_id, pickup_user.name, pickup_user.pickteam_id)
             request.session['token'] = token
+
+            if Permissions.objects.filter(org_id=org_id, policy_name="wholesale").exists():
+                context['ws_perm'] = True
             return context
 
     except PickupUser.DoesNotExist:

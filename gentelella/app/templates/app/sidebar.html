@@ -26,7 +26,7 @@
 
       <ul class="nav side-menu">
         <li><a href="/home"><i class="fa fa-home"></i> 홈 </a></li>
-        {% if ws_perm is not None %}
+        {% if ws_perm is not None and ws_perm == True %}
         <li><a href="/manage_ws"><i class="fa fa-clone"></i> 도매관리 </a></li>
         {% endif %}
         <li><a href="/upload_bulk"><i class="fa fa-file-excel-o"></i> 대량주문 </a></li>

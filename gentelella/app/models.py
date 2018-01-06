@@ -19,6 +19,7 @@ class TurtlechainUser:
     pickup_user_id = ""
     pickteam_id = ""
     name = ""
+    org_id = ""
 
     def __init__(self, obj):
 
@@ -26,6 +27,7 @@ class TurtlechainUser:
             self.username = obj.username
             self.acc_type = "retail"
             self.retailer_id = obj.retailer_id
+            self.org_id = obj.retailer_id
             self.retailer_name = obj.retailer_name
             self.name = obj.name
 
@@ -39,6 +41,7 @@ class TurtlechainUser:
             self.pickteam_id = obj.pickteam_id
             self.pickup_user_id = obj.pickup_user_id
             self.name = obj.name
+            self.org_id = obj.pickteam_id
 
         else:
             raise ValueError
