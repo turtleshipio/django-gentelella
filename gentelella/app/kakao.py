@@ -47,13 +47,6 @@ class KakaoSender:
 
         self.kakao_msg = self.org_msg.format(order_id=order_id, retailer_name=retailer_name, prd1=prd1, prd_count=prd_count)
         notify_url = self.notify_url.format(notify_id=notify_id)
-        print("!!!!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!!!!")
-        print(self.button1)
-        print(notify_url)
-        print("!!!!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!!!!")
         self.button1['url_mobile'] = notify_url
 
     def set_sms(self, retailer_name, notify_id):

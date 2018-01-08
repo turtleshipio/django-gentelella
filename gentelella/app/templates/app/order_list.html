@@ -93,6 +93,8 @@
                                 <button type="button" class="btn btn-warning btn-xs">승인대기</button>
                             {%  elif order.status == "error" %}
                                 <button type="button" class="btn btn-danger btn-xs">주문실패</button>
+                            {%  elif order.status == "oos" %}
+                                <button type="button" class="btn btn-danger btn-xs">품절</button>
                             {%  endif %}
                         </td>
                         <td>
@@ -115,7 +117,7 @@
                       </li>
                       {% endif %}
                       <li class="">
-                          <span>페이지 {{ page_obj.number}} 중 {{ page_obj.paginator.num_pages }}</span>
+                          <span>페이지 {{ page_obj.number}} 중 {{ num_pages }}</span>
                       </li>
                       {% if page_obj.has_next %}
                       <li>

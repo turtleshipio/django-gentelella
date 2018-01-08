@@ -123,15 +123,6 @@ def bulk_orders(request):
                     if phn not in phones:
                         phones.append(phn)
                     for phn in phones:
-                        print("!!!!!!!!!!!!!")
-                        print("!!!!!!!!!!!!!")
-                        print("!!!!!!!!!!!!!")
-                        print(phn)
-                        print("!!!!!!!!!!!!!")
-                        print("!!!!!!!!!!!!!")
-                        print("!!!!!!!!!!!!!")
-
-
                         sender.send_kakao_msg(phn)
                     sender.clear()
                     phones = ['01036678070']

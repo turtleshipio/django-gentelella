@@ -13,7 +13,7 @@ class OrderListView(generic.ListView):
     model = Orders
     context_object_name = 'orders'
     template_name = "app/order_list.html"
-    paginate_by = 10
+    paginate_by = 20
 
 
     #@method_decorator(require_token())
@@ -38,14 +38,17 @@ class OrderListView(generic.ListView):
             orders = Orders.objects.exclude(is_deleted="true").filter(pickteam_id=pickteam_id).order_by('-order_id').values('order_id', 'ws_name', 'created_time', 'count', 'retailer_name',
                                                                  'price', 'status')
 
-
         paginator = Paginator(orders, self.paginate_by)
         page = self.request.GET.get('page')
         context = super(OrderListView, self).get_context_data(**kwargs)
 
 
-        context['token'] = utils.get_decoded_token(token)
 
+        context['token'] = utils.get_decoded_token(token)
+        context['ws_perm'] = None
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print(str(paginator.num_pages))
+        num_pages = paginator.num_pages
         try:
             paged_orders = paginator.page(page)
         except PageNotAnInteger:
@@ -56,6 +59,7 @@ class OrderListView(generic.ListView):
         context['orders'] = paged_orders
         t_user = utils.get_user_from_token(token)
         context['t_user'] = t_user
+        context['num_pages'] = num_pages
         print(t_user.acc_type)
         #context['retail_user'] = utils.get_retail_user_from_token(token)
 

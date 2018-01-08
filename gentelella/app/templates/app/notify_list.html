@@ -64,6 +64,7 @@
                             <td><p>{{order.price}}</p></td>
                             <td> <select class="form-control col-2" name="choice" id="sel{{order.order_id}}">
                                     <option value="{{order.order_id}}.approved">확인</option>
+                                    <option value="{{order.order_id}}.oos">품절</option>
                                     <option value="{{order.order_id}}.error">미송</option>
                                     <option value="{{order.order_id}}.error">주문오류</option>
                                   </select>
