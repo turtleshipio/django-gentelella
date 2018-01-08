@@ -29,13 +29,13 @@ class OrderListView(generic.ListView):
         orders = []
         if acc_type == "retailer":
             retailer_name = token['retailer_name']
-            orders = Orders.objects.filter(retailer_name=retailer_name).order_by('-order_id').values('order_id', 'ws_name', 'created_time','retailer_name',
+            orders = Orders.objects.exclude(is_deleted="true").filter(retailer_name=retailer_name).order_by('-order_id').values('order_id', 'ws_name', 'created_time','retailer_name',
                                                                            'count', 'price', 'status')
 
 
         if acc_type == "pickup":
             pickteam_id = token['pickteam_id']
-            orders = Orders.objects.filter(pickteam_id=pickteam_id).order_by('-order_id').values('order_id', 'ws_name', 'created_time', 'count', 'retailer_name',
+            orders = Orders.objects.exclude(is_deleted="true").filter(pickteam_id=pickteam_id).order_by('-order_id').values('order_id', 'ws_name', 'created_time', 'count', 'retailer_name',
                                                                  'price', 'status')
 
 
