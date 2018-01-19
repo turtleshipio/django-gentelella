@@ -94,7 +94,7 @@ def bulk_orders(request):
                     status="onwait",
                     notify_id=notify_id,
                     pickteam_id=pickteam_id,
-                    retailer_name=retailer_name,
+                        retailer_name=retailer_name,
 
                 )
 

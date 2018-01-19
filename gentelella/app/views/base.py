@@ -86,16 +86,16 @@ def retail_login(request, username, password):
             request.session['token'] = token
             if Permissions.objects.filter(org_id=org_id, policy_name="wholesale").exists():
                 context['ws_perm'] = True
-            return context
+            return context, True
 
     except RetailUser.DoesNotExist:
         context['login_error'] = True
-        return context
+        return context, False
     except ValueError:
         context['login_error'] = True
-        return context
+        return context, False
 
-    return context
+    return context, False
 
 
 
@@ -122,17 +122,17 @@ def pickup_login(request, username, password):
 
             if Permissions.objects.filter(org_id=org_id, policy_name="wholesale").exists():
                 context['ws_perm'] = True
-            return context
+            return context, True
 
     except PickupUser.DoesNotExist:
         context['login_error'] = True
-        return context
+        return context, False
     except ValueError:
         context['login_error'] = True
-        return context
+        return context, False
 
     print(context['ws_perm'])
-    return context
+    return context, False
 
 
 
@@ -145,22 +145,33 @@ def login(request):
     context['signup_error'] = None
 
     if request.method == "GET":
+        request.session.flush()
+        request.session.modified = True
         return render(request, 'app/login.html', context=context)
+
     if request.method == "POST":
 
         context = None
+        success = False
         username = request.POST['username']
         password = request.POST['password']
         acc_type = request.POST['account-type']
 
         if acc_type == "retail":
-            context = retail_login(request, username, password)
+            context, success = retail_login(request, username, password)
 
         if acc_type == "pickup":
-            context = pickup_login(request, username, password)
+            context, success = pickup_login(request, username, password)
 
-        return render(request, 'app/index.html', context=context)
-
+        if success:
+            return render(request, 'app/index.html', context=context)
+        else:
+            request.session.flush()
+            request.session.modified = True
+            context = {}
+            context['login_error'] = None
+            context['signup_error'] = None
+            return render(request,'app/login.html', context=context)
 
 
 
