@@ -13,8 +13,14 @@ def require_token():
                 if token is not None:
                     return function(request, *args, **kwargs)
                 else:
+                    request.session.flush()
+                    request.session.modified = True
                     return redirect('/')
             except KeyError:
+                request.session.flush()
+                request.session.modified = True
+                return redirect('/')
+            except:
                 request.session.flush()
                 request.session.modified = True
                 return redirect('/')
