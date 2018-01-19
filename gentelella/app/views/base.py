@@ -62,7 +62,7 @@ def notify_success(request):
 
 def temp(request):
 
-    return render(request, 'app/tables_dynamic.html')
+    return render(request, 'app/page2.html')
 
 
 def retail_login(request, username, password):
