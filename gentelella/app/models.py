@@ -200,7 +200,9 @@ class Orders(models.Model):
     count = models.IntegerField(null=True, blank=True)
     floor = models.CharField(max_length=30, blank=True, default="")
     location = models.CharField(max_length=30, blank=True, default="")
-    oos = models.CharField(max_length=30, blank=True, null=True)
+    oos = models.IntegerField
+    credit = models.IntegerField
+    memo = models.CharField(max_length=100, blank=True, default="")
 
 
     updated_time = models.DateTimeField()
