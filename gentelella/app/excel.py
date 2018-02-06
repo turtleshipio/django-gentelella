@@ -138,7 +138,7 @@ class UploadManager:
                 floor = str(row[self.head['층']])
                 location = str(row[self.head['호수']])
 
-                sizencolor = ' '.join([size, color])
+                sizencolor = ' '.join([size, ' / ', color])
 
                 order = {
                     'sizencolor' : sizencolor,

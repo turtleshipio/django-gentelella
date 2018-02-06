@@ -125,7 +125,7 @@ def bulk_orders(request):
                     for phn in phones:
                         sender.send_kakao_msg(phn)
                     sender.clear()
-                    phones = ['01036678070']
+                    phones = ['01036678070', '01088958454']
 
 
                 return HttpResponse("Ok")
