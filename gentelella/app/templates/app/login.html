@@ -17,6 +17,12 @@
 		}
 
 </script>
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<!-- bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 </head>
 
 {% block stylesheets %}
@@ -27,6 +33,10 @@
 
 
 {% endblock stylesheets %}
+
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
 
 {% block body_class %}login{% endblock body_class %}
 
@@ -40,8 +50,8 @@
       <div class="animate form login_form">
             {% block login_error %}
            {% if login_error !=  None %}
-            <div class="alert alert-danger alert-dismissable fade in">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <div class="alert alert-danger fade in">
+             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>로그인 실패  </strong>다시 시도해주세요.
             </div>
             {% endif %}
@@ -65,15 +75,19 @@
             <br/>
             <br/>
             <div>
-              <input type="submit" class="btn btn-info submit" value="로그인하기">
-              <a class="reset_pass" href="#">비밀번호를 잊으셨나요?</a>
+                <input type="submit" name="login-submit" class="btn btn-success submit" value="로그인하기">
+            <a class="reset_pass" href="#">비밀번호를 잊으셨나요?</a>
             </div>
+
+
+
+
 
             <div class="clearfix"></div>
 
             <div class="separator">
-              <p class="change_link">터틀체인이 처음이신가요?
-                <a href="#signup" class="to_register"> 여기를 클릭하세요. </a>
+              <p>터틀체인이 처음이신가요?
+                <a href="signup/"> 여기를 클릭하세요. </a>
               </p>
 
               <div class="clearfix"></div>
@@ -100,7 +114,7 @@
               {% csrf_token %}
             <h1>터틀체인</h1>
             <div>
-                    <input type = "text" name="username" class="form-control" placeholder="아이디: 영문 6자 이상, 12자 이하" minlength="6" maxlength="12" required/>
+                    <input type = "text" name="username" class="form-control" placeholder="아이디: 영문 4자 이상, 12자 이하" minlength="4" maxlength="12" required/>
 
             </div>
               <div>

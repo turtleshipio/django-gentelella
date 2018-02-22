@@ -1,58 +1,142 @@
-$(function() {
-
-
-    // This function gets cookie with a given name
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie != '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
+// document.getElementById("check-username").addEventListener("click", duplicate_user);
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
         }
-        return cookieValue;
     }
-    var csrftoken = getCookie('csrftoken');
+    return cookieValue;
+}
 
-    /*
-    The functions below will create a header with csrftoken
-    */
+jQuery(window).load(function () {
+    //alert('page is loaded');
 
-    function csrfSafeMethod(method) {
-        // these HTTP methods do not require CSRF protection
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    $('.flat').each(function(i, obj){
+        //$(this).css
+    });
+
+});
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+$('div#duplicate-username').click(function(event){
+    console.log("it works!!");
+
+    var data= {};
+    var username = "";
+    username = $('input[name="username"]').val();
+    data.username = username;
+
+
+
+    if (username.length >= 4 && isAlphaNumeric(username)){
+        sendAjaxForUserDuplicateCheck(data);
+    } else{
+         console.log("WRONG!!!");
+         var p = $('#check-username');
+         p.text("잘못된 아이디 입니다. ");
+         p.css('color', 'red');
     }
-    function sameOrigin(url) {
-        // test that a given url is a same-origin URL
-        // url could be relative or scheme relative or absolute
-        var host = document.location.host; // host + port
-        var protocol = document.location.protocol;
-        var sr_origin = '//' + host;
-        var origin = protocol + sr_origin;
-        // Allow absolute or scheme relative URLs to same origin
-        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-            // or any other URL that isn't scheme relative or absolute i.e relative.
-            !(/^(\/\/|http:|https:).*/.test(url));
+
+});
+
+$( "#password-check" ).blur(function() {
+    var password = $('#password').val();
+    var password_check = $('#password-check').val();
+    var p = $('#p-password-check');
+
+
+    if (password === password_check){
+        if (password.length < 8){
+            p.text("8자리 이상이어야 합니다");
+            p.css('color', 'red');
+        } else {
+            p.text("");
+        }
+    } else{
+
+        p.text("비밀번호가 일치하지 않습니다");
+        p.css('color', 'red');
     }
+});
+
+
+
+function isAlphaNumeric(str) {
+  var code, i, len;
+
+
+  for (i = 0, len = str.length; i < len; i++) {
+    code = str.charCodeAt(i);
+    if (i == 0 && code > 47 && code < 58){
+        return false;
+    }
+    if (!(code > 47 && code < 58) && // numeric (0-9)
+        !(code > 64 && code < 91) && // upper alpha (A-Z)
+        !(code > 96 && code < 123)) { // lower alpha (a-z)
+      return false;
+    }
+  }
+  return true;
+};
+
+function sendAjaxForUserDuplicateCheck(data) {
+
+    var csrf = getCookie('csrftoken');
 
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-                // Send the token to same-origin, relative URLs only.
-                // Send the token only if the method warrants CSRF protection
-                // Using the CSRFToken value acquired earlier
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf);
             }
         }
     });
 
-});
+    $.ajax({
+        url : "/check_duplicate_username/",
+        type : "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        processData : false,
+        contentType: false,
+        success : function(result){
+            console.log(result['msg']);
+
+            exists = result['msg']
+            var p = $('#check-username');
+
+            if(exists === 'ok'){
+                p.text("사용가능한 아이디입니다.");
+                p.css('color', 'green');
+            } else{
+                p.text("사용할 수 없는 아이디입니다.");
+                p.css('color', 'red');
+            }
+
+        },
+        error : function(result){
+            console.log(result.responseText);
+            var p = $('#check-username');
+            p.text("사용할 수 없는 아이디입니다.");
+            p.css('color', 'red');
+        }
+    });
+
+}
+
+
 
 $('button#btn-confirm-upload').click(function(event){
 
@@ -60,8 +144,6 @@ $('button#btn-confirm-upload').click(function(event){
     var retailer_name = "";
     retailer_name = $('h3[name=retailer_name]').text();
     data.retailer_name = retailer_name;
-
-    console.log(data,retailer_name);
 
     var orders = [];
 
@@ -107,6 +189,8 @@ $('form#excel-modal').on('submit', function(event){
 
 });
 
+
+
 function create_post(formData) {
     console.log("create post is working!"); // sanity check
     $.ajax({
@@ -124,3 +208,4 @@ function create_post(formData) {
 
     });
 };
+

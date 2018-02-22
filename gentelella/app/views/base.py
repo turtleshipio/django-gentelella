@@ -11,6 +11,8 @@ from app.backend import RetailUserBackend
 from app import utils
 from app.decorators import require_token
 from app import pickup_utils
+import json
+
 @require_token()
 def home(request):
 
@@ -35,6 +37,53 @@ def home(request):
         return render(request, 'app/index.html', context=context)
     except KeyError:
         return redirect('/')
+
+
+def signup_check(request):
+
+    data_js = json.loads(request.body.decode('utf-8'))
+    username = data_js['username']
+    payload = {'msg': None}
+    try:
+        exists = RetailUser.objects.filter(username=username).exists()
+
+        if exists:
+            payload['msg'] = 'error'
+        else:
+            payload['msg'] = 'ok'
+
+        return HttpResponse(json.dumps(payload))
+
+    except RetailUser.DoesNotExist:
+        return HttpResponse("error")
+    return HttpResponse(str(e))
+
+
+
+def check_business_number(request):
+    print("******************")
+    print("******************")
+    print("******************")
+    print("******************")
+    print("******************")
+    print("******************")
+
+    data_js = json.loads(request.body.decode('utf-8'))
+    business_number = data_js['business_number']
+    payload = {'msg': None}
+    try:
+        exists = Retailer.objects.filter(business_number=business_number).exists()
+
+        if exists:
+            payload['msg'] = 'error'
+        else:
+            payload['msg'] = 'ok'
+
+        return HttpResponse(json.dumps(payload))
+
+    except Retailer.DoesNotExist:
+        return HttpResponse("error")
+
 
 
 def logout(request):
@@ -62,7 +111,7 @@ def notify_success(request):
 
 def temp(request):
 
-    return render(request, 'app/page2.html')
+    return render(request, 'app/form.html')
 
 
 def retail_login(request, username, password):
@@ -157,6 +206,8 @@ def login(request):
         password = request.POST['password']
         acc_type = request.POST['account-type']
 
+
+
         if acc_type == "retail":
             context, success = retail_login(request, username, password)
 
@@ -169,52 +220,60 @@ def login(request):
             request.session.flush()
             request.session.modified = True
             context = {}
-            context['login_error'] = None
-            context['signup_error'] = None
+            context['login_error'] = True
+            context['signup_error'] = True
             return render(request,'app/login.html', context=context)
 
 
 
-@require_http_methods(['POST'])
+@require_http_methods(['GET', 'POST'])
 def signup(request):
     context = {}
-    try:
 
-        form = SignUpForm(request.POST)
+    if request.method == "GET":
 
-        if form.is_valid():
+        styles = StoreSyles.objects.values_list('style_en', 'style_kr')
+        context['styles'] = styles
+        return render(request, 'app/signup-form.html', context=context)
 
-            username = form.cleaned_data['username']
-            name = form.cleaned_data['name']
-            phone = form.cleaned_data['phone']
-            password = form.cleaned_data['password']
+    if request.method == "POST":
+        try:
 
-            enc_password = pwd_context.encrypt(password)
-            retail_user = \
-                RetailUser(username=username, name=name,
-                           password=enc_password, phone=phone, retailer_id=-1)
-            retail_user.save()
+            form = SignUpForm(request.POST)
 
-            if retail_user is None:
-                retail_user = {'username': 'test'}
+            if form.is_valid():
 
-            context = {'retail_user': retail_user}
+                username = form.cleaned_data['username']
+                name = form.cleaned_data['name']
+                phone = form.cleaned_data['phone']
+                password = form.cleaned_data['password']
 
-            return render(request, template_name='app/index.html', context=context)
+                enc_password = pwd_context.encrypt(password)
+                retail_user = \
+                    RetailUser(username=username, name=name,
+                               password=enc_password, phone=phone, retailer_id=-1)
+                retail_user.save()
 
-        else:
+                if retail_user is None:
+                    retail_user = {'username': 'test'}
+
+                context = {'retail_user': retail_user}
+
+                return render(request, template_name='app/index.html', context=context)
+
+            else:
+                context['signup_error'] = True
+                return render(request, 'app/login.html', context=context)
+        except KeyError:
+            request.session.flush()
+            request.session.modified = True
             context['signup_error'] = True
             return render(request, 'app/login.html', context=context)
-    except KeyError:
-        request.session.flush()
-        request.session.modified = True
-        context['signup_error'] = True
-        return render(request, 'app/login.html', context=context)
-    except:
-        request.session.flush()
-        request.session.modified = True
-        context['signup_error'] = True
-        return render(request, 'app/login.html', context=context)
+        except:
+            request.session.flush()
+            request.session.modified = True
+            context['signup_error'] = True
+            return render(request, 'app/login.html', context=context)
 
 
 def gentella_html(request):

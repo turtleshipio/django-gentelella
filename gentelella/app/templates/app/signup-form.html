@@ -1,0 +1,141 @@
+{% extends "app/base.html" %}
+
+
+{% block stylesheets %}
+  {{ block.super }}
+  <!-- Ion.RangeSlider -->
+  <link href="/static/vendors/normalize-css/normalize.css" rel="stylesheet">
+  <link href="/static/vendors/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet">
+  <link href="/static/vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+  <!-- Bootstrap Colorpicker -->
+  <link href="/static/vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+
+  <link href="/static/vendors/cropper/dist/cropper.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+
+
+{% block content %}
+
+<script src="/static/build/js/signup.js"></script>
+  <div class="right_col" role="main">
+    <div class="">
+
+
+      <div class="clearfix"></div>
+
+      <div class="row">
+        <!-- form input mask -->
+
+          <div class="x_panel">
+            <div class="x_title text-center">
+              <h1>소매전용 회원가입</h1>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              <br />
+
+
+              <form action="signup/" class="form-horizontal form-label-left">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label class="control-label col-md-4 col-sm-4 col-xs-4">아이디</label>
+                  <div class="col-md-7 col-sm-7 col-xs-7">
+                    <input name="username" placeholder="4자 이상" type="text" class="form-control" minlength="4" maxlength="20" required>
+
+                    <div id="duplicate-username" class="btn btn-default btn-sm col-md-2 col-sm-2">중복확인</div>
+                    <p id="check-username" class="col-md-offset-2"></p>
+
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-4 col-sm-4 col-xs-4">비밀번호</label>
+                  <div class="col-md-7 col-sm-7 col-xs-7">
+                    <input id="password" type="password" class="form-control" placeholder="영문, 숫자 8자리 이상" minlength="8" required="">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-4 col-sm-4 col-xs-4">비밀번호 재입력</label>
+                  <div class="col-md-7 col-sm-7 col-xs-7">
+                    <input id="password-check" type="password" class="form-control" placeholder="영문, 숫자 8자리 이상" minlength="8" required="">
+                     <p id="p-password-check"></p>
+                  </div>
+                </div>
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                  <label class="control-label col-md-4 col-sm-4 col-xs-4">소매점 이름</label>
+                  <div class="col-md-7 col-sm-7 col-xs-7">
+                    <input type="text" class="form-control" >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-4 col-sm-4 col-xs-4">사업자 번호</label>
+                  <div class="col-md-7 col-sm-7 col-xs-7">
+                    <input id="business-number" type="text" class="form-control" data-inputmask="'mask' : '999-99-99999'">
+                    <p id="p-business-number-check"></p>
+                  </div>
+
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-4 col-sm-4 col-xs-4">대표자 이름</label>
+                  <div class="col-md-7 col-sm-7 col-xs-7">
+                    <input type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-4 col-sm-4 col-xs-4">대표자 휴대폰 번호</label>
+                  <div class="col-md-7 col-sm-7 col-xs-7">
+                    <input type="text" class="form-control" data-inputmask="'mask' : '(999) 9999-9999'">
+                  </div>
+                </div>
+                {% if styles %}
+                <div class="form-group">
+                  <label class="control-label col-md-4 col-sm-4 col-xs-4">스타일</label>
+                    <br/>
+                    <br/>
+                    {% for style in styles %}
+                    <div class="row">
+                      <div class="col-md-offset-5 col-sm-offset-4 col-xs-offset-4">
+                        <input type="checkbox" value="{{ style.0 }}" class="style-checkboxes" /> {{ style.1 }}
+                      </div>
+                    </div>
+                    {% endfor %}
+                    <br/>
+                </div>
+                {% endif %}
+                <div class="ln_solid"></div>
+
+                <div class="form-group">
+                  <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 col-md-offset-5">
+                    <button type="submit" name="signup" value="cancel" class="btn btn-primary">취소</button>
+                    <button type="submit" name="signup" value="confirm" class="btn btn-success">가입하기</button>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+        <!-- /form input mask -->
+
+      </div>
+
+
+
+
+
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super}}
+  <!-- Ion.RangeSlider -->
+  <script src="/static/vendors/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
+  <!-- Bootstrap Colorpicker -->
+  <script src="/static/vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+  <!-- jquery.inputmask -->
+  <script src="/static/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+  <!-- jQuery Knob -->
+  <script src="/static/vendors/jquery-knob/dist/jquery.knob.min.js"></script>
+  <!-- Cropper -->
+  <script src="/static/vendors/cropper/dist/cropper.min.js"></script>
+{% endblock javascripts %}

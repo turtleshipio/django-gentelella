@@ -280,3 +280,13 @@ class Pickteam(models.Model):
     class Meta:
         managed = False
         db_table = 'pickteam'
+
+class StoreSyles(models.Model):
+
+    style_id = models.BigIntegerField(primary_key=True)
+    style_en = models.CharField(max_length=1024)
+    style_kr = models.CharField(max_length=1024)
+
+    class Meta:
+        managed = False
+        db_table = 'store_styles'
