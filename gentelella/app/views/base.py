@@ -232,13 +232,24 @@ def signup(request):
 
     if request.method == "GET":
 
+
         styles = StoreSyles.objects.values_list('style_en', 'style_kr')
         context['styles'] = styles
         return render(request, 'app/signup-form.html', context=context)
 
     if request.method == "POST":
-        try:
+        print("????")
+        context['login_error'] = None
+        context['signup_error'] = None
 
+        if 'signup-cancel' in request.POST:
+
+            return redirect('/home')
+
+        return render(request, 'app/signup-form.html', context=context)
+
+        """ 
+        try:
             form = SignUpForm(request.POST)
 
             if form.is_valid():
@@ -275,7 +286,7 @@ def signup(request):
             context['signup_error'] = True
             return render(request, 'app/login.html', context=context)
 
-
+        """
 def gentella_html(request):
     context = {}
     # The template to be loaded as per gentelella.

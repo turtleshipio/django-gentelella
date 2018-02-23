@@ -36,67 +36,68 @@
               <br />
 
 
-              <form action="signup/" class="form-horizontal form-label-left">
+              <form id="signup-form" action="/signup/" method="post" class="form-horizontal form-label-left">
                 {% csrf_token %}
                 <div class="form-group">
-                  <label class="control-label col-md-4 col-sm-4 col-xs-4">아이디</label>
-                  <div class="col-md-7 col-sm-7 col-xs-7">
-                    <input name="username" placeholder="4자 이상" type="text" class="form-control" minlength="4" maxlength="20" required>
+                  <label class="control-label col-md-offset-1  col-md-4 col-sm-4 col-xs-4">아이디</label>
+                  <div class="col-md-3 col-sm-7 col-xs-7">
+                    <input name="username" id="username" placeholder="4자 이상" type="text" class="form-control" minlength="4" maxlength="20" required>
 
-                    <div id="duplicate-username" class="btn btn-default btn-sm col-md-2 col-sm-2">중복확인</div>
+                    <div id="duplicate-username" class="btn btn-default btn-sm col-md-4 col-sm-2">중복확인</div>
+                    <p></p>
                     <p id="check-username" class="col-md-offset-2"></p>
 
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="control-label col-md-4 col-sm-4 col-xs-4">비밀번호</label>
-                  <div class="col-md-7 col-sm-7 col-xs-7">
+                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">비밀번호</label>
+                  <div class="col-md-3 col-sm-7 col-xs-7">
                     <input id="password" type="password" class="form-control" placeholder="영문, 숫자 8자리 이상" minlength="8" required="">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="control-label col-md-4 col-sm-4 col-xs-4">비밀번호 재입력</label>
-                  <div class="col-md-7 col-sm-7 col-xs-7">
+                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">비밀번호 재입력</label>
+                  <div class="col-md-3 col-sm-7 col-xs-7">
                     <input id="password-check" type="password" class="form-control" placeholder="영문, 숫자 8자리 이상" minlength="8" required="">
                      <p id="p-password-check"></p>
                   </div>
                 </div>
                 <div class="ln_solid"></div>
                 <div class="form-group">
-                  <label class="control-label col-md-4 col-sm-4 col-xs-4">소매점 이름</label>
-                  <div class="col-md-7 col-sm-7 col-xs-7">
-                    <input type="text" class="form-control" >
+                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">소매점 이름</label>
+                  <div class="col-md-3 col-sm-7 col-xs-7">
+                    <input type="text" id="retailer-name" class="form-control" >
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="control-label col-md-4 col-sm-4 col-xs-4">사업자 번호</label>
-                  <div class="col-md-7 col-sm-7 col-xs-7">
+                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">사업자 번호</label>
+                  <div class="col-md-3 col-sm-7 col-xs-7">
                     <input id="business-number" type="text" class="form-control" data-inputmask="'mask' : '999-99-99999'">
                     <p id="p-business-number-check"></p>
                   </div>
 
                 </div>
                 <div class="form-group">
-                  <label class="control-label col-md-4 col-sm-4 col-xs-4">대표자 이름</label>
-                  <div class="col-md-7 col-sm-7 col-xs-7">
-                    <input type="text" class="form-control">
+                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">대표자 이름</label>
+                  <div class="col-md-3 col-sm-7 col-xs-7">
+                    <input type="text" id="name" class="form-control">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="control-label col-md-4 col-sm-4 col-xs-4">대표자 휴대폰 번호</label>
-                  <div class="col-md-7 col-sm-7 col-xs-7">
-                    <input type="text" class="form-control" data-inputmask="'mask' : '(999) 9999-9999'">
+                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">대표자 휴대폰 번호</label>
+                  <div class="col-md-3 col-sm-7 col-xs-7">
+                    <input type="text" id="phone" class="form-control" data-inputmask="'mask' : '(999) 9999-9999'">
                   </div>
                 </div>
                 {% if styles %}
                 <div class="form-group">
-                  <label class="control-label col-md-4 col-sm-4 col-xs-4">스타일</label>
+                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">스타일</label>
                     <br/>
                     <br/>
                     {% for style in styles %}
                     <div class="row">
-                      <div class="col-md-offset-5 col-sm-offset-4 col-xs-offset-4">
-                        <input type="checkbox" value="{{ style.0 }}" class="style-checkboxes" /> {{ style.1 }}
+                      <div class="col-md-offset-6 col-sm-offset-4 col-xs-offset-4">
+                        <input type="checkbox" name="style-checkbox[]" value="{{ style.0 }}" class="style-checkboxes" /> {{ style.1 }}
                       </div>
                     </div>
                     {% endfor %}
@@ -107,16 +108,14 @@
 
                 <div class="form-group">
                   <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 col-md-offset-5">
-                    <button type="submit" name="signup" value="cancel" class="btn btn-primary">취소</button>
-                    <button type="submit" name="signup" value="confirm" class="btn btn-success">가입하기</button>
+                    <button type="submit"  value="cancel" class="btn btn-primary" formnovalidate>뒤로가기</button>
+                    <button type="submit"  value="confirm" class="btn btn-success" formnovalidate >가입하기</button>
                   </div>
                 </div>
-
               </form>
             </div>
           </div>
 
-        <!-- /form input mask -->
 
       </div>
 
