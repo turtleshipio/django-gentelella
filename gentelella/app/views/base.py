@@ -229,6 +229,7 @@ def login(request):
 @require_http_methods(['GET', 'POST'])
 def signup(request):
     context = {}
+    context['styles'] = None
 
     if request.method == "GET":
 
@@ -243,8 +244,25 @@ def signup(request):
         context['signup_error'] = None
 
         if 'signup-cancel' in request.POST:
-
+            print("something wrong")
             return redirect('/home')
+
+        data_js = json.loads(request.body.decode('utf-8'))
+        username = data_js['username']
+        password = data_js['password']
+        retailer_name = data_js['retailer_name']
+        business_number = data_js['business_number']
+        name = data_js['name']
+        phone = data_js['phone']
+        styles = data_js['styles']
+
+        print("username is:\t{0}".format(username))
+        print("password is:\t{0}".format(password))
+        print("retailer_name is:\t{0}".format(retailer_name))
+        print("business_number is:\t{0}".format(business_number))
+        print("name is:\t{0}".format(name))
+        print("phone is:\t{0}".format(phone))
+        print("styles is:\t{0}".format(styles))
 
         return render(request, 'app/signup-form.html', context=context)
 

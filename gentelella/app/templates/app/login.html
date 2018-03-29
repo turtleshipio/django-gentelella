@@ -121,24 +121,8 @@
                     <input type = "text" name="name" class="form-control" placeholder="이름" minlength="2" maxlength="5" required/>
 
             </div>
-            <div>
-              <input type="text" name="phone" class="form-control" placeholder="전화번호:  띄어쓰기 없이 써주세요" required=""  onkeydown="return numbersOnly(event)" maxlength="11" required/>
-            </div>
-                 <script>
- function numbersOnly(event) {
-			event = event || window.event;
-			var keyID = (event.which) ? event.which : event.keyCode;
-			if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 )
-			{
-				return;
-			}				return false;
-			else
-			{
 
-			}
-		}
 
-</script>
             <div>
               <input type="password" name="password" class="form-control" placeholder="비밀번호: 영문, 숫자 조합 8자리 이상" minlength="8" required />
             </div>

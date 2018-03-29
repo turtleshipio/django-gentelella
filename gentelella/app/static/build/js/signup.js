@@ -164,7 +164,6 @@ function sendAjaxForBizNumCheck(data) {
         processData : false,
         contentType: false,
         success : function(result){
-            console.log("hiii?");
             exists = result['msg'];
             console.log(exists);
             var p = $('#p-business-number-check');
@@ -210,56 +209,75 @@ $('#signup-form').submit(function(e){
         return false;
     }
 
-    console.log("1");
     if (isWhiteSpace(password) || password.length < 8){
         alert("비밀번호는 8자리 이상이어야 합니다.");
         return false;
     }
-    console.log("2");
+
     if (password !== password_check){
         alert("비밀번호가 일치하지 않습니다.");
         return false;
     }
-    console.log("3");
+
     if (isWhiteSpace(retailer_name)){
         alert("소매명을 확인해주세요");
         return false;
     }
-    console.log("4");
+
     if (isWhiteSpace(name)){
         alert("대표자 이름을 확인해주세요");
         return false;
     }
-    console.log("5");
+
     if (!isNumeric(business_number)|| business_number.length !== 10 ){
         alert("사업자 등록번호를 확인해주세요");
         return false;
     }
-    console.log("6");
+
     if (!isNumeric(phone) || phone.length < 10 || phone.length > 11){
         alert("전화번호를 확인해주세요");
         return false;
     }
 
+    var styles = [];
+    $('[id="styles"]:checked').each(function(){ styles.push(this.value); });
+    console.log("styles???");
+    console.log(styles);
 
-    console.log("7");
 
-    /*
-    if (username.length >= 4 || isAlphaNumeric(username)){
-        console.log("x");
-        data = {};
-        data.username = username;
-        sendAjaxForUsernameFormCheck(data);
-        return false;
-    }*/
-    console.log("8");
-    //if (isNumeric(business_number)|| business_number.length === 10 ){
-    //    sendAjaxForUsernameFormCheck(username);
-    //    return false;
-    //}
+    var data = {};
+    data.username = username;
+    data.password = password;
+    data.retailer_name = retailer_name;
+    data.business_number = business_number;
+    data.name = name;
+    data.phone = phone;
+    data.styles = styles;
 
-     window.location.replace("/");
-     return true;
+    $.ajax({
+        url : "/signup/",
+        type : "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        processData : false,
+        contentType: false,
+        success : function(result){
+
+            alert("회원가입성공");
+            window.location.replace("/home/");
+
+
+        },
+        error : function(result){
+             window.location.replace("/signup/");
+        }
+
+    });
+
+
+
+    return true;
 
 
 

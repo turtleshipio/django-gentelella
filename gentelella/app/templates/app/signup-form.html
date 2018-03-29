@@ -97,7 +97,7 @@
                     {% for style in styles %}
                     <div class="row">
                       <div class="col-md-offset-6 col-sm-offset-4 col-xs-offset-4">
-                        <input type="checkbox" name="style-checkbox[]" value="{{ style.0 }}" class="style-checkboxes" /> {{ style.1 }}
+                        <input id="styles" type="checkbox" name="style-checkbox[]" value="{{ style.0 }}" class="style-checkboxes" /> {{ style.1 }}
                       </div>
                     </div>
                     {% endfor %}
