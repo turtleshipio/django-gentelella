@@ -5,3 +5,7 @@ passlib
 PyJWT
 xlrd
 django-widget-tweaks
+
+# requires yum install mysql-devel
+mysqlclient
+

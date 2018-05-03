@@ -4,14 +4,21 @@ from django.views.decorators.http import require_http_methods
 from passlib.apps import custom_app_context as pwd_context
 
 from app.models import *
+
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
 from django.shortcuts import redirect, render
 from app.forms import *
 from app.backend import RetailUserBackend
-#from passlib.hash import sha256_crypt
 from app import utils
 from app.decorators import require_token
 from app import pickup_utils
 import json
+from app.views.auth.signup import create_turtlechain_user
+from app.views.auth.login import retail_login, pickup_login
+from django.template import Context
+
+
 
 @require_token()
 def home(request):
@@ -39,53 +46,6 @@ def home(request):
         return redirect('/')
 
 
-def signup_check(request):
-
-    data_js = json.loads(request.body.decode('utf-8'))
-    username = data_js['username']
-    payload = {'msg': None}
-    try:
-        exists = RetailUser.objects.filter(username=username).exists()
-
-        if exists:
-            payload['msg'] = 'error'
-        else:
-            payload['msg'] = 'ok'
-
-        return HttpResponse(json.dumps(payload))
-
-    except RetailUser.DoesNotExist:
-        return HttpResponse("error")
-    return HttpResponse(str(e))
-
-
-
-def check_business_number(request):
-    print("******************")
-    print("******************")
-    print("******************")
-    print("******************")
-    print("******************")
-    print("******************")
-
-    data_js = json.loads(request.body.decode('utf-8'))
-    business_number = data_js['business_number']
-    payload = {'msg': None}
-    try:
-        exists = Retailer.objects.filter(business_number=business_number).exists()
-
-        if exists:
-            payload['msg'] = 'error'
-        else:
-            payload['msg'] = 'ok'
-
-        return HttpResponse(json.dumps(payload))
-
-    except Retailer.DoesNotExist:
-        return HttpResponse("error")
-
-
-
 def logout(request):
 
     try:
@@ -95,96 +55,21 @@ def logout(request):
     except:
         return redirect('/')
 
-
+@require_http_methods(['GET'])
 def notify(request):
     return render(request, 'app/notify.html')
 
+@require_http_methods(['POST'])
 def notify_success(request):
 
-    if request.method == "POST":
-        notify_id = request.POST.get("notify_id", "")
+    notify_id = request.POST.get("notify_id", "")
+    context = {'notify_id': notify_id}
 
-        context = {'notify_id': notify_id}
+    return render(request, 'app/alert.html', context=context)
 
-        return render(request, 'app/alert.html', context=context)
-
-
+@require_http_methods(['GET'])
 def temp(request):
-
     return render(request, 'app/form.html')
-
-
-def retail_login(request, username, password):
-    context = {}
-    context['login_error'] = ""
-    context['signup_error'] = ""
-    context['content'] = ""
-    context['ws_perm'] = False
-
-    try:
-        retail_user = RetailUser.objects.exclude(retailer_id=-1).get(username=username)
-        pwd_valid = pwd_context.verify(password, retail_user.password)
-
-        user = TurtlechainUser(retail_user)
-        org_id = user.org_id
-        context['t_user'] = user
-
-        if pwd_valid:
-            token = utils.issue_token(username, retail_user.phone, retail_user.retailer_id, retail_user.retailer_name,
-                                      retail_user.name)
-            request.session['token'] = token
-            if Permissions.objects.filter(org_id=org_id, policy_name="wholesale").exists():
-                context['ws_perm'] = True
-            return context, True
-
-    except RetailUser.DoesNotExist:
-        context['login_error'] = True
-        return context, False
-    except ValueError:
-        context['login_error'] = True
-        return context, False
-
-    return context, False
-
-
-
-def pickup_login(request, username, password):
-
-    context = {}
-    context['login_error'] = ""
-    context['signup_error'] = ""
-    context['content'] = ""
-    context['ws_perm'] = False
-
-    try:
-        pickup_user = PickupUser.objects.exclude(pickup_user_id=-1).get(username=username)
-        pwd_valid = pwd_context.verify(password, pickup_user.password)
-
-        user = TurtlechainUser(pickup_user)
-        org_id = user.org_id
-        context['t_user'] = user
-
-
-        if pwd_valid:
-            token = pickup_utils.issue_token(username, pickup_user.phone, pickup_user.pickup_user_id, pickup_user.name, pickup_user.pickteam_id)
-            request.session['token'] = token
-
-            if Permissions.objects.filter(org_id=org_id, policy_name="wholesale").exists():
-                context['ws_perm'] = True
-            return context, True
-
-    except PickupUser.DoesNotExist:
-        context['login_error'] = True
-        return context, False
-    except ValueError:
-        context['login_error'] = True
-        return context, False
-
-    print(context['ws_perm'])
-    return context, False
-
-
-
 
 
 @require_http_methods(['GET', 'POST'])
@@ -200,14 +85,24 @@ def login(request):
 
     if request.method == "POST":
 
-        context = None
+        context = {}
         success = False
         username = request.POST['username']
         password = request.POST['password']
         acc_type = request.POST['account-type']
 
-
-
+        user = authenticate(request=request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            
+            
+        
+            return render(request, 'app/index.html', context=context)
+        
+        else:
+            
+        """
         if acc_type == "retail":
             context, success = retail_login(request, username, password)
 
@@ -224,8 +119,7 @@ def login(request):
             context['signup_error'] = True
             return render(request,'app/login.html', context=context)
 
-
-
+        """ 
 @require_http_methods(['GET', 'POST'])
 def signup(request):
     context = {}
@@ -233,89 +127,48 @@ def signup(request):
 
     if request.method == "GET":
 
-
         styles = StoreSyles.objects.values_list('style_en', 'style_kr')
         context['styles'] = styles
         return render(request, 'app/signup-form.html', context=context)
 
     if request.method == "POST":
         print("????")
-        context['login_error'] = None
-        context['signup_error'] = None
+        context['login_error'] = ""
+        context['signup_error'] = ""
+        context['content'] = ""
+        context['ws_perm'] = False
 
         if 'signup-cancel' in request.POST:
             print("something wrong")
             return redirect('/home')
 
         data_js = json.loads(request.body.decode('utf-8'))
-        username = data_js['username']
-        password = data_js['password']
-        retailer_name = data_js['retailer_name']
-        business_number = data_js['business_number']
-        name = data_js['name']
-        phone = data_js['phone']
-        styles = data_js['styles']
 
-        print("username is:\t{0}".format(username))
-        print("password is:\t{0}".format(password))
-        print("retailer_name is:\t{0}".format(retailer_name))
-        print("business_number is:\t{0}".format(business_number))
-        print("name is:\t{0}".format(name))
-        print("phone is:\t{0}".format(phone))
-        print("styles is:\t{0}".format(styles))
+        success, t_user, token = create_turtlechain_user(data_js)
 
-        return render(request, 'app/signup-form.html', context=context)
+        print("???RESULT!!!!!!")
+        print(success)
 
-        """ 
-        try:
-            form = SignUpForm(request.POST)
-
-            if form.is_valid():
-
-                username = form.cleaned_data['username']
-                name = form.cleaned_data['name']
-                phone = form.cleaned_data['phone']
-                password = form.cleaned_data['password']
-
-                enc_password = pwd_context.encrypt(password)
-                retail_user = \
-                    RetailUser(username=username, name=name,
-                               password=enc_password, phone=phone, retailer_id=-1)
-                retail_user.save()
-
-                if retail_user is None:
-                    retail_user = {'username': 'test'}
-
-                context = {'retail_user': retail_user}
-
-                return render(request, template_name='app/index.html', context=context)
-
+        if success:
+            
+            context['t_user'] = t_user
+            request.session['token'] = token
+            org_id = t_user.org_id
+            if Permissions.objects.filter(org_id=org_id, policy_name="wholesale").exists():
+                context['ws_perm'] = True
             else:
-                context['signup_error'] = True
-                return render(request, 'app/login.html', context=context)
-        except KeyError:
-            request.session.flush()
-            request.session.modified = True
-            context['signup_error'] = True
-            return render(request, 'app/login.html', context=context)
-        except:
-            request.session.flush()
-            request.session.modified = True
-            context['signup_error'] = True
-            return render(request, 'app/login.html', context=context)
-
-        """
-def gentella_html(request):
-    context = {}
-    # The template to be loaded as per gentelella.
-    # All resource paths for gentelella end in .html.
-
-    # Pick out the html file name from the url. And load that template.
-    load_template = request.path.split('/')[-1]
-    template = loader.get_template('app/' + load_template)
-
-    return HttpResponse(template.render(context, request))
-
+                context['ws_perm'] = False
+                
+            print("??????")
+            print("what?s in context?")
+            print(context)
+            
+            return HttpResponseRedirect(reverse('home'))
+            #return render(request, 'app/index.html', context=context)
+        
+        else:
+            return render(request, 'app/signup-form.html', context)
+    
 
 @require_token()
 @require_http_methods(["POST"])

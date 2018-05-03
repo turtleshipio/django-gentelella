@@ -8,8 +8,79 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import AbstractUser, Group
 
 
+
+
+class TCUser(AbstractUser):
+    phone = models.CharField(max_length=11)
+    
+    def get_full_name(self):
+      
+      # Returns Korean way of full name
+      
+      return "%s%s" % (self.last_name, self.first_name)
+        
+    class Meta:
+        managed=True
+        db_table = "tc_user"
+        verbose_name = "TC User"
+        verbose_name_plural = "TC Users"
+
+        
+class TCGroup(models.Model):        
+    group = models.ForeignKey(Group, on_delete = models.SET_NULL, null=True)
+    #group = models.OneToOneField('auth.Group', unique=True, null=True)
+    
+    org_name = models.CharField(max_length=191, null=True)
+    bank_account_number = models.CharField(max_length=191, null=True)
+    bank = models.CharField(max_length=191, null=True)
+    bank_account_number = models.CharField(max_length=191, null=True)
+    bank_holder_name = models.CharField(max_length=191, null=True)
+    
+    class Meta:
+        managed=True
+        db_table='tc_group'
+        verbose_name = "TC Group"
+        verbose_name_plural = "TC Groups"
+
+class TCPickteam(TCGroup):
+    
+    owner = models.ForeignKey(TCUser, on_delete = models.SET_NULL, null=True)
+    
+    def __str__(self):
+        return self.owner.get_full_name() if self.owner is not None else "TC Pickteam Object"
+        
+    class Meta:
+        managed=True
+        db_table = 'tc_pickteam'
+        verbose_name = "TC Pickteam"
+        verbose_name_plural = "TC Pickteams"
+        
+    
+
+class TCRetailer(TCGroup):
+    biz_num = models.CharField(max_length=10, blank=True,null=True)
+    biz_type = models.CharField(max_length=30, blank=True, null=True)
+    store_type = models.CharField(max_length=30, blank=True, null=True)
+    address = models.CharField(max_length=191, blank=True, null=True)
+    
+    pickteam = models.ManyToManyField(TCPickteam)
+    owner = models.ForeignKey(TCUser, on_delete = models.SET_NULL, null=True)
+    
+    def __str__(self):
+        return self.org_name if (self.org_name is not None or self.org_name != "") else "TC Retailer Object"
+    
+    class Meta:
+        managed = True
+        db_table = 'tc_retailer'
+        verbose_name = "TC Retailer"
+        verbose_name_plural = "TC Retailers"
+        
+
+        
+        
 class TurtlechainUser:
 
     username = ""
@@ -90,22 +161,6 @@ class Buildings(models.Model):
 
 
 
-class User(models.Model):
-    user_id = models.BigAutoField(primary_key=True)
-    username = models.CharField(unique=True, max_length=254, blank=True, null=True)
-    password = models.CharField(max_length=512, blank=True, null=True)
-    name = models.CharField(max_length=12, blank=True, null=True)
-    email = models.CharField(max_length=50, blank=True, null=True)
-    phone = models.CharField(max_length=12, blank=True, null=True)
-    org = models.CharField(max_length=100, blank=True, null=True)
-    last_login_time = models.DateTimeField(blank=True, null=True)
-    updated_time = models.DateTimeField(blank=True, null=True)
-    account_type = models.CharField(max_length=1, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'user'
-
 class Ws(models.Model):
     id = models.BigAutoField(primary_key=True)
     ws_name = models.CharField(max_length=30)
@@ -150,7 +205,7 @@ class Wholesalers(models.Model):
 
 class Retailer(models.Model):
     retailer_id = models.BigAutoField(primary_key=True)
-    retailer_name = models.CharField(unique=True, max_length=20)
+    retailer_name = models.CharField( max_length=20)
     business_number = models.CharField(unique=True, max_length=20)
     business_type = models.CharField(max_length=20)
     store_type = models.CharField(max_length=20)
@@ -158,8 +213,10 @@ class Retailer(models.Model):
     bank_account_num = models.CharField(max_length=20)
     bank = models.CharField(max_length=20)
     bank_holder_name = models.CharField(max_length=20)
-    created_time = models.DateTimeField(blank=True, null=True)
+    created_time = models.DateTimeField(blank=True, auto_now=True, null=True)
+    
     pickteam_id = models.IntegerField()
+    main_user_id = models.IntegerField()
 
     class Meta:
         managed = False
