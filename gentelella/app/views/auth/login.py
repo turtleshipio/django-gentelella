@@ -12,7 +12,7 @@ from app import utils
 from app.decorators import require_token
 from app import pickup_utils
 import json
-
+from django.contrib.auth import authenticate, login
 
 def retail_login(request, username, password):
     context = {}

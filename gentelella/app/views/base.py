@@ -18,7 +18,7 @@ from app.views.auth.signup import create_turtlechain_user
 from app.views.auth.login import retail_login, pickup_login
 from django.template import Context
 
-
+from django.contrib import auth
 
 @require_token()
 def home(request):
@@ -91,16 +91,17 @@ def login(request):
         password = request.POST['password']
         acc_type = request.POST['account-type']
 
-        user = authenticate(request=request, username=username, password=password)
-        
+        user = auth.authenticate(request=request, username=username, password=password)
+
+        print("***")
         if user is not None:
-            login(request, user)
-            
-            
-        
+            auth.login(request, user)
+
             return render(request, 'app/index.html', context=context)
         
         else:
+            return redirect('/')
+            return None
             
         """
         if acc_type == "retail":
