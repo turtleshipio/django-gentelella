@@ -3,7 +3,7 @@ from django.template import loader
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 from app.forms import DocumentForm
-from app.decorators import require_token
+from app.decorators import require_token, require_login
 from app import utils
 from app.excel import UploadManager
 from app.models import  Orders, RetailerPickteam
@@ -16,10 +16,11 @@ import io
 import xlrd
 
 
-@require_token()
+@require_login()
 @require_http_methods(['GET', 'POST'])
 def bulk_orders(request):
-
+    context= {}
+    """
     if 'msg' in request.session:
         request.session['msg']= None
         request.session.modified = True
@@ -29,18 +30,19 @@ def bulk_orders(request):
     context = utils.get_context_from_token(decoded_token)
     t_user = utils.get_user_from_token(decoded_token)
     context['t_user'] = t_user
+    """
 
-    if t_user.acc_type == "retailer":
-        retail_user = utils.get_retail_user_from_token(decoded_token)
-        retailer_name = retail_user['retailer_name']
-        context['retailer_name'] = retailer_name
+    retailer = request.user.groups.filter(name="retailer_group")
 
-    pickteam_id = t_user.pickteam_id
+    if len(retailer) > 0:
+
+        context['retailer_name'] = retailer[0].name
+
+    #pickteam_id = t_user.pickteam_id
 
 
     if request.method == "GET":
-        context['order'] = None
-        context['retailer_name'] = None
+
         return render(request, 'app/form_upload.html', context=context)
 
     if request.method == "POST":

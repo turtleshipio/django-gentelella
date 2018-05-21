@@ -1,4 +1,9 @@
+
 {% extends "app/base_site.html" %}
+
+{% load auth_tags %}
+{% load user_tags %}
+
 
 {% block title %} Form Upload {% endblock title %}
 
@@ -46,24 +51,22 @@
               </div>
           </div>
 
-                 {% if t_user %}
-                  {% if t_user.acc_type == "pickup" %}
-            <div class="form-horizontal row">
+                {% if user|check_group:'pickup_group' %}
 
-                   <div class="control-group ">
+                    <div class="form-horizontal row">
+                    <div class="control-group ">
                     <label for="retailer_name" class="control-label  col-sm-0.5 pull-left"><p class="text-info">소매명<i class="icon-star"></i></p></label>
                     <div class="controls">
                         <input type="text" name ="retailer_name" id="retailer_name"  class="span4" required>
                     </div>
-                   </div>
+                    </div>
                     <br />
                     <br />
                     <br />
                 {% else %}
                 <input type="hidden" name="retailer_name" id="retailer_name" value="">
-            {% endif %}
-            {% endif %}
-                 </div>
+                {% endif %}
+                    </div>
                 <div row>
                 <input type="submit" value="업로드하기" data-toggle="modal" data-target="#modal" />
                 </div>
@@ -91,7 +94,7 @@
       </div>
       <div class="modal-body">
           {% if retailer_name %}
-            <h6 class="modal-title" id="retailerNameLabel">{{retailer_name}}s</h6>
+            <h6 class="modal-title" id="retailerNameLabel">{{retailer_name}}</h6>
           {% endif %}
          <table class="table table-striped projects">
                 <thead class="text-center">

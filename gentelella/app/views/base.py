@@ -20,8 +20,30 @@ from django.template import Context
 
 from django.contrib import auth
 
-@require_token()
+@require_http_methods(['GET', 'POST'])
 def home(request):
+
+    if request.method == "POST":
+
+        username = request.POST['username']
+        password = request.POST['password']
+        acc_type = request.POST['account-type']
+
+        user = auth.authenticate(request=request, username=username, password=password)
+
+        if user is not None:
+            auth.login(request, user)
+            return render(request, 'app/index.html')
+
+        else:
+            return redirect('/')
+
+    if request.method == "GET":
+
+        if not request.user.is_authenticated:
+            return redirect('/')
+        else:
+            return render(request, 'app/index.html')
 
     try:
         token = request.session['token']
@@ -44,6 +66,10 @@ def home(request):
         return render(request, 'app/index.html', context=context)
     except KeyError:
         return redirect('/')
+
+
+
+
 
 
 def logout(request):
@@ -93,9 +119,10 @@ def login(request):
 
         user = auth.authenticate(request=request, username=username, password=password)
 
-        print("***")
         if user is not None:
             auth.login(request, user)
+
+            #return redirect('/home')
 
             return render(request, 'app/index.html', context=context)
         

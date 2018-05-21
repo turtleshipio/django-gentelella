@@ -4,6 +4,15 @@ from django.shortcuts import redirect, render
 from app import utils
 from app.models import *
 
+def require_login():
+    def decorator(function):
+        def wrap(request, *args, **kwargs):
+            if request.user.is_authenticated:
+                return function(request, *args, **kwargs)
+            else:
+                return redirect('/')
+        return wrap
+    return decorator
 
 def require_token():
     def decorator(function):

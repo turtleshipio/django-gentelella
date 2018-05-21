@@ -1,3 +1,6 @@
+{% load auth_tags %}
+{% load user_tags %}
+
 <div class="left_col scroll-view">
   <div class="navbar nav_title" style="border: 0;">
     <a href="/home/" class="site_title"><i class="fa fa-spinner"></i> <span>터틀체인</span></a>
@@ -8,8 +11,8 @@
   <!-- menu profile quick info -->
   <div class="profile clearfix">
     <div class="profile_info">
-        {% if t_user is not None %}
-          <span>안녕하세요, <strong>{{ t_user.name}}</strong>님</span>
+        {% if user %}
+          <span>안녕하세요, <strong>{{ user|get_full_name }}</strong>님</span>
         {% else %}
           <span>안녕하세요, <strong>더제인</strong>님</span>
         {% endif %}
@@ -26,7 +29,8 @@
 
       <ul class="nav side-menu">
         <li><a href="/home"><i class="fa fa-home"></i> 홈 </a></li>
-        {% if ws_perm is not None and ws_perm == True %}
+
+        {% if user|check_group:'pickup_group' %}
         <li><a href="/manage_ws"><i class="fa fa-clone"></i> 도매관리 </a></li>
         {% endif %}
         <li><a href="/upload_bulk"><i class="fa fa-file-excel-o"></i> 대량주문 </a></li>
