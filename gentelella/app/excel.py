@@ -1,5 +1,5 @@
 import xlrd
-from app.models import Orders, Notify
+from app.models import Order, Notify
 from django.db import transaction
 import random
 import string
@@ -205,7 +205,7 @@ class UploadManager:
                     #notifies[ws_name] = randint(0,9999)
                     notify_id = notifies[ws_name]
 
-                order = Orders(
+                order = Order(
                     username=self.retail_user['username'],
                     retailer_name = self.retail_user['retailer_name'],
                     retailer_id=self.retail_user['retailer_id'],
@@ -270,7 +270,7 @@ class UploadManager:
                 msg = str(e)
                 continue
 
-        Orders.objects.bulk_create(orders)
+        Order.objects.bulk_create(orders)
 
         return self.fail_count, msg
 

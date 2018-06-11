@@ -3,7 +3,7 @@ from app.network.turtleship import APIService
 from django.db.models import Sum
 from django.views import generic
 from django import forms
-from app.models import Orders, Credits
+from app.models import Order, Credits
 from django.core.paginator import  Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin
@@ -22,7 +22,7 @@ class NotifyListForm(forms.Form):
 
 
 class NotifyListView(SingleObjectMixin, FormView):
-    model = Orders
+    model = Order
     context_object_name = 'orders'
     template_name = "app/notify_list.html"
     paginate_by = 10
@@ -32,7 +32,7 @@ class NotifyListView(SingleObjectMixin, FormView):
 
     def get(self, request, notify_id, *args, **kwargs):
 
-        self.object = Orders.objects.filter(notify_id=notify_id).order_by("-order_id")
+        self.object = Order.objects.filter(notify_id=notify_id).order_by("-order_id")
 
         print("#############################")
         print("#############################")
@@ -57,7 +57,7 @@ class NotifyListView(SingleObjectMixin, FormView):
 
 
         notify_id = self.request.POST.get('notify_id', "")
-        orders = Orders.objects.filter(notify_id=notify_id).order_by("order_id")
+        orders = Order.objects.filter(notify_id=notify_id).order_by("order_id")
         paginator = Paginator(orders, self.paginate_by)
         page = self.request.GET.get('page')
         return render(request, self.template_name, context={'orders': orders, 'notify_id' : notify_id})

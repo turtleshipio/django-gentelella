@@ -79,7 +79,7 @@ class TCRetailer(TCGroup):
         verbose_name_plural = "TC Retailers"
         
 
-        
+
         
 class TurtlechainUser:
 
@@ -243,7 +243,7 @@ class RetailUser(models.Model):
         return self.name
 
 
-class Orders(models.Model):
+class Order(models.Model):
     order_id = models.BigAutoField(primary_key=True)
     username = models.CharField(max_length=100, blank=True, null=True)
     retailer = models.ForeignKey(Retailer, on_delete=models.DO_NOTHING, null=True)

@@ -1,8 +1,9 @@
 import requests
 import json
+from app.models import Order
+from app import utils
 
-
-class KakaoSender:
+class OrderSubmitManager:
 
     target_url = {
         'dev': 'https://dev-alimtalk-api.bizmsg.kr:1443/v1/sender/send',
@@ -37,6 +38,57 @@ class KakaoSender:
     path = "v1/sender/send"
     headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
 
+    notifies = {}
+    orders = []
+    phones = []
+
+    def create_orders_from_js(self, orders_js, username):
+
+        notify = {}
+
+        for order_js in orders_js:
+
+            ws_name = order_js['ws_name']
+
+            if ws_name in self.notifies:
+                notify_id = notifies[ws_name]['notify_id']
+                count = order_js['count']
+                self.notifies[ws_name]['prd_count'] += int(count)
+            else:
+                notify['notify_id'] = utils.get_uuid(70)
+                notify['prd_count'] = int(order_js['count'])
+                notify['prd1'] = order_js['product_name']
+                notify['phn'] = order_js['ws_phone']
+                self.notifies[ws_name] = notify
+                notify.clear()
+
+            order = Order(
+                username=username,
+                sizencolor=order_js['sizencolor'],
+                ws_phone=order_js['ws_phone'],
+                ws_name=ws_name,
+                product_name=order_js['product_name'],
+                building=order_js['building'],
+                floor=order_js['floor'],
+                location=order_js['location'],
+                count=order_js['count'],
+                price=order_js['price'],
+                is_deleted="false",
+                status="onwait",
+                notify_id=notify_id,
+                pickteam_id=pickteam_id,
+                retailer_name=retailer_name,
+
+            )
+
+            self.orders.append(order)
+        try:
+            Order.objects.bulk_create(self.orders)
+            return True
+        except Exception as e:
+            return False
+
+
     def clear(self):
         self.kakao_msg = ""
         self.button1['url_mobile'] = ""
@@ -44,6 +96,8 @@ class KakaoSender:
 
 
     def set_msg(self, order_id, retailer_name, prd1, prd_count, notify_id):
+
+
 
         self.kakao_msg = self.org_msg.format(order_id=order_id, retailer_name=retailer_name, prd1=prd1, prd_count=prd_count)
         notify_url = self.notify_url.format(notify_id=notify_id)

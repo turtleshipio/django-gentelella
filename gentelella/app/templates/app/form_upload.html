@@ -51,7 +51,7 @@
               </div>
           </div>
 
-                {% if user|check_group:'pickup_group' %}
+                {% if user|check_group:'pickteam_group' %}
 
                     <div class="form-horizontal row">
                     <div class="control-group ">
@@ -112,7 +112,8 @@
                   </tr>
                 </thead>
                 <tbody class="text-center">
-                {% block order %}
+
+                    {% block order %}
                     {% if order  %}
                     <div class="form-group">
                         <form action="/upload_excel" id="upload_excel" method="post">
@@ -134,7 +135,7 @@
                   </tbody>
 
          </table>
-          {% endblock order %}
+        {% endblock order %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">다시 업로드하기</button>

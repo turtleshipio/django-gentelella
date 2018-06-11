@@ -1,7 +1,7 @@
-from app.kakao import KakaoSender
+from app.kakao import OrderSubmitManager
 from app import utils
 
-sender = KakaoSender()
+sender = OrderSubmitManager()
 
 phones = [
     '01088958454', #염승헌

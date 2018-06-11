@@ -20,8 +20,26 @@ from django.template import Context
 
 from django.contrib import auth
 
-@require_http_methods(['GET', 'POST'])
+
+@require_http_methods(['GET'])
 def home(request):
+
+    context = {}
+    context['content'] = None
+
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return redirect('/')
+        else:
+            return render(request, 'app/index.html', context=context)
+
+
+def login(request):
+
+
+    if request.method == "GET":
+
+        return render(request, 'app/login.html')
 
     if request.method == "POST":
 
@@ -33,53 +51,17 @@ def home(request):
 
         if user is not None:
             auth.login(request, user)
-            return render(request, 'app/index.html')
+            return redirect('/home/')
 
         else:
             return redirect('/')
-
-    if request.method == "GET":
-
-        if not request.user.is_authenticated:
-            return redirect('/')
-        else:
-            return render(request, 'app/index.html')
-
-    try:
-        token = request.session['token']
-        token = utils.decode_token(token)
-        context = utils.get_context_from_token(token)
-        context['home'] = None
-        context['content'] = None
-        user = utils.get_user_from_token(token)
-        context['t_user'] = user
-
-
-        if Permissions.objects.filter(org_id=user.org_id, policy_name="wholesale").exists():
-            context['ws_perm'] = True
-        else:
-            context['ws_perm'] = False
-
-
-        context['login_error'] = None
-        context['signup_error'] = None
-        return render(request, 'app/index.html', context=context)
-    except KeyError:
-        return redirect('/')
-
-
-
-
-
 
 def logout(request):
 
-    try:
-        request.session.flush()
-        request.session.modified = True
-        return redirect('/')
-    except:
-        return redirect('/')
+    if request.user.is_active:
+        auth.logout(request.user)
+
+
 
 @require_http_methods(['GET'])
 def notify(request):
@@ -98,56 +80,6 @@ def temp(request):
     return render(request, 'app/form.html')
 
 
-@require_http_methods(['GET', 'POST'])
-def login(request):
-    context = {}
-    context['login_error'] = None
-    context['signup_error'] = None
-
-    if request.method == "GET":
-        request.session.flush()
-        request.session.modified = True
-        return render(request, 'app/login.html', context=context)
-
-    if request.method == "POST":
-
-        context = {}
-        success = False
-        username = request.POST['username']
-        password = request.POST['password']
-        acc_type = request.POST['account-type']
-
-        user = auth.authenticate(request=request, username=username, password=password)
-
-        if user is not None:
-            auth.login(request, user)
-
-            #return redirect('/home')
-
-            return render(request, 'app/index.html', context=context)
-        
-        else:
-            return redirect('/')
-            return None
-            
-        """
-        if acc_type == "retail":
-            context, success = retail_login(request, username, password)
-
-        if acc_type == "pickup":
-            context, success = pickup_login(request, username, password)
-
-        if success:
-            return render(request, 'app/index.html', context=context)
-        else:
-            request.session.flush()
-            request.session.modified = True
-            context = {}
-            context['login_error'] = True
-            context['signup_error'] = True
-            return render(request,'app/login.html', context=context)
-
-        """ 
 @require_http_methods(['GET', 'POST'])
 def signup(request):
     context = {}
@@ -208,7 +140,7 @@ def delete_order(request):
         if form.is_valid():
 
             order_id = form.cleaned_data['order_id']
-            Orders.objects.filter(order_id=order_id).update(is_deleted='true')
+            Order.objects.filter(order_id=order_id).update(is_deleted='true')
 
             return redirect('/order_list/')
 
@@ -238,7 +170,7 @@ def order_confirm(request):
                     choices[status] = [order_id]
 
             for choice in choices:
-                Orders.objects.filter(pk__in=choices[choice]).update(status=choice)
+                Order.objects.filter(pk__in=choices[choice]).update(status=choice)
 
             return render(request, 'app/alert.html', context=context)
 
