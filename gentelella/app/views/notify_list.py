@@ -33,19 +33,6 @@ class NotifyListView(SingleObjectMixin, FormView):
     def get(self, request, notify_id, *args, **kwargs):
 
         self.object = Order.objects.filter(notify_id=notify_id).order_by("-order_id")
-
-        print("#############################")
-        print("#############################")
-        print("#############################")
-        print("#############################")
-        print("#############################")
-        print(len(self.object))
-        print("#############################")
-        print("#############################")
-        print("#############################")
-        print("#############################")
-        print("#############################")
-        print("#############################")
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

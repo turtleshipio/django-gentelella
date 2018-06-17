@@ -6,7 +6,7 @@ import string
 from random import randint
 import requests
 
-class UploadManager:
+class OrderExcelValidator:
 
     file = None
     book = None
@@ -49,24 +49,11 @@ class UploadManager:
             if self.sheet_name != self.book.sheet_names()[0]:
                 return False, "엑셀시트의 이름은 \"발주발송관리\"여야만 합니다."
 
-
-
             header = self.sheet.row_values(0)
-
-            for h in header:
-                h = h.strip()
-
-
 
             required = self.required
 
-            print("**************************")
-            print(header)
-
             diff = set(required) - set(header)
-            print("**************************")
-            print("diff should be an empty set()")
-            print(diff)
 
             if diff != set():
                 diff = list(diff)
@@ -99,16 +86,12 @@ class UploadManager:
 
                 count = row[self.head['수량']]
                 price = row[self.head['도매가']]
-                print("1111111111111111111")
-                print(type(count))
-                print(type(price))
                 if type(count) == str:
                     count = int(count) if count.isdigit() else count
                 elif type(count) == int:
                     continue
                 elif type(count) == float:
                     count = int(count)
-
 
                 if type(price) == str:
                     price = int(price) if price.isdigit() else price
@@ -117,16 +100,8 @@ class UploadManager:
                 elif type(price) == float:
                     price = int(price)
 
-                print("222222222")
-                print(type(count))
-                print(type(price))
-
-
                 count = '%d' % int(count)
                 price = '%d' % int(price)
-
-
-
 
 
                 size = str(row[self.head['사이즈']])
@@ -170,9 +145,7 @@ class UploadManager:
         if len(orders) < 1:
             success = False
 
-
         return orders, success, msg
-
 
 
     def insert_db(self):

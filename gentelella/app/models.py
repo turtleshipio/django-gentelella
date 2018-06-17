@@ -31,14 +31,18 @@ class TCUser(AbstractUser):
         
 class TCGroup(models.Model):        
     group = models.ForeignKey(Group, on_delete = models.SET_NULL, null=True)
-    #group = models.OneToOneField('auth.Group', unique=True, null=True)
-    
+    main_user = models.ForeignKey(TCUser, on_delete = models.SET_NULL, null=True)
+
     org_name = models.CharField(max_length=191, null=True)
-    bank_account_number = models.CharField(max_length=191, null=True)
+    account_number = models.CharField(max_length=191, null=True)
     bank = models.CharField(max_length=191, null=True)
     bank_account_number = models.CharField(max_length=191, null=True)
     bank_holder_name = models.CharField(max_length=191, null=True)
-    
+
+    def __str__(self):
+        return self.org_name if (self.org_name is not None or self.org_name != "") else "TC Group Object"
+
+
     class Meta:
         managed=True
         db_table='tc_group'
@@ -47,10 +51,8 @@ class TCGroup(models.Model):
 
 class TCPickteam(TCGroup):
     
-    owner = models.ForeignKey(TCUser, on_delete = models.SET_NULL, null=True)
-    
     def __str__(self):
-        return self.owner.get_full_name() if self.owner is not None else "TC Pickteam Object"
+        return self.main_user.get_full_name() if self.main_user is not None else "TC Pickteam Object"
         
     class Meta:
         managed=True
@@ -66,9 +68,8 @@ class TCRetailer(TCGroup):
     store_type = models.CharField(max_length=30, blank=True, null=True)
     address = models.CharField(max_length=191, blank=True, null=True)
     
-    pickteam = models.ManyToManyField(TCPickteam)
-    owner = models.ForeignKey(TCUser, on_delete = models.SET_NULL, null=True)
-    
+    pickteam = models.ManyToManyField(TCPickteam) # is this really many to many..? Need to check this out
+
     def __str__(self):
         return self.org_name if (self.org_name is not None or self.org_name != "") else "TC Retailer Object"
     

@@ -2,8 +2,10 @@ import requests
 import json
 from app.models import Order
 from app import utils
+from datetime import datetime
 
-class OrderSubmitManager:
+
+class KakaoNotifySender:
 
     target_url = {
         'dev': 'https://dev-alimtalk-api.bizmsg.kr:1443/v1/sender/send',
@@ -15,11 +17,14 @@ class OrderSubmitManager:
     message_type = 'at'
     phn = '821088958454'
     profile = '038086c8c247154ec2b8a803ae7322af14cf1d48'
-    tmplId = '2'
-    org_msg = '주문번호:{order_id}\n{retailer_name}에서 \
-     {prd1} 외 {prd_count}개의 상품목록에 대해서 주문요청을 했습니다. \
-     주문을 승인하시면 소매점의 사입삼촌이 해당 매장을 오늘 방문합니다. \
-     주문요청을 승인하시겠습니까?'
+    tmplId = '4'
+    #org_msg = '주문번호:{order_id}\n{retailer_name}에서 \
+    # {prd1} 외 {prd_count}개의 상품목록에 대해서 주문요청을 했습니다. \
+    # 주문을 승인하시면 소매점의 사입삼촌이 해당 매장을 오늘 방문합니다. \
+    # 주문요청을 승인하시겠습니까?'
+
+    org_msg = '주문자:{retailer_name}\n도매명:{ws_name}\n\n주문확인 버튼을 클릭후 주문을 확인해 주세요.\n\n주문번호:{order_num}'
+
     kakao_msg = ""
     smsKind = 'S'
     msgSms = org_msg
@@ -38,56 +43,6 @@ class OrderSubmitManager:
     path = "v1/sender/send"
     headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
 
-    notifies = {}
-    orders = []
-    phones = []
-
-    def create_orders_from_js(self, orders_js, username):
-
-        notify = {}
-
-        for order_js in orders_js:
-
-            ws_name = order_js['ws_name']
-
-            if ws_name in self.notifies:
-                notify_id = notifies[ws_name]['notify_id']
-                count = order_js['count']
-                self.notifies[ws_name]['prd_count'] += int(count)
-            else:
-                notify['notify_id'] = utils.get_uuid(70)
-                notify['prd_count'] = int(order_js['count'])
-                notify['prd1'] = order_js['product_name']
-                notify['phn'] = order_js['ws_phone']
-                self.notifies[ws_name] = notify
-                notify.clear()
-
-            order = Order(
-                username=username,
-                sizencolor=order_js['sizencolor'],
-                ws_phone=order_js['ws_phone'],
-                ws_name=ws_name,
-                product_name=order_js['product_name'],
-                building=order_js['building'],
-                floor=order_js['floor'],
-                location=order_js['location'],
-                count=order_js['count'],
-                price=order_js['price'],
-                is_deleted="false",
-                status="onwait",
-                notify_id=notify_id,
-                pickteam_id=pickteam_id,
-                retailer_name=retailer_name,
-
-            )
-
-            self.orders.append(order)
-        try:
-            Order.objects.bulk_create(self.orders)
-            return True
-        except Exception as e:
-            return False
-
 
     def clear(self):
         self.kakao_msg = ""
@@ -95,11 +50,13 @@ class OrderSubmitManager:
         self.phn = ""
 
 
-    def set_msg(self, order_id, retailer_name, prd1, prd_count, notify_id):
+    def set_msg(self, retailer_name, ws_name, notify_id):
 
-
-
-        self.kakao_msg = self.org_msg.format(order_id=order_id, retailer_name=retailer_name, prd1=prd1, prd_count=prd_count)
+        print("!!!!!!!!!")
+        print(type(notify_id))
+        print(notify_id)
+        order_num = notify_id[:7]
+        self.kakao_msg = self.org_msg.format(order_num=order_num, retailer_name=retailer_name, ws_name=ws_name)
         notify_url = self.notify_url.format(notify_id=notify_id)
         self.button1['url_mobile'] = notify_url
 
@@ -114,7 +71,7 @@ class OrderSubmitManager:
             'message_type' : self.message_type,
             'phn' : phone,
             'profile' : self.profile,
-            'tmplId' : self.tmplId, 
+            'tmplId' : self.tmplId,
             'msg' : sms_msg,
             'smsKind' : 'L',
             'msgSms' : sms_msg,
@@ -147,23 +104,10 @@ class OrderSubmitManager:
         }]
 
         url = self.target_url['prod'] if prod else self.target_url['dev']
-        print(url)
-        print(self.button1)
-        print(data)
 
         try:
             response = requests.post(url=url, headers=self.headers, data=json.dumps(data))
-            print("***************************************")
-            print("***************************************")
-            print("***************************************")
-            print("***************************************")
-            print("***************************************")
-            print("***************************************")
-            print("***************************************")
-            print("***************************************")
-            print("***************************************")
-            print("***************************************")
-            print("***************************************")
+
             print(response.text)
 
         except requests.exceptions.HTTPError as e:
@@ -171,4 +115,60 @@ class OrderSubmitManager:
 
 
 
+class OrderCreator:
+
+    notifies = {}
+    orders = []
+    phones = []
+    phone_dict = {}
+
+
+    def create_orders_from_js(self, orders_js, username, retailer_name, pickteam_id):
+
+        for index, order_js in enumerate(orders_js):
+
+            print("create_orders!!!")
+            ws_name = order_js['ws_name']
+            print(ws_name)
+            timestamp = datetime.now().timestamp()
+            timestamp *= 1000000
+            timestamp = str(int(timestamp))
+            index = str(index)
+            product_name = order_js['product_name']
+
+            notify_id = ""
+
+            if ws_name not in self.notifies:
+                notify_id = utils.create_notify_id(timestamp, index, retailer_name, product_name)
+                self.notifies[ws_name] = {
+                    'phone': order_js['ws_phone'],
+                    'notify_id': notify_id}
+            else:
+                notify_id = self.notifies[ws_name]['notify_id']
+
+
+            order = Order(
+                username=username,
+                sizencolor=order_js['sizencolor'],
+                ws_phone=order_js['ws_phone'],
+                ws_name=ws_name,
+                product_name=order_js['product_name'],
+                building=order_js['building'],
+                floor=order_js['floor'],
+                location=order_js['location'],
+                count=order_js['count'],
+                price=order_js['price'],
+                is_deleted="false",
+                status="onwait",
+                notify_id=notify_id,
+                pickteam_id=pickteam_id,
+                retailer_name=retailer_name,
+            )
+            self.orders.append(order)
+
+        try:
+            Order.objects.bulk_create(self.orders)
+            return True
+        except Exception as e:
+            return False
 

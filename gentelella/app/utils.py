@@ -5,6 +5,8 @@ from app import config
 import random
 import string
 from app.models import *
+import hashlib
+
 
 def getYesterdayDateAt11pm():
 
@@ -65,7 +67,7 @@ def get_context_from_token(token):
 
     return context
 
-
+''' 
 def get_user_from_token(decoded_token):
 
     t_user = None
@@ -99,6 +101,25 @@ def get_retail_user_from_token(decoded_token):
 def get_decoded_token(token):
     return decode_token(token)
 
-
+'''
 def get_uuid(n):
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
+
+def create_notify_id(timestamp, index, retailer_name, product_name):
+
+    if timestamp is None or index is None or retailer_name is None or product_name is None:
+        return False, "parameter is None"
+
+    if type(timestamp) != str or type(index) != str or type(retailer_name) != str or type(product_name) != str:
+        return False, "parameter type is not str"
+
+
+    timestamp = hashlib.md5(timestamp.encode('utf-8')).hexdigest()
+    index = hashlib.md5(index.encode('utf-8')).hexdigest()
+    retailer_name = hashlib.md5(retailer_name.encode('utf-8')).hexdigest()
+    product_name = hashlib.md5(product_name.encode('utf-8')).hexdigest()
+
+    notify_id = ''.join([timestamp, index, retailer_name, product_name])
+
+    return notify_id
+

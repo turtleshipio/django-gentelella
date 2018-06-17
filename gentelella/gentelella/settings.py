@@ -76,6 +76,8 @@ TEMPLATES = [
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SECURE = False
+
 
 WSGI_APPLICATION = 'gentelella.wsgi.application'
 

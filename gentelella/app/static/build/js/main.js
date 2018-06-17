@@ -32,6 +32,7 @@ function csrfSafeMethod(method) {
 
 $('button#btn-confirm-upload').click(function(event){
 
+    console.log("here!!!");
     var data= {};
     var retailer_name = "";
     retailer_name = $('h3[name=retailer_name]').text();
@@ -57,6 +58,15 @@ $('button#btn-confirm-upload').click(function(event){
     });
 
     data.orders = orders
+    var csrftoken = getCookie('csrftoken');
+
+    $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+    });
 
     $.ajax({
         url : "/upload_bulk/",
@@ -75,8 +85,6 @@ $('button#btn-confirm-upload').click(function(event){
 $('form#excel-modal').on('submit', function(event){
     event.preventDefault();
     var formData = new FormData(this);
-
-    console.log("form submitted!")  // sanity check
     create_post(formData);
 
 });
@@ -84,7 +92,6 @@ $('form#excel-modal').on('submit', function(event){
 
 
 function create_post(formData) {
-    console.log("create post is working!"); // sanity check
     $.ajax({
         url : "/modal_view/",
         type : "POST",
