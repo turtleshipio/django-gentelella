@@ -1,5 +1,6 @@
 {% extends "app/base_site.html" %}
-
+{% load auth_tags %}
+{% load user_tags %}
 {% block title %} Projects {% endblock title %}
 
 {% block stylesheets %}
@@ -45,8 +46,8 @@
                 <thead class="text-center">
                   <tr>
                     <th><h4 class="text-center">선택</h4></th>
-                    {% if t_user %}
-                      {% if t_user.acc_type == "pickup" %}
+                    {% if user %}
+                      {% if user|check_group:'pickup_group' %}
                       <th><h4 class="text-center">소매명</h4></th>
                       {% endif %}
                       {% endif %}
@@ -68,8 +69,8 @@
                               <input type="checkbox" class="custom-control-input">
         <span class="custom-control-indicator"></span>
                           </td>
-                          {% if t_user %}
-                      {% if t_user.acc_type == "pickup" %}
+                          {% if user %}
+                          {% if user|check_group:'pickup_group' %}
                           <td class="text-center">{{ order.retailer_name }}</td>
                           {% endif %}
                           {% endif %}

@@ -10,12 +10,6 @@ from django.views.generic.edit import FormMixin
 from django.views.generic import FormView
 from app.forms import CreditForm
 
-from app.utils import getYesterdayDateAt11pm
-import logging
-from django.utils.decorators import method_decorator
-from app.decorators import require_token
-from app import utils
-
 
 class NotifyListForm(forms.Form):
     order_id = forms.RadioSelect()
@@ -48,22 +42,4 @@ class NotifyListView(SingleObjectMixin, FormView):
         paginator = Paginator(orders, self.paginate_by)
         page = self.request.GET.get('page')
         return render(request, self.template_name, context={'orders': orders, 'notify_id' : notify_id})
-
-
-
-        #   self.context['orders'] = orders
-        print(orders)
-
-        return render(request, self.template_name, context={'orders': orders})
-
-
-
-
-
-class NotifyListPost(FormMixin, generic.ListView):
-    form_class =  NotifyListForm
-    template_name = "app/notify_list.html"
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object
 
