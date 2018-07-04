@@ -32,7 +32,6 @@ $('button#submit-edit-ws-modal').click(function(event){
     data.col = $('input#edit-col-'+counter).val();
     data.ws_phone= $('input#edit-ws-phone-'+counter).val();
 
-    alert(data.col);
 
     if(isWhiteSpace(data.ws_name)){
         alert("도매명을 입력해주세요");
