@@ -8,8 +8,6 @@ from django.core.paginator import  Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin
 from django.views.generic import FormView
-from app.forms import CreditForm
-
 
 class NotifyListForm(forms.Form):
     order_id = forms.RadioSelect()
@@ -20,7 +18,6 @@ class NotifyListView(SingleObjectMixin, FormView):
     context_object_name = 'orders'
     template_name = "app/notify_list.html"
     paginate_by = 10
-    form_class = CreditForm
     allow_empty = False
 
 

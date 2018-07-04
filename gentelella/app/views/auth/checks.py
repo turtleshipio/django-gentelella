@@ -9,7 +9,6 @@ from app.forms import *
 from app.backend import RetailUserBackend
 #from passlib.hash import sha256_crypt
 from app import utils
-from app.decorators import require_token
 from app import pickup_utils
 import json
 

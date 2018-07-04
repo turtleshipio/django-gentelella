@@ -3,7 +3,7 @@ import json
 from app.models import Order
 from app import utils
 from datetime import datetime
-
+from app.models import *
 
 class KakaoNotifySender:
 
@@ -52,9 +52,6 @@ class KakaoNotifySender:
 
     def set_msg(self, retailer_name, ws_name, notify_id):
 
-        print("!!!!!!!!!")
-        print(type(notify_id))
-        print(notify_id)
         order_num = notify_id[:7]
         self.kakao_msg = self.org_msg.format(order_num=order_num, retailer_name=retailer_name, ws_name=ws_name)
         notify_url = self.notify_url.format(notify_id=notify_id)
@@ -123,13 +120,26 @@ class OrderCreator:
     phone_dict = {}
 
 
-    def create_orders_from_js(self, orders_js, username, retailer_name, pickteam_id):
+    def create_orders_from_js(self, user, orders_js, username, retailer_name, pickteam_id):
+
+
+        group = TCGroup.objects.filter(main_user=user)[0]
+        self.orders = []
 
         for index, order_js in enumerate(orders_js):
 
-            print("create_orders!!!")
             ws_name = order_js['ws_name']
+            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
+            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
+            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
             print(ws_name)
+            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
+            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
+            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
+            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
+            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
+            ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
+
             timestamp = datetime.now().timestamp()
             timestamp *= 1000000
             timestamp = str(int(timestamp))
@@ -150,12 +160,12 @@ class OrderCreator:
             order = Order(
                 username=username,
                 sizencolor=order_js['sizencolor'],
-                ws_phone=order_js['ws_phone'],
+                ws_phone=ws.ws_phone,
                 ws_name=ws_name,
                 product_name=order_js['product_name'],
-                building=order_js['building'],
-                floor=order_js['floor'],
-                location=order_js['location'],
+                building=ws.building,
+                floor= ws.floor,
+                location= ws.location,
                 count=order_js['count'],
                 price=order_js['price'],
                 is_deleted="false",
@@ -170,5 +180,8 @@ class OrderCreator:
             Order.objects.bulk_create(self.orders)
             return True
         except Exception as e:
+            print("&&&&&&&&&&")
+            print(str(e))
+            print("&&&&&&&&&&")
             return False
 

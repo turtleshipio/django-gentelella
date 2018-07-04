@@ -1,6 +1,7 @@
 {% extends "app/base_site.html" %}
-
-{% block title %} Projects {% endblock title %}
+{% load auth_tags %}
+{% load user_tags %}
+{% load utils_tags %}
 
 {% block stylesheets %}
   {{ block.super }}
@@ -11,7 +12,7 @@
     <div class="">
       <div class="page-title">
         <div class="title_left">
-          <h3>도매관리 </h3>
+          <h3>도매관리</h3>
         </div>
 
         <div class="title_right">
@@ -26,86 +27,239 @@
         </div>
       </div>
 
-      <div class="clearfix"></div>
+        <div class="clearfix"></div>
 
-      <div class="row">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2><i class="fa fa-square-o"></i> 도매 추가</h2>
+                        {% if messages %}
+                        <ul class="messages">
+                            {% for msg in messages %}
+                                {% if msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                    <li {% if msg.tags %} class="{{ msg.tags }} text-danger" {% endif %}>&nbsp{{ msg }} </li>
+                                {% elif msg.level != DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                    <li {% if msg.tags %} class="{{ msg.tags }} text-success" {% endif %}>&nbsp{{ msg }} </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <div class="clearfix"></div>
+                        <div class="x_content">
+                            <br />
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-modal-lg">새로운 도매 추가하기 + </button>
+                                <div class="modal fade bs-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span> </button>
+                                            <h4 class="modal-title" id="addWsModal">새로운 도매 추가하기</h4>
 
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="manage_ws/" class="form-horizontal form-label-left" method="post">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3" for="ws_name">도매명 <span class="required">*</span></label>
+                                                <div class="col-md-5">
+                                                    <input type="text" id="ws_name" name="ws_name" required="required" class="form-control col-md-5 col-xs-7">
+                                                </div>
+                                            </div>
+
+                                                 <div class="form-group">
+                                                <label class="control-label col-md-3" for="select-buildings-add-ws-0">상가명<span class="required">*</span></label>
+                                                {% if buildings %}
+
+                                                    <div class="col-md-5">
+                                                        <select class="form-control" name="0" id="select-buildings-add-ws-0">
+                                                        <option value="" selected disabled>상가를 골라주세요</option>
+                                                        {% for building in buildings %}
+                                                            <option id="option-default-add-ws-0" value="{{building}}">{{building}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    </div>
+
+                                                {% endif %}
+                                                </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3" for="floor-add-ws-0">층<span class="required">*</span></label>
+                                                <div class="col-md-5">
+                                                    {% csrf_token %}
+                                                    <select type="text" name="0" readonly="true" id="floor-add-ws-0" name="floor" required="required" class="form-control col-md-5 col-xs-7">
+                                                   <option value="" selected disabled>층을 골라주세요</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                             <div class="form-group">
+                                                <label class="control-label col-md-3" for="location">호수<span class="required">*</span></label>
+                                                <div class="col-md-5">
+                                                    <input type="text" id="location" name="location" required="required" class="form-control col-md-5 col-xs-7" maxlength="5">
+                                                </div>
+                                             </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3" for="col">열</label>
+                                                <div class="col-md-5">
+                                                    <input type="text" id="col" name="col" class="form-control col-md-5 col-xs-7" maxlength="5">
+                                                </div>
+                                             </div>
+
+
+                                             <div class="form-group">
+                                                <label class="control-label col-md-3" for="ws_phone">핸드폰 번호<span class="required">*</span></label>
+                                                <div class="col-md-5">
+                                                    <input type="text" id="ws_phone" name="ws_phone" required="required" class="form-control col-md-5 col-xs-7" data-inputmask="'mask' : '999-9999-9999'">
+                                                </div>
+                                             </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                                        <button type="button" id="btn-add-ws-modal" class="btn btn-primary">추가하기</button>
+                                    </div>
+                                </div>
+                                </div>
+                                </div>
+
+                        </div>
+
+
+                    </div>
+
+            </div>
+        </div>
+        <div class="">
           <div class="col-md-12">
           <div class="x_panel">
-
-             <div class="pull-right">
-             <button type="submit"
-                    onclick="return confirm('정말로 삭제하시겠습니까?')"
-                    class="btn btn-danger btn-md" value="삭제">
-                <i class="fa fa-trash-o"></i> 삭제
-            </button>
-            </div>
+              <div class="x_title">
+                  <h2><i class="fa fa-bars"></i> 등록된 도매</h2>
+              <div class="clearfix"></div>
+              </div>
               <!-- start project list -->
               <table class="table table-striped projects">
                 <thead class="text-center">
                   <tr>
-                    <th><h4 class="text-center">선택</h4></th>
-                    {% if t_user %}
-                      {% if t_user.acc_type == "pickup" %}
-                      <th><h4 class="text-center">소매명</h4></th>
-                      {% endif %}
-                      {% endif %}
-                      <th><h4 class="text-center">주문번호</h4></th>
                     <th><h4 class="text-center">도매명</h4></th>
-                    <th><h4 class="text-center">수량</h4></th>
-                    <th><h4 class="text-center">총 결제금액</h4></th>
-                    <th><h4 class="text-center">상태</h4></th>
+                    <th><h4 class="text-center">상가</h4></th>
+                    <th><h4 class="text-center">층</h4></th>
+                    <th><h4 class="text-center">호수</h4></th>
+                    <th><h4 class="text-center">열</h4></th>
+                    <th><h4 class="text-center">전화번호</h4></th>
                     <th><h4 class="text-center">수정</h4></th>
-
                   </tr>
                 </thead>
                 <tbody class="text-center">
-                  {%  for order in orders %}
-                  <form action="/delete_order/" method="post">
-                      {% csrf_token %}
-                      <tr class="text-center">
-                          <td class="text-center">
-                              <input type="checkbox" class="custom-control-input">
-        <span class="custom-control-indicator"></span>
-                          </td>
-                          {% if t_user %}
-                      {% if t_user.acc_type == "pickup" %}
-                          <td class="text-center">{{ order.retailer_name }}</td>
-                          {% endif %}
-                          {% endif %}
-                        <td class="text-center">{{  order.order_id }}</td>
+                  {%  for ws in ws_list %}
+                        <tr id="tr-ws-list{{ws.id}}">
                         <td class="text-center">
-                          <a><strong>{{  order.ws_name }}</strong></a>
+                          <a id="a-ws-name-list{{ws.id}}"><strong>{{  ws.ws_name }}</strong></a>
                           <br />
-                          <small>{{  order.created_time }}</small>
+                          <small>{{  ws.updated_time }}</small>
                         </td>
-                      <td>
-                          <p>{{  order.count }}개</p>
+                        <td class="text-center">
+                          <p id="edit-ws-building-{{forloop.counter}}">{{ ws.building}}</p>
+                        </td>
+                        <td class="text-center">
+                            <p id="edit-ws-floor-{{forloop.counter}}">{{ ws.floor }}층 </p>
+                        </td>
+                      <td class="text-center">
+                          <p>{{ ws.location }}호 </p>
                       </td>
                         <td class="text-center">
-                            {% load humanize %}
-                          <p>{{  order.price|intcomma}}원</p>
+                            <p>{{ ws.col}} </p>
                         </td>
-                        <td>
-                            {%  if order.status == "approved" %}
-                                <button type="button" class="btn btn-success btn-xs">승인완료</button>
-                            {% elif order.status == "onwait" %}
-                                <button type="button" class="btn btn-warning btn-xs">승인대기</button>
-                            {%  elif order.status == "error" %}
-                                <button type="button" class="btn btn-danger btn-xs">주문실패</button>
-                            {%  endif %}
-                        </td>
+                       <td class="text-center">
+                          <p>{{  ws.ws_phone | format_mobile_phone }}</p>
+                      </td>
                         <td>
 
+                            <form action="/delete_wsbyuser" class="form-horizontal">
+                                {% csrf_token %}
+                                <div class="form-group" >
+                                <button type="button" id="btn-edit-ws-{{forloop.counter}}" value="{{forloop.counter}}"   class="btn btn-info btn-xs" data-toggle="modal" data-target=".edit-ws-modal{{forloop.counter }}"><i class="fa fa-pencil"></i> 수정 </button>
+                            <div class="modal fade edit-ws-modal{{forloop.counter}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span> </button>
+                                            <h4 class="modal-title" id="editWsModal">도매정보 수정하기</h4>
+                                        </div>
+                                        <div class="modal-body form-horizontal">
+                                            <form action="/edit_wsbyuser/" class="form-horizontal form-label-left" method="put">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="id" value="{{ws.id}}">
+                                                <input type="hidden" name="counter" value="{{forloop.counter}}">
+                                                <div class="form-group">
+                                                   <label class="control-label col-md-3" for="ws_name">도매명 <span class="required">*</span></label>
+                                                   <div class="col-md-5">
+                                                       <input type="text" id="edit-ws-name-{{forloop.counter}}" value="{{ws.ws_name}}" name="edit_ws_name" required="required" class="form-control col-md-5 col-xs-7" readonly="true">
+                                                   </div>
+                                               </div>
+                                                <div class="form-group">
+                                                   <label class="control-label col-md-3" for="select-buildings-edit-ws-{{forloop.counter}}">상가명<span class="required">*</span></label>
+                                                    {% if buildings %}
 
-                                  <a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> 수정 </a>
-                                  <input type="hidden" name="order_id" value="{{order.order_id}}">
-                                  <button type="submit" onclick="return confirm('정말로 삭제하시겠습니까?')" class="btn btn-danger btn-xs" value="삭제"><i class="fa fa-trash-o"></i> 삭제 </button>
+                                                    <div class="col-md-5">
+                                                        <select class="form-control" id="select-buildings-edit-ws-{{forloop.counter}}" name="{{forloop.counter}}">
+                                                        <option value=""  disabled>상가를 골라주세요</option>
+                                                        {% for building in buildings %}
+                                                            <option value="{{building}}">{{building}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    </div>
+
+                                                {% endif %}
+
+                                               </div>
+                                                <div class="form-group">
+                                                   <label class="control-label col-md-3" for="floor-edit-ws-{{forloop.counter}}">층<span class="required">*</span></label>
+                                                    <div class="col-md-5">
+                                                    {% csrf_token %}
+                                                    <select type="text" readonly="true" id="floor-edit-ws-{{forloop.counter}}" name="floor" required="required" class="form-control col-md-5 col-xs-7">
+                                                    <option id="option-default-edit-ws-{{forloop.counter}}" value="" selected disabled>층을 골라주세요</option>
+                                                    </select>
+                                                </div>
+                                               </div>
+                                                <div class="form-group">
+                                                   <label class="control-label col-md-3" for="edit-location-{{forloop.counter}}">호수<span class="required">*</span></label>
+                                                   <div class="col-md-5">
+                                                       <input type="text" value="{{ws.location}}"  id="edit-location-{{forloop.counter}}" name="edit_location" required="required" class="form-control col-md-5 col-xs-7">
+                                                   </div>
+                                               </div>
+                                                 <div class="form-group">
+                                                   <label class="control-label col-md-3" for="edit-col-{{forloop.counter}}">열</label>
+                                                   <div class="col-md-5">
+                                                       <input type="text" value="{{ws.col}}"  id="edit-col-{{forloop.counter}}" name="edit_location" class="form-control col-md-5 col-xs-7">
+                                                   </div>
+                                               </div>
+
+                                                <div class="form-group">
+                                                   <label class="control-label col-md-3" for="edit-ws-phone-{{forloop.counter}}">핸드폰 번호<span class="required">*</span></label>
+                                                   <div class="col-md-5">
+                                                       <input type="text" value="{{ws.ws_phone}}" id="edit-ws-phone-{{forloop.counter}}" name="edit_ws_phone" required="required" class="form-control col-md-5 col-xs-7" data-inputmask="'mask' : '999-9999-9999'">
+                                                   </div>
+                                               </div>
+
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                                            <button type="button" value="{{forloop.counter}}" id="submit-edit-ws-modal" class="btn btn-primary">수정하기</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" id="btn-delete-ws" value= "{{ws.id}}" class="btn btn-danger btn-xs">
+                                <i class="fa fa-trash-o"></i> 삭제</button>
+                                </div>
                             </form>
-
                         </td>
                       </tr>
                   {%  endfor %}
+
+                    <!-- modal for editing ws. Should be outside of for-loop -->
+
+
 
                   {% if is_paginated %}
                   <ul class="pagination">
@@ -115,7 +269,7 @@
                       </li>
                       {% endif %}
                       <li class="">
-                          <span>페이지 {{ page_obj.number}} 중 {{ page_obj.paginator.num_pages }}</span>
+                          <span>페이지 {{ page_obj.number}} 중 {{ num_pages }}</span>
                       </li>
                       {% if page_obj.has_next %}
                       <li>
@@ -125,7 +279,6 @@
 
                   </ul>
                     {% else %}
-                    <p>주문내역이 아직 없습니다.</p>
                   {% endif %}
                 </tbody>
               </table>
@@ -141,4 +294,6 @@
 
 {% block javascripts %}
   {{ block.super }}
+ <script src="/static/build/js/manage_ws.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.60/inputmask/jquery.inputmask.js"></script>
 {% endblock javascripts %}

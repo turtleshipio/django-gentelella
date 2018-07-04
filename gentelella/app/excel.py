@@ -6,7 +6,11 @@ import string
 from random import randint
 import requests
 
+from app.models import *
+
 class OrderExcelValidator:
+
+    user = None
 
     file = None
     book = None
@@ -24,9 +28,12 @@ class OrderExcelValidator:
                 '구매자명', '구매자ID', '수취인명', '결제위치', '상품번호', '상품명', '옵션정보',
                 '수량', '상품가격', '판매자 상품코드', '구매자연락처',  '우편번호',
                 '출고지', '결제수단', '유입경로', '배송지', ]'''
-    required = ['도매명','층', '전화번호', '상가',  '호수', '수량', '사이즈', '컬러', '도매가', '장끼명']
-
+    required_fmt = ['fmt_ws_name', 'fmt_product_name', 'fmt_sizeNcolor', 'fmt_color',  'fmt_price', 'fmt_count']
+    required = None
     head = {}
+
+    def __init__(self, user):
+        self.user = user
 
     def set_file(self, file):
 
@@ -41,16 +48,22 @@ class OrderExcelValidator:
     def set_retail_user(self, retail_user):
         self.retail_user = retail_user
 
-    def validate(self):
+    def validate(self, format):
+
+        self.required = []
+        self.head=  {}
+
+        for fmt in self.required_fmt:
+            if hasattr(format, fmt):
+                self.required.append(getattr(format, fmt))
+            else:
+                return False, "다음 항목이 업로드해주신 엑셀파일에 존재하지 않습니다:%s" % fmt
 
         try:
             if self.sheet is None:
                 return False, "엑셀시트가 올바르지 않습니다."
-            if self.sheet_name != self.book.sheet_names()[0]:
-                return False, "엑셀시트의 이름은 \"발주발송관리\"여야만 합니다."
 
             header = self.sheet.row_values(0)
-
             required = self.required
 
             diff = set(required) - set(header)
@@ -58,40 +71,47 @@ class OrderExcelValidator:
             if diff != set():
                 diff = list(diff)
                 cols = ', '.join(diff)
-
                 return False, "아래의 열 이름들을 확인해주세요\n{cols}".format(cols=cols)
             else:
                 for req in required:
                     for col in header:
                         if req == col:
                             self.head[req] = header.index(col)
-
         except Exception as e:
+            print("zzzzzzz")
             return False, str(e)
-            #return False, "알 수 없는 이유로 실패했습니다. 엑셀 양식을 다시 한번 확인해주세요"
 
+        print("!!!")
         return True, "성공"
 
     def extract(self):
 
+
         orders = []
         msg = ""
-
+        print("????")
         nrow = self.sheet.nrows
 
         for nrow in range(1, self.sheet.nrows):
             row = self.sheet.row_values(nrow)
-
+            print(row)
             try:
 
                 count = row[self.head['수량']]
                 price = row[self.head['도매가']]
+                print(777777777)
+                print(777777777)
+                print(777777777)
+                print(price)
+                print(777777777)
+                print(777777777)
                 if type(count) == str:
                     count = int(count) if count.isdigit() else count
                 elif type(count) == int:
                     continue
                 elif type(count) == float:
                     count = int(count)
+
 
                 if type(price) == str:
                     price = int(price) if price.isdigit() else price
@@ -106,23 +126,27 @@ class OrderExcelValidator:
 
                 size = str(row[self.head['사이즈']])
                 color = str(row[self.head['컬러']])
-                ws_phone = str(row[self.head['전화번호']])
                 ws_name = str(row[self.head['도매명']])
                 product_name = str(row[self.head['장끼명']])
-                building = str(row[self.head['상가']])
-                floor = str(row[self.head['층']])
-                location = str(row[self.head['호수']])
-
                 sizencolor = ' '.join([size, ' / ', color])
+
+                print("aaaaaaaaaaaaaaaaaaaaaa")
+
+                group = TCGroup.objects.filter(main_user=self.user)[0]
+                try:
+                    ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
+                except Exception as e:
+                    return None, None, "Does Not Exist"
+
 
                 order = {
                     'sizencolor' : sizencolor,
-                    'ws_phone': ws_phone,
+                    'ws_phone': ws.ws_phone,
                     'ws_name': ws_name,
                     'product_name': product_name,
-                    'building': building,
-                    'floor': floor,
-                    'location': location,
+                    'building': ws.building,
+                    'floor': ws.floor,
+                    'location': ws.location,
                     'price': price,
                     'count' : count
                 }

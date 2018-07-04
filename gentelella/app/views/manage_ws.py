@@ -1,62 +1,150 @@
-from django.shortcuts import render
-from app.network.turtleship import APIService
-from django.views import generic
+from django.views.generic.edit import ModelFormMixin
+from django.views.generic.list import ListView
+from django.db import IntegrityError
+from django.http import HttpResponseForbidden, HttpResponse, JsonResponse
 from app.models import *
-from django.core.paginator import  Paginator, EmptyPage, PageNotAnInteger
-from app.utils import getYesterdayDateAt11pm
-from django.utils.decorators import method_decorator
-from app.decorators import *
-from app import utils
+from app.forms.ws_form import CreateWsForm
+from app.decorators import can_manage_ws, ajax_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+from django.contrib.auth.decorators import  login_required
+from django.views.decorators.http import require_http_methods
+from django.shortcuts import get_object_or_404
+import json
+
+@ajax_required
+@login_required()
+@can_manage_ws()
+@require_http_methods(["PUT"])
+def edit_wsbyuser(request):
+
+    data_js = json.loads(request.body.decode('utf-8'))[0]
+    ws_name = data_js['ws_name']
+    building = data_js['building']
+    floor = data_js['floor']
+    location = data_js['location']
+    col = data_js['col']
+    ws_phone = data_js['ws_phone']
+
+    try:
+        group = TCGroup.objects.filter(main_user=request.user)[0]
+        wsbygroup = get_object_or_404(WsByTCGroup, group=group, ws_name=ws_name, is_deleted=False)
+        wsbygroup.building = building
+        wsbygroup.floor = floor
+        wsbygroup.location = location
+        wsbygroup.ws_phone = ws_phone
+        wsbygroup.col = col
+        wsbygroup.save()
+        return HttpResponse("ok")
+    except Exception as e:
+        response = HttpResponse(e)
+        response.status_code = 500
+        return response
+
+@ajax_required
+@login_required()
+@can_manage_ws()
+@require_http_methods(["PUT"])
+def delete_wsbygroup(request):
+    user = request.user
+    data_js = json.loads(request.body.decode('utf-8'))[0]
+    wsbyuser_id = data_js['id']
+
+    try:
+        group = TCGroup.objects.filter(main_user=user)[0]
+        WsByTCGroup.objects.filter(group=group).exclude(is_deleted=True).update(is_deleted=True)
+        return HttpResponse("ok")
+    except Exception as e:
+        response = HttpResponse(e)
+        response.status_code = 500
+        return response
+
+@ajax_required
+@login_required()
+@can_manage_ws()
+@require_http_methods(["POST"])
+def floors_by_building(request):
+
+    print("???????")
+    print("???????")
+    print("???????")
+    print("???????")
+    print("???????")
+    print("???????")
+    data_js = json.loads(request.body.decode('utf-8'))[0]
+    building = data_js['building']
+
+    try:
+        floors = Wholesalers.objects.filter(building_name=building).values_list('floor', flat=True).distinct()
+        floors = list(floors)
+        data = {'floors': floors}
+        return JsonResponse(data);
+    except Exception as e:
+        response = HttpResponse("error")
+        response.status_code = 500
+        return response
 
 
-class ManageWSListView(generic.ListView):
-    model = Ws
+class WSFormMixinListView(ModelFormMixin, ListView):
+    model = WsByTCGroup
+    form = CreateWsForm
+    fields = ()
     context_object_name = 'ws'
     template_name = "app/manage_ws.html"
     paginate_by = 10
 
 
-    @method_decorator(can_manage_ws())
-    def dispatch(self, *args, **kwargs):
-        return super(ManageWSListView, self).dispatch(*args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        token = self.request.session['token']
-        token = utils.get_decoded_token(token)
-
-        acc_type = token['acc_type']
-
-        orders = []
-        if acc_type == "retailer":
-            retailer_name = token['retailer_name']
-            orders = Order.objects.filter(retailer_name=retailer_name).order_by('-order_id').values('order_id', 'ws_name', 'created_time', 'retailer_name',
-                                                                           'count', 'price', 'status')
+    def get_context_data(self, *args, **kwargs):
+        context = super(WSFormMixinListView, self).get_context_data(*args, **kwargs)
+        group = TCGroup.objects.filter(main_user=self.request.user)[0]
 
 
-        if acc_type == "pickup":
-            pickteam_id = token['pickteam_id']
-            orders = Order.objects.filter(pickteam_id=pickteam_id).order_by('-order_id').values('order_id', 'ws_name', 'created_time', 'count', 'retailer_name',
-                                                                 'price', 'status')
+        ws_list = WsByTCGroup.objects.filter(group=group).exclude(is_deleted=True).order_by('-updated_time')
+        buildings = Buildings.objects.values_list('building_name', flat=True).order_by('building_name')
 
+        paginator = Paginator(ws_list, self.paginate_by)
 
-        paginator = Paginator(orders, self.paginate_by)
         page = self.request.GET.get('page')
-        context = super(ManageWSListView, self).get_context_data(**kwargs)
+        try:
+            ws = paginator.page(page)
+        except PageNotAnInteger:
+            ws = paginator.page(1)
+        except EmptyPage:
+            ws = paginator.page(paginator.num_pages)
 
+        context['buildings'] = buildings
+        context['num_pages'] = paginator.num_pages
+        context['ws_list'] = ws
+        context['form'] = self.get_form()
+        return context
 
-        context['token'] = utils.get_decoded_token(token)
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        self.form = self.get_form(self.form_class)
+
+        return ListView.get(self, request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden
+        if not request.user.has_tcperm('change_wsbytcgroup'):
+            return HttpResponseForbidden
+
+        data_js = json.loads(request.body.decode('utf-8'))[0]
+        ws_name = data_js['ws_name']
+        building= data_js['building']
+        floor   = data_js['floor']
+        location= data_js['location']
+        col = data_js['col']
+        ws_phone= data_js['ws_phone']
 
         try:
-            paged_orders = paginator.page(page)
-        except PageNotAnInteger:
-            paged_orders = paginator.page(1)
-        except EmptyPage:
-            paged_orders = paginator.page(paginator.num_pages)
+            group = TCGroup.objects.filter(main_user=request.user)[0]
+            ws_bytcuser = WsByTCGroup.objects.create(ws_name=ws_name,col=col, building=building, floor=floor, location=location, ws_phone=ws_phone, group=group)
+            msg = "도매가 성공적으로 추가 되었습니다."
+            messages.success(request, msg)
+        except IntegrityError:
+            messages.error(request, '도매추가를 실패하였습니다.')
+            return HttpResponse('error')
 
-        context['orders'] = paged_orders
-        t_user = utils.get_user_from_token(token)
-        context['t_user'] = t_user
-        print(t_user.acc_type)
-        #context['retail_user'] = utils.get_retail_user_from_token(token)
-
-        return context
+        return self.get(request, *args, **kwargs)

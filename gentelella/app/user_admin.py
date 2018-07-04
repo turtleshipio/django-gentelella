@@ -5,7 +5,7 @@ class TCUserAdmin(BaseUserAdmin):
     add_form = TCUserCreationForm
     add_fieldsets = (
         (None, {
-            'classes': ('wide',),
-            'fields': ('phone', 'first_name', 'last_name', 'password1', 'password2')}
-        ),
+            'classes' : ('wide',),
+            'fields' : ('phone', 'first_name', 'last_name', 'password1', 'password2')
+        }),
     )

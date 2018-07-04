@@ -6,22 +6,34 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
 
 
-
-
 class TCUser(AbstractUser):
     phone = models.CharField(max_length=11)
-    
+    full_name = models.CharField(max_length=30, null=False)
+
     def get_full_name(self):
       
-      # Returns Korean way of full name
-      
-      return "%s%s" % (self.last_name, self.first_name)
-        
+      return self.full_name
+
+    def has_tcperm(self, codename):
+        perms = self.get_all_permissions()
+        codename = '.'.join(['app', codename])
+
+        return True if codename in perms else False
+
+    def has_tcperms(self, codenames):
+        perms = self.get_all_permissions()
+        result = True
+        for codename in codenames:
+            temp_codename = 'app.' + codename
+            if temp_codename not in perms:
+                result = False
+
+        return result
+
     class Meta:
         managed=True
         db_table = "tc_user"
@@ -29,7 +41,7 @@ class TCUser(AbstractUser):
         verbose_name_plural = "TC Users"
 
         
-class TCGroup(models.Model):        
+class TCGroup(models.Model):
     group = models.ForeignKey(Group, on_delete = models.SET_NULL, null=True)
     main_user = models.ForeignKey(TCUser, on_delete = models.SET_NULL, null=True)
 
@@ -42,12 +54,12 @@ class TCGroup(models.Model):
     def __str__(self):
         return self.org_name if (self.org_name is not None or self.org_name != "") else "TC Group Object"
 
-
     class Meta:
-        managed=True
         db_table='tc_group'
+        managed=True
         verbose_name = "TC Group"
         verbose_name_plural = "TC Groups"
+
 
 class TCPickteam(TCGroup):
     
@@ -59,16 +71,48 @@ class TCPickteam(TCGroup):
         db_table = 'tc_pickteam'
         verbose_name = "TC Pickteam"
         verbose_name_plural = "TC Pickteams"
-        
-    
+
+
+class OrderFormats(models.Model):
+
+    DEFAULT_PK = -1
+
+    fmt_name = models.CharField(null=False, default="", max_length=10, verbose_name="포맷명")
+    fmt_ws_name = models.CharField(null=False, max_length=10, verbose_name="도매명 포맷")
+    fmt_product_name = models.CharField(null=False, max_length=10, verbose_name="장끼명 포맷")
+    fmt_sizeNcolor = models.CharField(null=False, max_length=10, verbose_name="사이즈 및 컬러 포맷")
+    fmt_color = models.CharField(null=False, max_length=10, verbose_name="컬러 포맷")
+    fmt_price = models.CharField(null=False, max_length=10, verbose_name="도매가 포맷")
+    fmt_count = models.CharField(null=False, max_length=10, verbose_name="수량 포맷")
+    fmt_request = models.CharField(null=True, max_length=10, verbose_name="요청사항 포맷")
+
+
+    def __str__(self):
+        return self.fmt_name
+
+    class Meta:
+        db_table = 'order_formats'
+        managed = True
+        verbose_name = "Order Format"
+        verbose_name_plural = "Order Formats"
+
 
 class TCRetailer(TCGroup):
+
+
     biz_num = models.CharField(max_length=10, blank=True,null=True)
     biz_type = models.CharField(max_length=30, blank=True, null=True)
     store_type = models.CharField(max_length=30, blank=True, null=True)
     address = models.CharField(max_length=191, blank=True, null=True)
-    
-    pickteam = models.ManyToManyField(TCPickteam) # is this really many to many..? Need to check this out
+
+    order_format = models.OneToOneField(
+        OrderFormats,
+        on_delete=None,
+        null=True,
+
+    )
+    pickteam = models.ForeignKey(TCPickteam, null=True, on_delete=None, related_name="tc_retailer_pickteam")
+
 
     def __str__(self):
         return self.org_name if (self.org_name is not None or self.org_name != "") else "TC Retailer Object"
@@ -78,10 +122,8 @@ class TCRetailer(TCGroup):
         db_table = 'tc_retailer'
         verbose_name = "TC Retailer"
         verbose_name_plural = "TC Retailers"
-        
 
 
-        
 class TurtlechainUser:
 
     username = ""
@@ -119,8 +161,6 @@ class TurtlechainUser:
             raise ValueError
 
 
-
-
 class OrderConfirm(models.Model):
     order_id = models.BigAutoField(primary_key=True)
     ws_status = models.CharField(max_length=10, blank=True, null=True)
@@ -131,6 +171,7 @@ class OrderConfirm(models.Model):
     class Meta:
         managed = False
         db_table = 'order_confirm'
+
 
 class Credits(models.Model):
     credit_id = models.BigAutoField(primary_key=True)
@@ -153,13 +194,32 @@ class Buildings(models.Model):
     holiday = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=1024, blank=True, null=True)
     business_hour = models.CharField(max_length=100, blank=True, null=True)
-    updated_time = models.DateTimeField(blank=True, null=True)
+    updated_time = models.DateTimeField(auto_now_add=True, blank=True)
 
     class Meta:
         managed = False
         db_table = 'buildings'
 
 
+class WsByTCGroup(models.Model):
+    ws_name = models.CharField(max_length=30)
+    building = models.CharField(max_length=30)
+    location = models.CharField(max_length=30)
+    floor = models.CharField(max_length=30)
+    col = models.CharField(max_length=5, null=True, default="")
+    ws_phone = models.CharField(max_length=30)
+    group = models.ForeignKey(TCGroup, on_delete=None, default=3)
+    updated_time = models.DateTimeField(auto_now_add=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.ws_name
+
+    class Meta:
+        managed = True
+        db_table = 'wsbytcgroup'
+        verbose_name = "TCGroup's Wholesaler"
+        verbose_name_plural = "TCGroup's Wholesalers"
 
 
 class Ws(models.Model):
@@ -177,6 +237,7 @@ class Ws(models.Model):
         managed = False
         db_table = 'ws'
 
+
 class Permissions(models.Model):
     policy_name = models.CharField(primary_key=True, max_length=30)
     username = models.CharField(max_length=100)
@@ -186,8 +247,6 @@ class Permissions(models.Model):
     class Meta:
         managed = False
         db_table = 'permissions'
-
-
 
 
 class Wholesalers(models.Model):
@@ -202,7 +261,6 @@ class Wholesalers(models.Model):
     class Meta:
         managed = False
         db_table = 'wholesalers'
-
 
 class Retailer(models.Model):
     retailer_id = models.BigAutoField(primary_key=True)
@@ -222,7 +280,6 @@ class Retailer(models.Model):
     class Meta:
         managed = False
         db_table = 'retailer'
-
 
 class RetailUser(models.Model):
     user_idx = models.BigAutoField(primary_key=True)
@@ -250,7 +307,8 @@ class Order(models.Model):
     retailer = models.ForeignKey(Retailer, on_delete=models.DO_NOTHING, null=True)
     ws_name = models.CharField(max_length=100, blank=True, null=True)
     status = models.CharField(max_length=10, blank=True, null=True)
-    ws_phone = models.CharField(max_length=12)
+    ws_phone = models.CharField(max_length=12, null=False)
+    ws_store_phone = models.CharField(max_length=12, null=True)
     product_name = models.CharField(max_length=50)
     sizencolor = models.CharField(db_column='sizeNcolor', max_length=1024)  # Field name made lowercase.
 
@@ -348,3 +406,6 @@ class StoreSyles(models.Model):
     class Meta:
         managed = False
         db_table = 'store_styles'
+
+
+

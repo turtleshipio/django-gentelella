@@ -4,7 +4,7 @@ register = Library()
 
 @register.filter()
 def check_permission(user, perm):
-    return user.has_perm(permission)
+    return user.has_tcperm(perm)
 
 @register.filter()
 def check_group(user, group):

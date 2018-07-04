@@ -1,22 +1,13 @@
-from django.template import loader
-from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
-from passlib.apps import custom_app_context as pwd_context
+
 
 from app.models import *
 
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import redirect, render
-from app.forms import *
-from app.backend import RetailUserBackend
-from app import utils
-from app.decorators import require_token
-from app import pickup_utils
 import json
 from app.views.auth.signup import create_turtlechain_user
-from app.views.auth.login import retail_login, pickup_login
-from django.template import Context
 
 from django.contrib import auth
 
@@ -36,7 +27,6 @@ def home(request):
 
 def login(request):
 
-
     if request.method == "GET":
 
         return render(request, 'app/login.html')
@@ -45,7 +35,6 @@ def login(request):
 
         username = request.POST['username']
         password = request.POST['password']
-        acc_type = request.POST['account-type']
 
         user = auth.authenticate(request=request, username=username, password=password)
 
@@ -59,7 +48,9 @@ def login(request):
 def logout(request):
 
     if request.user.is_active:
-        auth.logout(request.user)
+        auth.logout(request)
+
+    return HttpResponseRedirect('/')
 
 
 
@@ -77,7 +68,7 @@ def notify_success(request):
 
 @require_http_methods(['GET'])
 def temp(request):
-    return render(request, 'app/form.html')
+    return render(request, 'app/widgets.html')
 
 
 @require_http_methods(['GET', 'POST'])
@@ -92,22 +83,18 @@ def signup(request):
         return render(request, 'app/signup-form.html', context=context)
 
     if request.method == "POST":
-        print("????")
         context['login_error'] = ""
         context['signup_error'] = ""
         context['content'] = ""
         context['ws_perm'] = False
 
         if 'signup-cancel' in request.POST:
-            print("something wrong")
             return redirect('/home')
 
         data_js = json.loads(request.body.decode('utf-8'))
 
         success, t_user, token = create_turtlechain_user(data_js)
 
-        print("???RESULT!!!!!!")
-        print(success)
 
         if success:
             
@@ -119,18 +106,12 @@ def signup(request):
             else:
                 context['ws_perm'] = False
                 
-            print("??????")
-            print("what?s in context?")
-            print(context)
-            
             return HttpResponseRedirect(reverse('home'))
-            #return render(request, 'app/index.html', context=context)
-        
+
         else:
             return render(request, 'app/signup-form.html', context)
     
 
-@require_token()
 @require_http_methods(["POST"])
 def delete_order(request):
 
@@ -151,8 +132,6 @@ def delete_order(request):
 def order_confirm(request):
 
     if request.method == 'POST':
-
-
 
             choice_list = request.POST.getlist('choice')
             notify_id = request.POST.get('notify_id')

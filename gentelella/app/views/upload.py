@@ -1,21 +1,14 @@
 from django.shortcuts import render, redirect
-from django.template import loader
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
-from app.forms import DocumentForm
-from app.decorators import require_token, require_login
-from app import utils
 from app.excel import OrderExcelValidator
 from app.models import *
 from app import common
-from django.db import transaction
 from app.kakao import OrderCreator, KakaoNotifySender
 import json
+from django.contrib.auth.decorators import  login_required
 
-import io
-import xlrd
-
-@require_login()
+@login_required()
 @require_http_methods(['GET', 'POST'])
 def bulk_orders(request):
     context= {
@@ -29,8 +22,8 @@ def bulk_orders(request):
         context['retailer_name'] = retailer[0].name
 
     if request.method == "GET":
-
-        return render(request, 'app/form_upload.html', context=context)
+        request.FILES['excel_file'] = None
+        return render(request, 'app/upload_bulk_orders.html', context=context)
 
     if request.method == "POST":
 
@@ -38,31 +31,49 @@ def bulk_orders(request):
 
             data_js = json.loads(request.body.decode('utf-8'))
             orders_js = data_js[0]['orders']
-            phones = []
+            print("####")
+            print("####")
+            print("####")
+            print("####")
+            print("####")
+            print("####")
+            print("####")
+            print(orders_js)
+            print("####")
+            print("####")
+            print("####")
+            print("####")
+            print("####")
+            print("####")
+            print("####")
+            print("####")
 
-            retailer_name = ""
-            pickteam = None
+            is_pickteam = common.check_group(request.user, 'pickteam_group')
 
-            is_retailer = common.check_group(request.user, 'retailer_group')
-
-            if is_retailer:
-                retailer = TCRetailer.objects.get(main_user=request.user)
-                retailer_name = retailer.org_name
-
-                group = request.user.groups.get(name='retailer_group')
-                pickteam = retailer.pickteam.all()[0] # technically should be foreign key instead of n:n. Just for now.
-
-            else: # if pickteam
+            if is_pickteam:
                 pickteam = TCPickteam.objects.get(main_user = request.user)
                 try:
                     retailer_name = data_js[0]['retailer_name']
                 except:
                     return HttpResponse('retailer not found')
 
+            else: # if pickteam
+                retailer = TCRetailer.objects.get(main_user=request.user)
+                retailer_name = retailer.org_name
+
+                group = request.user.groups.get(name='retailer_group')
+                pickteam = retailer.pickteam # technically should be foreign key instead of n:n. Just for now.
+
             creator = OrderCreator()
             sender = KakaoNotifySender()
 
-            result = creator.create_orders_from_js(orders_js, request.user.username, retailer_name, pickteam.id)
+            success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id)
+
+            if not success:
+                response = HttpResponse("error")
+                response.status_code=500
+                return response
+
             notifies = creator.notifies
 
             for ws_name in notifies:
@@ -81,7 +92,7 @@ def bulk_orders(request):
 
             return HttpResponse("Ok")
 
-@require_login()
+@login_required()
 @require_http_methods(['GET', 'POST'])
 def modal_view(request):
 
@@ -91,25 +102,29 @@ def modal_view(request):
 
         file = request.FILES['excel_file']
 
-        validator = OrderExcelValidator()
+        validator = OrderExcelValidator(request.user)
         validator.set_file(file)
-        success, msg = validator.validate()
+
+        is_pickteam = common.check_group(request.user, 'pickteam_group')
+
+        if is_pickteam:
+            retailer_name = request.POST['retailer_name']
+            retailer = TCRetailer.objects.get(org_name=retailer_name)
+
+        else:
+            retailer = TCRetailer.objects.get(main_user=request.user)
+
+        order_format = retailer.order_format
+        success, msg = validator.validate(order_format)
 
         if not success:
             return render(request, 'app/excel_modal.html', context={'orders': None, 'retailer_name':None, 'msg':msg})
 
         orders, success, msg = validator.extract()
 
-        retailer_name = ""
-        is_retailer = common.check_group(request.user, 'retailer_group')
-
-        if is_retailer:
-            retailer_name = TCRetailer.objects.get(main_user=request.user).org_name
-        else:
-            retailer_name = request.POST['retailer_name']
-
         if success:
-            return render(request, 'app/excel_modal.html', context={'orders': orders, 'retailer_name': retailer_name, 'msg':None})
+            return render(request, 'app/excel_modal.html', context={'orders': orders, 'retailer_name': retailer.org_name, 'msg':None})
         else:
+            request.FILES['excel_file'] = None
             return render(request, 'app/excel_modal.html', context={'orders': None, 'retailer_name':None, 'msg':msg})
 

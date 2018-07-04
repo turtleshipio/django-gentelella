@@ -1,7 +1,7 @@
 from app.models import *
 
 def check_permission(user, perm):
-    return user.has_perm(permission)
+    return user.has_tcperm(perm)
 
 def check_group(user, group):
     return user.groups.filter(name=group).exists()
