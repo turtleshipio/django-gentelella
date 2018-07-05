@@ -87,8 +87,8 @@
           <file leaf-file-name="excel.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/app/excel.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="583">
-                  <caret line="31" column="27" selection-start-line="31" selection-start-column="27" selection-end-line="31" selection-end-column="27" />
+                <state relative-caret-position="58">
+                  <caret line="31" column="26" selection-start-line="31" selection-start-column="26" selection-end-line="31" selection-end-column="26" />
                   <folding>
                     <element signature="e#0#11#0" expanded="true" />
                   </folding>
@@ -579,7 +579,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1280" y="-640" width="2560" height="1440" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.12929687" />
       <window_info anchor="bottom" id="TODO" order="7" />
@@ -590,7 +589,7 @@
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.8653234" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32952926" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24972972" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49783784" visible="true" weight="0.26895043" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.49783784" visible="true" weight="0.8345481" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -986,8 +985,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/excel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="583">
-          <caret line="31" column="27" selection-start-line="31" selection-start-column="27" selection-end-line="31" selection-end-column="27" />
+        <state relative-caret-position="58">
+          <caret line="31" column="26" selection-start-line="31" selection-start-column="26" selection-end-line="31" selection-end-column="26" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
