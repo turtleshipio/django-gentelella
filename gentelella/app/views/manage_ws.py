@@ -99,9 +99,9 @@ class WSFormMixinListView(ModelFormMixin, ListView):
         group = TCGroup.objects.filter(main_user=self.request.user)[0]
 
 
-        ws_list = WsByTCGroup.objects.filter(group=group).exclude(is_deleted=True).order_by('-updated_time')
         buildings = Buildings.objects.values_list('building_name', flat=True).order_by('building_name')
 
+        ws_list = WsByTCGroup.objects.filter(group=group).exclude(is_deleted=True).order_by('-updated_time')
         paginator = Paginator(ws_list, self.paginate_by)
 
         page = self.request.GET.get('page')

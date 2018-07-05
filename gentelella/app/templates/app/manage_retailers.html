@@ -1,0 +1,183 @@
+{% extends "app/base_site.html" %}
+{% load auth_tags %}
+{% load user_tags %}
+{% load utils_tags %}
+
+{% block stylesheets %}
+  {{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="">
+      <div class="page-title">
+        <div class="title_left">
+          <h3>소매관리</h3>
+        </div>
+
+        <div class="title_right">
+          <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search for...">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button">Go!</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+
+        <div class="">
+          <div class="col-md-12">
+          <div class="x_panel">
+              <div class="x_title">
+                  <h2><i class="fa fa-bars"></i> 소매 관리하기</h2>
+              <div class="clearfix"></div>
+              </div>
+              <!-- start project list -->
+              <table class="table table-striped projects">
+                <thead class="text-center">
+                  <tr>
+                    <th><h4 class="text-center">소매명</h4></th>
+                    <th><h4 class="text-center">지역</h4></th>
+                    <th><h4 class="text-center">전화번호</h4></th>
+                    <th><h4 class="text-center">주문서 양식</h4></th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                  {%  for retailer in retailers %}
+                        <tr>
+                        <td class="text-center">
+                            <p id="retailer-name-{{forloop.counter}}"><strong>{{retailer.org_name}}</strong></p>
+                        </td>
+                        <td class="text-center">
+                            <p id="retailer-city-{{forloop.counter}}">{{retailer.city}}</p>
+                        </td>
+                        <td class="text-center">
+                            <p id="retailer-mobile-phone-{{forloop.counter}}">{{retailer.mobile_phone | format_mobile_phone}}</p>
+                        </td>
+                        <td class="text-center">
+                            <button type="button" data-toggle="modal" data-target=".order-format-modal-{{forloop.counter}}" id="btn-order-format-{{forloop.counter}}" value="{{forloop.counter}}" class="btn btn-info" data-dismiss="modal">양식보기</button>
+                        </td>
+
+                        <div class="modal fade order-format-modal-{{forloop.counter}}" id="modal-{{forloop.counter}}" tabindex="-1" role="dialog" aria-hidden="true">
+                           <form action="/manage_retailers/" class="form-horizontal form-label-left" method="post">
+                               {% csrf_token %}
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span> </button>
+                                            <h4 class="modal-title" id="edit-order-format">주문서양식 수정하기</h4>
+                                    </div>
+                                    <div class="modal-body form-horizontal">
+
+                                        {% with format=retailer.order_format %}
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="input-retailer-name-{{forloop.counter}}">소매명</label>
+
+                                            <div class="col-md-5">
+                                                <input value="{{retailer.org_name}}" readonly id="input-retailer-name-{{forloop.counter}}" name="retailer_name" class="form-control col-md-5 col-xs-7">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="order-fmt-ws-name-{{forloop.counter}}">도매명 포맷<span class="required">*</span></label>
+                                            <div class="col-md-5">
+                                                <input type="text" value="{{format.fmt_ws_name}}" name="fmt_order_format" id="order-fmt-ws-name-{{forloop.counter}}" required="required" class="form-control col-md-5 col-xs-7">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="order-fmt-product-name-{{forloop.counter}}">장끼명 포맷<span class="required">*</span></label>
+                                            <div class="col-md-5">
+                                                <input type="text" value="{{format.fmt_product_name}}" name="fmt_product_name" id="order-fmt-product-name-{{forloop.counter}}" required="required" class="form-control col-md-5 col-xs-7">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="order-fmt-sizencolor-{{forloop.counter}}">사이즈 및 컬러 포맷<span class="required">*</span></label>
+                                            <div class="col-md-5">
+                                                <input type="text" value="{{format.fmt_sizeNcolor}}" name="fmt_sizencolor" id="order-fmt-sizencolor-{{forloop.counter}}" required="required" class="form-control col-md-5 col-xs-7">
+                                            </div>
+                                            <small>사이즈와 컬러를 따로 쓰면 사이즈만 적어주세요</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="order-fmt-color-{{forloop.counter}}">컬러</label>
+                                            <div class="col-md-5">
+                                                <input type="text" value="{{format.fmt_color}}" name="fmt_color" id="order-fmt-color-{{forloop.counter}}" required="required" class="form-control col-md-5 col-xs-7">
+                                            </div>
+                                            <small>사이즈와 컬러를 같이 쓰면 빈 칸으로 남겨주세요</small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="order-fmt-price-{{forloop.counter}}">가격 포맷<span class="required">*</span></label>
+                                            <div class="col-md-5">
+                                                <input type="text" value="{{format.fmt_price}}" id="order-fmt-price-{{forloop.counter}}" required="required" class="form-control col-md-5 col-xs-7">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="order-fmt-count-{{forloop.counter}}">수량 포맷<span class="required">*</span></label>
+                                            <div class="col-md-5">
+                                                <input type="text" value="{{format.fmt_count}}" id="order-fmt-count-{{forloop.counter}}" required="required" class="form-control col-md-5 col-xs-7">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="order-fmt-request-{{forloop.counter}}">요청사항 포맷</label>
+                                            <div class="col-md-5">
+                                                <input type="text" value="{{format.fmt_request}}" id="order-fmt-request-{{forloop.counter}}" required="required" class="form-control col-md-5 col-xs-7">
+                                            </div>
+                                            <small>빈공간으로 남겨도 괜찮습니다.</small>
+                                        </div>
+                                        {% endwith %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                                        <button type="button" value="{{forloop.counter}}" id="submit-order-format" class="btn btn-primary">수정하기</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                           </form>
+                        </div>
+
+                      </tr>
+                  {%  endfor %}
+
+
+                  {% if is_paginated %}
+                  <ul class="pagination">
+                      {% if page_obj.has_previous %}
+                      <li>
+                          <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
+                      </li>
+                      {% endif %}
+                      <li class="">
+                          <span>페이지 {{ page_obj.number}} 중 {{ num_pages }}</span>
+                      </li>
+                      {% if page_obj.has_next %}
+                      <li>
+                          <span><a href="?page={{page_obj.next_page_number }}">다음</a></span>
+                      </li>
+                      {% endif %}
+
+                  </ul>
+                    {% else %}
+                  {% endif %}
+                </tbody>
+              </table>
+              <!-- end project list -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super }}
+ <script src="/static/build/js/manage_retailers.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.60/inputmask/jquery.inputmask.js"></script>
+{% endblock javascripts %}

@@ -50,6 +50,8 @@ class TCGroup(models.Model):
     bank = models.CharField(max_length=191, null=True)
     bank_account_number = models.CharField(max_length=191, null=True)
     bank_holder_name = models.CharField(max_length=191, null=True)
+    mobile_phone  = models.CharField(max_length=11, null=False, default="01088958454")
+
 
     def __str__(self):
         return self.org_name if (self.org_name is not None or self.org_name != "") else "TC Group Object"
@@ -100,6 +102,7 @@ class OrderFormats(models.Model):
 class TCRetailer(TCGroup):
 
 
+    city = models.CharField(max_length=10, blank=False, null=False, default="서울")
     biz_num = models.CharField(max_length=10, blank=True,null=True)
     biz_type = models.CharField(max_length=30, blank=True, null=True)
     store_type = models.CharField(max_length=30, blank=True, null=True)

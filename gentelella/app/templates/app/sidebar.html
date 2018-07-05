@@ -29,10 +29,13 @@
 
       <ul class="nav side-menu">
         <!-- <li><a href="/home"><i class="fa fa-home"></i> 홈 </a></li> -->
-        <li><a href="/manage_ws"><i class="fa fa-clone"></i> 도매관리 </a></li>
         <li><a href="/upload_bulk"><i class="fa fa-file-excel-o"></i> 대량주문 </a></li>
         <li><a href="/order_list"><i class="fa fa-desktop"></i> 주문내역 </a></li>
-          <li><a href="/credits"><i class="fa fa-archive"></i> 미송확인 </a></li>
+        <li><a href="/manage_ws"><i class="fa fa-building-o"></i> 도매관리 </a></li>
+        {% if user|check_group:'pickteam_group' %}
+          <li><a href="/manage_retailers"><i class="fa fa-laptop"></i> 소매관리 </a></li>
+        {% endif %}
+        <li><a href="/credits"><i class="fa fa-archive"></i> 미송확인 </a></li>
         <li><a href="/logout"><i class="fa fa-sign-out"></i> 로그아웃 </a></li>
 
       </ul>

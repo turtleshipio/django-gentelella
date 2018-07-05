@@ -31,22 +31,6 @@ def bulk_orders(request):
 
             data_js = json.loads(request.body.decode('utf-8'))
             orders_js = data_js[0]['orders']
-            print("####")
-            print("####")
-            print("####")
-            print("####")
-            print("####")
-            print("####")
-            print("####")
-            print(orders_js)
-            print("####")
-            print("####")
-            print("####")
-            print("####")
-            print("####")
-            print("####")
-            print("####")
-            print("####")
 
             is_pickteam = common.check_group(request.user, 'pickteam_group')
 
@@ -113,6 +97,7 @@ def modal_view(request):
 
         else:
             retailer = TCRetailer.objects.get(main_user=request.user)
+            retailer_name = retailer.org_name
 
         order_format = retailer.order_format
         success, msg = validator.validate(order_format)
@@ -121,6 +106,7 @@ def modal_view(request):
             return render(request, 'app/excel_modal.html', context={'orders': None, 'retailer_name':None, 'msg':msg})
 
         orders, success, msg = validator.extract()
+
 
         if success:
             return render(request, 'app/excel_modal.html', context={'orders': orders, 'retailer_name': retailer.org_name, 'msg':None})

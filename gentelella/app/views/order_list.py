@@ -29,20 +29,6 @@ class OrderListView(generic.ListView):
             pickteam_id = pickteam.id
             orders = Order.objects.exclude(is_deleted="true").filter(pickteam_id=pickteam_id).order_by('-order_id').values('order_id', 'ws_name', 'created_time', 'count', 'retailer_name',
                                                                                                                            'price', 'status')
-
-            print("***********")
-            print("***********")
-            print("***********")
-            print("***********")
-            print("***********")
-            print(orders)
-            print("***********")
-            print("***********")
-            print("***********")
-            print("***********")
-            print("***********")
-            print("***********")
-
         else:
 
             retailer = TCRetailer.objects.get(main_user=user)

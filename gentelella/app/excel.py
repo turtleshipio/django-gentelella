@@ -1,11 +1,4 @@
 import xlrd
-from app.models import Order, Notify
-from django.db import transaction
-import random
-import string
-from random import randint
-import requests
-
 from app.models import *
 
 class OrderExcelValidator:
@@ -28,8 +21,22 @@ class OrderExcelValidator:
                 '구매자명', '구매자ID', '수취인명', '결제위치', '상품번호', '상품명', '옵션정보',
                 '수량', '상품가격', '판매자 상품코드', '구매자연락처',  '우편번호',
                 '출고지', '결제수단', '유입경로', '배송지', ]'''
-    required_fmt = ['fmt_ws_name', 'fmt_product_name', 'fmt_sizeNcolor', 'fmt_color',  'fmt_price', 'fmt_count']
     required = None
+
+    required_fmt = {
+        'fmt_ws_name' : None,
+        'fmt_product_name' : None,
+        'fmt_sizeNcolor' : None,
+        'fmt_price' : None,
+        'fmt_count' : None,
+        'fmt_color' : None,
+    }
+
+    optional_fmt = {
+        'fmt_color' : None,
+        'fmt_request' : None,
+    }
+
     head = {}
 
     def __init__(self, user):
@@ -55,21 +62,31 @@ class OrderExcelValidator:
 
         for fmt in self.required_fmt:
             if hasattr(format, fmt):
-                self.required.append(getattr(format, fmt))
+                self.required_fmt[fmt] = getattr(format, fmt)
+                #self.required.append(getattr(format, fmt))
             else:
                 return False, "다음 항목이 업로드해주신 엑셀파일에 존재하지 않습니다:%s" % fmt
 
         try:
             if self.sheet is None:
                 return False, "엑셀시트가 올바르지 않습니다."
-
             header = self.sheet.row_values(0)
-            required = self.required
+            required = list(self.required_fmt.values())
+            #required = self.required
+            print("*******")
+            print(required)
+            print(type(required))
+            print(header)
 
             diff = set(required) - set(header)
-
+            print(diff)
             if diff != set():
                 diff = list(diff)
+                print("!!!!!!")
+                print("!!!!!!")
+                print(diff)
+                print("!!!!!!")
+                print("!!!!!!")
                 cols = ', '.join(diff)
                 return False, "아래의 열 이름들을 확인해주세요\n{cols}".format(cols=cols)
             else:
@@ -78,40 +95,32 @@ class OrderExcelValidator:
                         if req == col:
                             self.head[req] = header.index(col)
         except Exception as e:
-            print("zzzzzzz")
             return False, str(e)
 
-        print("!!!")
+        print("heyhey")
         return True, "성공"
 
     def extract(self):
 
-
+        print(999999)
         orders = []
         msg = ""
-        print("????")
         nrow = self.sheet.nrows
 
         for nrow in range(1, self.sheet.nrows):
             row = self.sheet.row_values(nrow)
-            print(row)
+
             try:
 
-                count = row[self.head['수량']]
-                price = row[self.head['도매가']]
-                print(777777777)
-                print(777777777)
-                print(777777777)
-                print(price)
-                print(777777777)
-                print(777777777)
+                count = row[self.head[self.required_fmt['fmt_count']]]
+                price = row[self.head[self.required_fmt['fmt_price']]]
+
                 if type(count) == str:
                     count = int(count) if count.isdigit() else count
                 elif type(count) == int:
                     continue
                 elif type(count) == float:
                     count = int(count)
-
 
                 if type(price) == str:
                     price = int(price) if price.isdigit() else price
@@ -123,21 +132,25 @@ class OrderExcelValidator:
                 count = '%d' % int(count)
                 price = '%d' % int(price)
 
+                size = str(row[self.head[self.required_fmt['fmt_sizeNcolor']]])
+                if 'fmt_color' in self.required_fmt and self.required_fmt['fmt_color'] is not None:
+                    print("whatwhat")
+                    color = str(row[self.head[self.required_fmt['fmt_color']]])
+                else:
+                    color = None
+                ws_name = str(row[self.head[self.required_fmt['fmt_ws_name']]])
+                product_name = str(row[self.head[self.required_fmt['fmt_product_name']]])
 
-                size = str(row[self.head['사이즈']])
-                color = str(row[self.head['컬러']])
-                ws_name = str(row[self.head['도매명']])
-                product_name = str(row[self.head['장끼명']])
-                sizencolor = ' '.join([size, ' / ', color])
-
-                print("aaaaaaaaaaaaaaaaaaaaaa")
+                if color is not None:
+                    sizencolor = ' '.join([size, ' / ', color])
+                else:
+                    sizencolor = size
 
                 group = TCGroup.objects.filter(main_user=self.user)[0]
                 try:
                     ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
                 except Exception as e:
                     return None, None, "Does Not Exist"
-
 
                 order = {
                     'sizencolor' : sizencolor,
@@ -154,14 +167,11 @@ class OrderExcelValidator:
                 orders.append(order)
                 msg = "success!"
 
-
             except ValueError as e:
                 msg = str(e)
                 continue
 
             except Exception as e:
-                print("exception while excel extracting")
-                print(row)
                 msg = str(e)
                 continue
 
@@ -170,141 +180,3 @@ class OrderExcelValidator:
             success = False
 
         return orders, success, msg
-
-
-    def insert_db(self):
-
-        orders = []
-        msg = ""
-        notifies = {}
-
-        for nrow in range(1, self.sheet.nrows):
-            row = self.sheet.row_values(nrow)
-
-            try:
-
-                ws_name = row[self.head['도매명']]
-                count = row[self.head['수량']]
-                if type(count)  == str:
-                    count = int(count) if count.isdigit() else count
-                elif type(count) == int:
-                    continue
-                elif type(count) == float:
-                    count = int(count)
-
-                count = '%d' % (count)
-
-
-                if ws_name in notifies:
-                    notify_id = notifies[ws_name]
-                else:
-                    notifies[ws_name] = self.get_uuid(20)
-                    #notifies[ws_name] = randint(0,9999)
-                    notify_id = notifies[ws_name]
-
-                order = Order(
-                    username=self.retail_user['username'],
-                    retailer_name = self.retail_user['retailer_name'],
-                    retailer_id=self.retail_user['retailer_id'],
-                    sizencolor= row[self.head['사이즈 및 컬러']],
-                    ws_phone = row[self.head['전화번호']],
-                    ws_name = ws_name,
-                    product_name = row[self.head['장끼명']],
-                    building =row[self.head['상가']],
-                    floor=row[self.head['층']],
-                    location=row[self.head['호수']],
-                    count = count,
-                    price = row[self.head['도매가']],
-                    is_deleted="false",
-                    status="onwait",
-                    notify_id=notify_id
-                )
-
-                if ws_name not in self.notify:
-                    self.notify[ws_name] = {}
-                    self.notify[ws_name]['notify_id'] = notify_id
-                    self.notify[ws_name]['retailer_id'] = self.retail_user['retailer_id']
-                    self.notify[ws_name]['prd_count'] = count
-                    self.notify[ws_name]['prd1'] = row[self.head['장끼명']]
-                else:
-                    if type(count) == int:
-                        self.notify[ws_name]['prd_count'] += count
-
-                    #excel_origin='naver',
-                    #naver_order_id=row[self.head['주문번호']],
-                    #naver_order_group_id=row[self.head['상품주문번호']],
-                    #buyer_name=row[self.head['구매자명']],
-                    #buyer_id=row[self.head['구매자ID']],
-                    #receiver_name=row[self.head['수취인명']],
-                    #pay_origin=row[self.head['결제위치']],
-                    #product_num=row[self.head['상품번호']],
-                    #buyer_phone= row[self.head['구매자연락처']],
-                    #product_name_retailer=row[self.head['상품명']],
-                    #buyer_pay_method=row[self.head['결제수단']],
-                    #buyer_address=row[self.head['배송지']],
-                    #depart_loc=row[self.head['출고지']],
-                    #postal_code=row[self.head['우편번호']],
-                    #retailer_price=row[self.head['상품가격']],
-                    #delivery_method=row[self.head['배송방법']],
-                    #delivery_id=row[self.head['송장번호']],
-                    #deliverer=row[self.head['택배사']],
-                    #sales_channel=row[self.head['판매채널']],
-                    #marketing_channel=row[self.head['유입경로']],
-                    #buyer_order_count=row[self.head['수량']],
-
-                    #   )
-
-                orders.append(order)
-
-
-            except ValueError as e:
-                self.fail_count += 1
-                msg = str(e)
-                continue
-
-            except Exception as e:
-                self.fail_count += 1
-                msg = str(e)
-                continue
-
-        Order.objects.bulk_create(orders)
-
-        return self.fail_count, msg
-
-    def get_uuid(self, n):
-        return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
-
-    def notify_orders(self):
-
-        notifies = []
-
-        msg = ""
-
-        for ws in self.notify:
-
-            try:
-                n = Notify(
-                    ws_name=ws,
-                    notify_id=self.notify[ws]['notify_id'],
-                    retailer_id=self.notify[ws]['retailer_id'],
-                    prd1=self.notify[ws]['prd1'],
-                    prd_count=self.notify[ws]['prd_count']
-                )
-
-                notifies.append(n)
-
-            except ValueError:
-                msg = str(e)
-
-            except Exception as e:
-                msg = str(e)
-                continue
-
-        Notify.objects.bulk_create(notifies)
-
-
-
-
-
-
-

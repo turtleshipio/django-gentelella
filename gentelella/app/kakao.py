@@ -129,15 +129,6 @@ class OrderCreator:
         for index, order_js in enumerate(orders_js):
 
             ws_name = order_js['ws_name']
-            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
-            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
-            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
-            print(ws_name)
-            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
-            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
-            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
-            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
-            print("ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ")
             ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
 
             timestamp = datetime.now().timestamp()
@@ -180,8 +171,5 @@ class OrderCreator:
             Order.objects.bulk_create(self.orders)
             return True
         except Exception as e:
-            print("&&&&&&&&&&")
-            print(str(e))
-            print("&&&&&&&&&&")
             return False
 

@@ -6,7 +6,7 @@ from app.views.order_list import OrderListView
 from app.views.credit_list import CreditListView
 from app.views.notify_list import NotifyListView
 from app.views.manage_ws import WSFormMixinListView, delete_wsbygroup, floors_by_building, edit_wsbyuser
-
+from app.views.manage_retailers import TCRetailersListView
 
 urlpatterns = [
     url(r'^super/', admin.site.urls),
@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^notify/(?P<notify_id>\w+)/$', NotifyListView.as_view(), name="notify_list"),
     url(r'^order_confirm/$', base.order_confirm, name='order_confirm'),
     url(r'^manage_ws/$', WSFormMixinListView.as_view(), name='manage_ws'),
+    url(r'^manage_retailers/$',TCRetailersListView.as_view(), name='manage_retailers'),
     url(r'^delete_wsbyuser/$', delete_wsbygroup, name='delete_wsbyuser'),
     url(r'^edit_wsbyuser/$', edit_wsbyuser, name='edit_wsbyuser'),
     url(r'^manage_ws/buildings/$', floors_by_building, name='floors_by_buliding'),
