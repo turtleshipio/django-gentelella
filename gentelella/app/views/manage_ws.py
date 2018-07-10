@@ -11,10 +11,8 @@ from django.contrib.auth.decorators import  login_required
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import get_object_or_404
 import json
+from app.common import *
 
-@ajax_required
-@login_required()
-@can_manage_ws()
 @require_http_methods(["PUT"])
 def edit_wsbyuser(request):
 
@@ -43,7 +41,6 @@ def edit_wsbyuser(request):
 
 @ajax_required
 @login_required()
-@can_manage_ws()
 @require_http_methods(["PUT"])
 def delete_wsbygroup(request):
     user = request.user
@@ -61,16 +58,9 @@ def delete_wsbygroup(request):
 
 @ajax_required
 @login_required()
-@can_manage_ws()
 @require_http_methods(["POST"])
 def floors_by_building(request):
 
-    print("???????")
-    print("???????")
-    print("???????")
-    print("???????")
-    print("???????")
-    print("???????")
     data_js = json.loads(request.body.decode('utf-8'))[0]
     building = data_js['building']
 
@@ -96,8 +86,14 @@ class WSFormMixinListView(ModelFormMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(WSFormMixinListView, self).get_context_data(*args, **kwargs)
-        group = TCGroup.objects.filter(main_user=self.request.user)[0]
+        is_retailer = check_group(self.request.user, 'retailer_group')
+        is_pickteam = check_group(self.request.user, 'pickteam_group')
+        is_staff = check_group(self.request.user, 'staff')
 
+        if is_pickteam or is_staff:
+            group = TCGroup.objects.get(main_user=self.request.user, type="pickteam")
+        else:
+            group = TCGroup.objects.get(main_user=self.request.user, type="retailer")
 
         buildings = Buildings.objects.values_list('building_name', flat=True).order_by('building_name')
 
@@ -126,8 +122,6 @@ class WSFormMixinListView(ModelFormMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return HttpResponseForbidden
-        if not request.user.has_tcperm('change_wsbytcgroup'):
             return HttpResponseForbidden
 
         data_js = json.loads(request.body.decode('utf-8'))[0]

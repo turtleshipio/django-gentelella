@@ -45,6 +45,7 @@ class TCGroup(models.Model):
     group = models.ForeignKey(Group, on_delete = models.SET_NULL, null=True)
     main_user = models.ForeignKey(TCUser, on_delete = models.SET_NULL, null=True)
 
+    type = models.CharField(max_length=10, null=True)
     org_name = models.CharField(max_length=191, null=True)
     account_number = models.CharField(max_length=191, null=True)
     bank = models.CharField(max_length=191, null=True)
@@ -84,13 +85,34 @@ class OrderFormats(models.Model):
     fmt_product_name = models.CharField(null=False, max_length=10, verbose_name="장끼명 포맷")
     fmt_sizeNcolor = models.CharField(null=False, max_length=10, verbose_name="사이즈 및 컬러 포맷")
     fmt_color = models.CharField(null=False, max_length=10, verbose_name="컬러 포맷")
-    fmt_price = models.CharField(null=False, max_length=10, verbose_name="도매가 포맷")
     fmt_count = models.CharField(null=False, max_length=10, verbose_name="수량 포맷")
+    fmt_price = models.CharField(null=False, max_length=10, verbose_name="도매가 포맷")
     fmt_request = models.CharField(null=True, max_length=10, verbose_name="요청사항 포맷")
 
 
     def __str__(self):
         return self.fmt_name
+
+    def get_format_str(self):
+
+        li = [self.fmt_ws_name, self.fmt_product_name, self.fmt_sizeNcolor, self.fmt_color, self.fmt_count, self.fmt_price, self.fmt_request]
+        formats = [i for i in li if bool(i or not i.isspace()) and i != '']
+        return ', '.join(formats)
+
+    def get_format_dict(self):
+
+        return {
+            'fmt_ws_name' : self.fmt_ws_name,
+            'fmt_product_name' : self.fmt_product_name,
+            'fmt_sizeNcolor' : self.fmt_sizeNcolor,
+            'fmt_color' : self.fmt_color,
+            'fmt_count' : self.fmt_count,
+            'fmt_price' : self.fmt_price,
+            'fmt_request' : self.fmt_request,
+            'str' : self.get_format_str()
+        }
+
+
 
     class Meta:
         db_table = 'order_formats'
@@ -305,6 +327,8 @@ class RetailUser(models.Model):
 
 
 class Order(models.Model):
+
+
     order_id = models.BigAutoField(primary_key=True)
     username = models.CharField(max_length=100, blank=True, null=True)
     retailer = models.ForeignKey(Retailer, on_delete=models.DO_NOTHING, null=True)
@@ -320,24 +344,30 @@ class Order(models.Model):
     floor = models.CharField(max_length=30, blank=True, default="")
     location = models.CharField(max_length=30, blank=True, default="")
     oos = models.IntegerField
-    credit = models.IntegerField
     memo = models.CharField(max_length=100, blank=True, default="")
 
 
     updated_time = models.DateTimeField()
     created_time = models.DateTimeField()
 
-    credit = models.ForeignKey(Credits, on_delete=models.DO_NOTHING, related_name="order_of_credits", null=True)
-    is_deleted = models.CharField(max_length=10, blank=True, null=True)
+    is_deleted = models.BooleanField(null=False, default=False, name="is_deleted")
 
 
     notify_id = models.CharField(max_length=100, default="")
     building = models.CharField(max_length=100, default="")
-    pickteam_id = models.IntegerField()
     retailer_name = models.CharField(max_length=30, default="")
+    pickteam = models.ForeignKey(TCPickteam, on_delete=None, null=True, db_column="pickteam_id" )
+    retailer = models.ForeignKey(TCRetailer, on_delete=None, null=True)
+
+
+    def get_order_name(self):
+        return '/ '.join([self.ws_name, self.product_name])
+
+    def __str__(self):
+        return self.get_order_name()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'orders'
 
 

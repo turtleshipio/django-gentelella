@@ -27,13 +27,13 @@ class OrderListView(generic.ListView):
 
             pickteam = TCPickteam.objects.get(main_user=user)
             pickteam_id = pickteam.id
-            orders = Order.objects.exclude(is_deleted="true").filter(pickteam_id=pickteam_id).order_by('-order_id').values('order_id', 'ws_name', 'created_time', 'count', 'retailer_name',
+            orders = Order.objects.exclude(is_deleted=True).filter(pickteam_id=pickteam_id).order_by('-order_id').values('order_id', 'ws_name', 'created_time', 'count', 'retailer_name',
                                                                                                                            'price', 'status')
         else:
 
             retailer = TCRetailer.objects.get(main_user=user)
             retailer_name = retailer.org_name
-            orders = Order.objects.exclude(is_deleted="true").filter(retailer_name=retailer_name).order_by('-order_id').values('order_id', 'ws_name', 'created_time', 'retailer_name',
+            orders = Order.objects.exclude(is_deleted=True).filter(retailer_name=retailer_name).order_by('-order_id').values('order_id', 'ws_name', 'created_time', 'retailer_name',
                                                                                                                                'count', 'price', 'status')
 
         paginator = Paginator(orders, self.paginate_by)

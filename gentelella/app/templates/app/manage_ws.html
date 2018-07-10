@@ -15,22 +15,13 @@
           <h3>도매관리</h3>
         </div>
 
-        <div class="title_right">
-          <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search for...">
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="button">Go!</button>
-              </span>
-            </div>
-          </div>
-        </div>
+
       </div>
 
         <div class="clearfix"></div>
 
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
                         <h2><i class="fa fa-square-o"></i> 도매 추가</h2>
@@ -55,7 +46,6 @@
                                     <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span> </button>
                                             <h4 class="modal-title" id="addWsModal">새로운 도매 추가하기</h4>
-
                                     </div>
                                     <div class="modal-body">
                                         <form action="manage_ws/" class="form-horizontal form-label-left" method="post">
@@ -129,7 +119,7 @@
             </div>
         </div>
         <div class="">
-          <div class="col-md-12">
+          <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="x_panel">
               <div class="x_title">
                   <h2><i class="fa fa-bars"></i> 등록된 도매</h2>
@@ -262,7 +252,7 @@
 
 
                   {% if is_paginated %}
-                  <ul class="pagination">
+                  <ul class="pagination pull-right">
                       {% if page_obj.has_previous %}
                       <li>
                           <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
@@ -282,6 +272,25 @@
                   {% endif %}
                 </tbody>
               </table>
+                                {% if is_paginated %}
+                  <ul class="pagination pull-right">
+                      {% if page_obj.has_previous %}
+                      <li>
+                          <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
+                      </li>
+                      {% endif %}
+                      <li class="">
+                          <span>페이지 {{ page_obj.number}} 중 {{ num_pages }}</span>
+                      </li>
+                      {% if page_obj.has_next %}
+                      <li>
+                          <span><a href="?page={{page_obj.next_page_number }}">다음</a></span>
+                      </li>
+                      {% endif %}
+
+                  </ul>
+                    {% else %}
+                  {% endif %}
               <!-- end project list -->
 
             </div>

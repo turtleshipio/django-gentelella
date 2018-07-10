@@ -27,6 +27,9 @@ def home(request):
 
 def login(request):
 
+    if request.user.is_authenticated():
+        return redirect('/manage_orders')
+
     if request.method == "GET":
 
         return render(request, 'app/login.html')
@@ -68,7 +71,7 @@ def notify_success(request):
 
 @require_http_methods(['GET'])
 def temp(request):
-    return render(request, 'app/widgets.html')
+    return render(request, 'app/form.html')
 
 
 @require_http_methods(['GET', 'POST'])

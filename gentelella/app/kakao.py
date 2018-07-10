@@ -105,7 +105,6 @@ class KakaoNotifySender:
         try:
             response = requests.post(url=url, headers=self.headers, data=json.dumps(data))
 
-            print(response.text)
 
         except requests.exceptions.HTTPError as e:
             print(str(e))
@@ -118,18 +117,21 @@ class OrderCreator:
     orders = []
     phones = []
     phone_dict = {}
-
+    ws_dict = {}
 
     def create_orders_from_js(self, user, orders_js, username, retailer_name, pickteam_id):
 
 
         group = TCGroup.objects.filter(main_user=user)[0]
         self.orders = []
-
+        self.ws_dict = {}
         for index, order_js in enumerate(orders_js):
 
+
             ws_name = order_js['ws_name']
-            ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
+            if ws_name not in self.ws_dict:
+                ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
+                self.ws_dict[ws_name] = True
 
             timestamp = datetime.now().timestamp()
             timestamp *= 1000000
@@ -159,7 +161,7 @@ class OrderCreator:
                 location= ws.location,
                 count=order_js['count'],
                 price=order_js['price'],
-                is_deleted="false",
+                is_deleted=False,
                 status="onwait",
                 notify_id=notify_id,
                 pickteam_id=pickteam_id,
@@ -171,5 +173,12 @@ class OrderCreator:
             Order.objects.bulk_create(self.orders)
             return True
         except Exception as e:
+            print("!!!!")
+            print("!!!!")
+            print("!!!!")
+            print(str(e))
+            print("!!!!")
+            print("!!!!")
+            print("!!!!")
             return False
 

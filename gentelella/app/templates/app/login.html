@@ -52,10 +52,11 @@
 
           {% endblock %}
         <section class="login_content">
+            <a href="/home/" class="site_title"><img src="/static/images/turtlechain_logo.png" width="208"> </a>
 
-          <form action="/login/" method="post">
-              {% csrf_token %}
-            <h1>터틀체인</h1>
+
+              <form action="/login/" method="post">
+            {% csrf_token %}
             <div>
               <input name="username" id ="username" type="text" class="form-control" placeholder="아이디" required="" />
             </div>

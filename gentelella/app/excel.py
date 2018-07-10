@@ -37,6 +37,8 @@ class OrderExcelValidator:
         'fmt_request' : None,
     }
 
+    ws_dict = {}
+
     head = {}
 
     def __init__(self, user):
@@ -72,21 +74,22 @@ class OrderExcelValidator:
                 return False, "엑셀시트가 올바르지 않습니다."
             header = self.sheet.row_values(0)
             required = list(self.required_fmt.values())
+            required = [r for r in required if bool(r or not r.isspace()) and r !='']
             #required = self.required
-            print("*******")
-            print(required)
-            print(type(required))
-            print(header)
+            #print("*******")
+            #print(required)
+            #print(type(required))
+            #print(header)
 
             diff = set(required) - set(header)
-            print(diff)
+            #print(diff)
             if diff != set():
-                diff = list(diff)
-                print("!!!!!!")
-                print("!!!!!!")
-                print(diff)
-                print("!!!!!!")
-                print("!!!!!!")
+                #diff = list(diff)
+                #print("!!!!!!")
+                #print("!!!!!!")
+                #print(diff)
+                #print("!!!!!!")
+                #print("!!!!!!")
                 cols = ', '.join(diff)
                 return False, "아래의 열 이름들을 확인해주세요\n{cols}".format(cols=cols)
             else:
@@ -97,15 +100,14 @@ class OrderExcelValidator:
         except Exception as e:
             return False, str(e)
 
-        print("heyhey")
         return True, "성공"
 
     def extract(self):
 
-        print(999999)
         orders = []
         msg = ""
         nrow = self.sheet.nrows
+        self.ws_dict = {}
 
         for nrow in range(1, self.sheet.nrows):
             row = self.sheet.row_values(nrow)
@@ -133,11 +135,11 @@ class OrderExcelValidator:
                 price = '%d' % int(price)
 
                 size = str(row[self.head[self.required_fmt['fmt_sizeNcolor']]])
-                if 'fmt_color' in self.required_fmt and self.required_fmt['fmt_color'] is not None:
-                    print("whatwhat")
+                if 'fmt_color' in self.required_fmt and self.required_fmt['fmt_color'] is not None and self.required_fmt['fmt_color'] != '':
                     color = str(row[self.head[self.required_fmt['fmt_color']]])
                 else:
                     color = None
+
                 ws_name = str(row[self.head[self.required_fmt['fmt_ws_name']]])
                 product_name = str(row[self.head[self.required_fmt['fmt_product_name']]])
 
@@ -148,7 +150,9 @@ class OrderExcelValidator:
 
                 group = TCGroup.objects.filter(main_user=self.user)[0]
                 try:
-                    ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
+                    if ws_name not in self.ws_dict:
+                        ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
+                        self.ws_dict[ws.ws_name] = True
                 except Exception as e:
                     return None, None, "Does Not Exist"
 
@@ -177,6 +181,7 @@ class OrderExcelValidator:
 
         success = True
         if len(orders) < 1:
+            msg = "에러가 생겼습니다"
             success = False
 
         return orders, success, msg
