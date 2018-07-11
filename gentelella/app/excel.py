@@ -38,7 +38,7 @@ class OrderExcelValidator:
     }
 
     ws_dict = {}
-
+    ws_list = []
     head = {}
 
     def __init__(self, user):
@@ -65,7 +65,6 @@ class OrderExcelValidator:
         for fmt in self.required_fmt:
             if hasattr(format, fmt):
                 self.required_fmt[fmt] = getattr(format, fmt)
-                #self.required.append(getattr(format, fmt))
             else:
                 return False, "다음 항목이 업로드해주신 엑셀파일에 존재하지 않습니다:%s" % fmt
 
@@ -108,6 +107,8 @@ class OrderExcelValidator:
         msg = ""
         nrow = self.sheet.nrows
         self.ws_dict = {}
+        self.ws_list = []
+        group = TCGroup.objects.filter(main_user=self.user)[0]
 
         for nrow in range(1, self.sheet.nrows):
             row = self.sheet.row_values(nrow)
@@ -148,11 +149,16 @@ class OrderExcelValidator:
                 else:
                     sizencolor = size
 
-                group = TCGroup.objects.filter(main_user=self.user)[0]
                 try:
-                    if ws_name not in self.ws_dict:
+                    if ws_name not in self.ws_list:
                         ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
-                        self.ws_dict[ws.ws_name] = True
+                        self.ws_list.append(ws_name)
+                        print("******")
+                        print("******")
+                        print(ws_name)
+                        print("******")
+                        print("******")
+                        print("******")
                 except Exception as e:
                     return None, None, "Does Not Exist"
 

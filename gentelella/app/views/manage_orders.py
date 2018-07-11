@@ -36,7 +36,8 @@ def bulk_orders(request):
             data_js = json.loads(request.body.decode('utf-8'))
             orders_js = data_js[0]['orders']
 
-            is_pickteam = check_group(request.user, 'pickteam_group')
+            group = TCGroup.objects.filter(main_user=request.user)[0]
+            is_pickteam = (group.type == "pickteam")
 
             if is_pickteam:
                 pickteam = TCPickteam.objects.get(main_user = request.user)
@@ -50,14 +51,12 @@ def bulk_orders(request):
             else: # if pickteam
                 retailer = TCRetailer.objects.get(main_user=request.user)
                 retailer_name = retailer.org_name
-
-                group = request.user.groups.get(name='retailer_group')
-                pickteam = retailer.pickteam # technically should be foreign key instead of n:n. Just for now.
+                pickteam = retailer.pickteam
 
             creator = OrderCreator()
             sender = KakaoNotifySender()
 
-            success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id)
+            success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, group)
 
             if not success:
                 response = HttpResponse("error")
@@ -69,7 +68,7 @@ def bulk_orders(request):
             for ws_name in notifies:
                 notify_id = notifies[ws_name]['notify_id']
                 sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id)
-                phones = ['010-8895-8454']
+                phones = []
 
                 ws_phone = notifies[ws_name]['phone']
                 if ws_phone not in phones:
@@ -107,7 +106,6 @@ def modal_view(request):
             retailer_name = retailer.org_name
 
         order_format = retailer.order_format
-
         success, msg = validator.validate(order_format)
 
 
@@ -151,30 +149,39 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
     login_url = '/'
     paginate_by = 20
 
+    is_pickteam = True
+    retailer = None
+    pickteam = None
+    orders = None
+
+    def get_queryset(self):
+        self.is_pickteam = check_group(self.request.user, 'pickteam_group')
+
+        if self.is_pickteam:
+            self.pickteam = TCPickteam.objects.get(main_user=self.request.user)
+            self.orders = Order.objects.exclude(is_deleted=True).filter(pickteam=self.pickteam).order_by('-created_time')
+        else:
+            self.retailer = TCRetailer.objects.get(main_user=self.request.user)
+            self.orders = Order.objects.exclude(is_deleted=True).filter(retailer=self.retailer).order_by('-created_time')
+
+
+        return self.orders
 
 
     def get_context_data(self, *args, **kwargs):
         context = super(ManageOrderListView, self).get_context_data(*args, **kwargs)
-        orders = None
 
-        is_pickteam = check_group(self.request.user, 'pickteam_group')
-        #is_pickteam = False
         retailers = None
         format = None
         format_str = None
 
-        if is_pickteam:
-            pickteam = TCPickteam.objects.get(main_user=self.request.user)
-            orders = Order.objects.exclude(is_deleted=True).filter(pickteam=pickteam).order_by('-created_time')
-            retailers = TCRetailer.objects.filter(pickteam=pickteam)
+        if self.is_pickteam:
+            retailers = TCRetailer.objects.filter(pickteam=self.pickteam)
         else:
-            retailer = TCRetailer.objects.get(main_user=self.request.user)
-            orders = Order.objects.exclude(is_deleted=True).filter(retailer=retailer).order_by('-created_time')
-
-            format = retailer.order_format
+            format = self.retailer.order_format
             format_str = format.get_format_str()
 
-        paginator = Paginator(orders, self.paginate_by)
+        paginator = Paginator(self.orders, self.paginate_by)
         page = self.request.GET.get('page')
 
 
@@ -185,19 +192,19 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
         except EmptyPage:
             paged_orders = paginator.page(paginator.num_pages)
 
-        if is_pickteam:
+        if self.is_pickteam:
             context['retailers'] = retailers
 
+        context['is_pickteam'] = self.is_pickteam
         context['format'] = format
         context['format_str'] = format_str
-
-        context['orders'] = paged_orders
+        context['retailer_name'] = self.retailer.org_name if self.retailer else None
+        context['orders'] = paged_orders if paged_orders else None
         context['num_pages'] = paginator.num_pages
+        context['order'] = None
 
         return context
 
-    def get(self, request, *args, **kwargs):
-        return ListView.get(self, request, *args, **kwargs)
 
 
     def put(self, request, *args, **kwargs):

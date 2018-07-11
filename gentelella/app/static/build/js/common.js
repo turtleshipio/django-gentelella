@@ -48,3 +48,8 @@ function isNumeric(str) {
 function isWhiteSpace(str){
     return (str.length === 0 || !str.trim());
 }
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}

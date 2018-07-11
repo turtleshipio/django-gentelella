@@ -118,20 +118,21 @@ class OrderCreator:
     phones = []
     phone_dict = {}
     ws_dict = {}
+    ws_list = []
 
-    def create_orders_from_js(self, user, orders_js, username, retailer_name, pickteam_id):
+    def create_orders_from_js(self, user, orders_js, username, retailer_name, pickteam_id, group):
 
 
-        group = TCGroup.objects.filter(main_user=user)[0]
         self.orders = []
-        self.ws_dict = {}
+        self.ws_list = []
+
         for index, order_js in enumerate(orders_js):
 
-
             ws_name = order_js['ws_name']
-            if ws_name not in self.ws_dict:
+            if ws_name not in self.ws_list:
                 ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
-                self.ws_dict[ws_name] = True
+                print("!!!!!")
+                self.ws_list.append(ws_name)
 
             timestamp = datetime.now().timestamp()
             timestamp *= 1000000
@@ -148,7 +149,6 @@ class OrderCreator:
                     'notify_id': notify_id}
             else:
                 notify_id = self.notifies[ws_name]['notify_id']
-
 
             order = Order(
                 username=username,

@@ -44,7 +44,7 @@
                             <form class="form-horizontal form-label-left" id="excel-modal" action="/excel_modal/" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
 
-                            {% if user|check_group:'pickteam_group' %}
+                            {% if is_pickteam %}
                                 <div class="form-group">
                                         <label class="control-label col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-12" for="select-retailer" >소매명</label>
                                     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -122,8 +122,6 @@
                       {% endif %}
 
                   </ul>
-                    {% else %}
-                    <p>주문내역이 아직 없습니다.</p>
                   {% endif %}
 
 
@@ -132,7 +130,7 @@
                 <thead class="text-center">
                   <tr>
                     <th><h4 class="text-center">도매명</h4></th>
-                      {% if user|check_group:'pickup_group' %}
+                      {% if is_pickteam %}
                       <th><h4 class="text-center">소매명</h4></th>
                       {% endif %}
                     <th><h4 class="text-center">수량</h4></th>
@@ -149,14 +147,12 @@
                           <br />
                           <small>{{  order.created_time }}</small>
                         </td>
-                        <td>
-                          {% if user %}
-                              {% if user|check_group:'pickup_group' %}
-                              <h4>hello</h4>
-                              <td class="text-center">{{ order.retailer_name }}</td>
-                              {% endif %}
+                        {% if is_pickteam %}
+                          <td>
+                              <p> {{ order.retailer_name }}</p>
+                          </td>
                           {% endif %}
-
+                          <td>
                           <p>{{  order.count }}개</p>
                         </td>
                         <td class="text-center">
@@ -346,11 +342,11 @@
                 </thead>
                 <tbody class="text-center">
 
+                {% if order  %}
                     {% block order %}
-                    {% if order  %}
                     <div class="form-group">
                         <form action="/upload_excel" id="upload_excel" method="post">
-                            {% csrf_token %
+                            {% csrf_token %}
 
 
                         <tr class="table-row">
@@ -363,13 +359,13 @@
                         </tr>
                         </form>
                     </div>
-                    {% endif %}
 
 
                   </tbody>
-
+            {% endblock order %}
+          {% endif %}
          </table>
-        {% endblock order %}
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">다시 업로드하기</button>

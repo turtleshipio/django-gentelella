@@ -14,13 +14,18 @@ function getCookie(name) {
     return cookieValue;
 };
 
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
 function isWhiteSpace(str){
     return str.replace(/^\s+|\s+$/gm,'').length == 0;
 };
 
 $('button#btn-confirm-upload').click(function(event){
 
-    console.log("here!!!");
+    console.log("heyheyhey");
     var data= {};
     var retailer_name = "";
     retailer_name = $('h3[name=retailer_name]').text();
