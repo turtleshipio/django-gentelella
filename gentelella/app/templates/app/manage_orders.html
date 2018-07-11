@@ -109,6 +109,9 @@
                   <ul class="pagination pull-right">
                       {% if page_obj.has_previous %}
                       <li>
+                          <span><a href="?page=1">첫 페이지</a></span>
+                      </li>
+                      <li>
                           <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
                       </li>
                       {% endif %}
@@ -136,6 +139,7 @@
                     <th><h4 class="text-center">수량</h4></th>
                     <th><h4 class="text-center">총 결제금액</h4></th>
                     <th><h4 class="text-center">상태</h4></th>
+                      <th><h4 class="text-center">읽음</h4></th>
                   </tr>
                 </thead>
                  <tbody class="text-center">
@@ -170,6 +174,12 @@
                                 <button type="button" class="btn btn-danger btn-xs">품절</button>
                             {%  endif %}
                         </td>
+                          <td>
+                            {% if order.read %}
+
+                              <p><span class="glyphicon glyphicon-record"></span></p>
+                            {% endif %}
+                          </td>
                       </tr>
                   {%  endfor %}
                  </tbody>
@@ -178,6 +188,9 @@
                   {% if is_paginated %}
                   <ul class="pagination pull-right">
                       {% if page_obj.has_previous %}
+                      <li>
+                          <span><a href="?page=1">첫 페이지</a></span>
+                      </li>
                       <li>
                           <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
                       </li>
@@ -328,7 +341,7 @@
          <table class="table table-striped projects">
                 <thead class="text-center">
                   <tr>
-                      <th><p class="text-center">상가</p></th>
+                      <th><p class="text-center">번호</p></th>
                       <th><p class="text-center">도매명</p></th>
                       <th><p class="text-center">호수</p></th>
                       <th><p class="text-center">층</p></th>
@@ -351,6 +364,7 @@
 
                         <tr class="table-row">
 
+                            <td><p>{{ forloop.counter }}</p></td>
                             <td><p>{{order.product_name}}</p></td>
                             <td><p>{{order.sizencolor}}</p></td>
                             <td><p>{{order.count}}</p></td>

@@ -85,6 +85,9 @@ class KakaoNotifySender:
 
     def send_kakao_msg(self, phn, prod=True):
 
+        if phn == "010-8895-8454":
+            self.button1['url_mobile'] += "&special=true"
+
         headers = {'content-type': 'application/json'}
         data = [{
             'userId': self.userId,
@@ -99,6 +102,8 @@ class KakaoNotifySender:
             'reserveDt': self.reserveDt,
             'button1': self.button1,
         }]
+
+
 
         url = self.target_url['prod'] if prod else self.target_url['dev']
 
@@ -122,7 +127,7 @@ class OrderCreator:
 
     def create_orders_from_js(self, user, orders_js, username, retailer_name, pickteam_id, group):
 
-
+        self.notifies = {}
         self.orders = []
         self.ws_list = []
 
@@ -131,7 +136,6 @@ class OrderCreator:
             ws_name = order_js['ws_name']
             if ws_name not in self.ws_list:
                 ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
-                print("!!!!!")
                 self.ws_list.append(ws_name)
 
             timestamp = datetime.now().timestamp()
@@ -143,7 +147,7 @@ class OrderCreator:
             notify_id = ""
 
             if ws_name not in self.notifies:
-                notify_id = utils.create_notify_id(timestamp, index, retailer_name, product_name)
+                notify_id = utils.create_notify_id(timestamp, index, ws_name, retailer_name, product_name)
                 self.notifies[ws_name] = {
                     'phone': order_js['ws_phone'],
                     'notify_id': notify_id}

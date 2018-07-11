@@ -37,7 +37,7 @@
     <favorites_list name="gentelella" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.36974406">
+    <splitter split-orientation="horizontal" split-proportion="0.4875">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
           <file leaf-file-name="base.py" pinned="false" current-in-tab="false">
@@ -67,8 +67,8 @@
           <file leaf-file-name="manage_ws.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/views/manage_ws.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1098">
-                  <caret line="112" column="30" selection-start-line="112" selection-start-column="30" selection-end-line="112" selection-end-column="30" />
+                <state relative-caret-position="1711">
+                  <caret line="85" lean-forward="true" selection-start-line="85" selection-end-line="85" />
                   <folding>
                     <element signature="e#0#52#0" expanded="true" />
                   </folding>
@@ -79,8 +79,8 @@
           <file leaf-file-name="kakao.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/kakao.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="605">
-                  <caret line="163" column="32" selection-start-line="163" selection-start-column="32" selection-end-line="163" selection-end-column="32" />
+                <state relative-caret-position="408">
+                  <caret line="142" column="43" lean-forward="true" selection-start-line="142" selection-start-column="43" selection-end-line="142" selection-end-column="43" />
                   <folding>
                     <element signature="e#0#15#0" expanded="true" />
                   </folding>
@@ -88,11 +88,20 @@
               </provider>
             </entry>
           </file>
+          <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/app/utils.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="270">
+                  <caret line="102" lean-forward="true" selection-start-line="102" selection-end-line="102" />
+                </state>
+              </provider>
+            </entry>
+          </file>
           <file leaf-file-name="excel.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/excel.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="212">
-                  <caret line="108" column="24" selection-start-line="108" selection-start-column="24" selection-end-line="108" selection-end-column="24" />
+                <state relative-caret-position="602">
+                  <caret line="123" column="27" selection-start-line="123" selection-start-column="27" selection-end-line="123" selection-end-column="27" />
                   <folding>
                     <element signature="e#0#11#0" expanded="true" />
                   </folding>
@@ -100,20 +109,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="notify_list.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/app/templates/app/notify_list.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="28">
-                  <caret line="119" column="17" selection-start-line="119" selection-start-column="17" selection-end-line="119" selection-end-column="17" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="manage_orders.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/app/views/manage_orders.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="345">
-                  <caret line="217" column="47" selection-start-line="217" selection-start-column="47" selection-end-line="217" selection-end-column="47" />
+                <state relative-caret-position="469">
+                  <caret line="186" lean-forward="true" selection-start-line="186" selection-end-line="186" />
                   <folding>
                     <element signature="e#0#46#0" expanded="true" />
                   </folding>
@@ -133,8 +133,8 @@
           <file leaf-file-name="notify_list.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/views/notify_list.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="572">
-                  <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+                <state relative-caret-position="290">
+                  <caret line="35" column="145" selection-start-line="35" selection-start-column="145" selection-end-line="35" selection-end-column="145" />
                   <folding>
                     <element signature="e#0#35#0" expanded="true" />
                   </folding>
@@ -145,7 +145,7 @@
           <file leaf-file-name="manage_ws.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/templates/app/manage_ws.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="650">
+                <state relative-caret-position="-50">
                   <caret line="25" column="40" selection-start-line="25" selection-start-column="40" selection-end-line="25" selection-end-column="40" />
                 </state>
               </provider>
@@ -158,10 +158,32 @@
           <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/urls.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="442">
-                  <caret line="17" column="28" lean-forward="true" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
+                <state relative-caret-position="118">
+                  <caret line="6" column="47" selection-start-line="6" selection-start-column="47" selection-end-line="6" selection-end-column="47" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="notify_list.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/app/templates/app/notify_list.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1212">
+                  <caret line="92" column="27" selection-start-line="92" selection-start-column="27" selection-end-line="92" selection-end-column="27" />
                   <folding>
-                    <element signature="e#0#41#0" expanded="true" />
+                    <element signature="e#1426#1481#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="manage_orders.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/app/templates/app/manage_orders.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="327">
+                  <caret line="112" selection-start-line="112" selection-end-line="112" />
+                  <folding>
+                    <element signature="e#9795#16671#0" />
+                    <element signature="e#17024#17062#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -170,8 +192,8 @@
           <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/models.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="540">
-                  <caret line="31" column="41" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
+                <state relative-caret-position="440">
+                  <caret line="374" lean-forward="true" selection-start-line="374" selection-end-line="374" />
                   <folding>
                     <element signature="e#468#507#0" expanded="true" />
                     <element signature="e#840#974#0" />
@@ -199,15 +221,6 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="442">
                   <caret line="17" column="52" selection-start-line="17" selection-start-column="52" selection-end-line="17" selection-end-column="52" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="manage_orders.html" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/app/templates/app/manage_orders.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="678">
-                  <caret line="124" selection-start-line="124" selection-end-line="124" />
                 </state>
               </provider>
             </entry>
@@ -244,9 +257,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>id=&quot;ws_name&quot;</find>
-      <find>x_content</find>
-      <find>Large</find>
       <find>Form Design</find>
       <find>phone</find>
       <find>exce</find>
@@ -273,7 +283,10 @@
       <find>check</find>
       <find>credit</find>
       <find>retailer_name</find>
+      <find>retailers</find>
+      <find>notify_id</find>
       <find>window.</find>
+      <find>modal-body</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -282,11 +295,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/views/auth/checks.py" />
         <option value="$PROJECT_DIR$/app/views/auth/login.py" />
         <option value="$PROJECT_DIR$/app/views/credit_list.py" />
         <option value="$PROJECT_DIR$/app/admin.py" />
-        <option value="$PROJECT_DIR$/app/templates/app/notify_list.html" />
         <option value="$PROJECT_DIR$/app/templates/app/order_list.html" />
         <option value="$PROJECT_DIR$/app/decorators.py" />
         <option value="$PROJECT_DIR$/app/templates/app/index.html" />
@@ -302,7 +313,6 @@
         <option value="$PROJECT_DIR$/app/views/manage_retailers.py" />
         <option value="$PROJECT_DIR$/app/templates/app/manage_retailers.html" />
         <option value="$PROJECT_DIR$/app/templates/app/top_navigation.html" />
-        <option value="$PROJECT_DIR$/app/urls.py" />
         <option value="$PROJECT_DIR$/app/migrations/0035_tcgroup_type.py" />
         <option value="$PROJECT_DIR$/app/migrations/0031_auto_20180706_1827.py" />
         <option value="$PROJECT_DIR$/app/migrations/0033_auto_20180706_1829.py" />
@@ -322,15 +332,18 @@
         <option value="$PROJECT_DIR$/app/migrations/0042_auto_20180710_2118.py" />
         <option value="$PROJECT_DIR$/app/migrations/0043_auto_20180710_2122.py" />
         <option value="$PROJECT_DIR$/app/migrations/0045_remove_order_is_deleted.py" />
-        <option value="$PROJECT_DIR$/app/models.py" />
-        <option value="$PROJECT_DIR$/app/views/notify_list.py" />
         <option value="$PROJECT_DIR$/gentelella/settings.py" />
         <option value="$PROJECT_DIR$/app/excel.py" />
         <option value="$PROJECT_DIR$/app/static/build/js/main.js" />
-        <option value="$PROJECT_DIR$/app/kakao.py" />
         <option value="$PROJECT_DIR$/app/static/build/js/common.js" />
         <option value="$PROJECT_DIR$/app/templates/app/base_site.html" />
         <option value="$PROJECT_DIR$/app/static/build/js/manage_orders.js" />
+        <option value="$PROJECT_DIR$/app/urls.py" />
+        <option value="$PROJECT_DIR$/app/models.py" />
+        <option value="$PROJECT_DIR$/app/kakao.py" />
+        <option value="$PROJECT_DIR$/app/utils.py" />
+        <option value="$PROJECT_DIR$/app/templates/app/notify_list.html" />
+        <option value="$PROJECT_DIR$/app/views/notify_list.py" />
         <option value="$PROJECT_DIR$/app/views/manage_orders.py" />
         <option value="$PROJECT_DIR$/app/templates/app/manage_orders.html" />
       </list>
@@ -548,7 +561,7 @@
     <frame x="1280" y="-640" width="2560" height="1440" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49927112" visible="true" weight="0.1453125" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4985942" weight="0.1453125" />
       <window_info anchor="bottom" id="TODO" order="7" />
       <window_info anchor="right" id="R Packages" order="5" />
       <window_info anchor="right" id="R Graphics" order="3" />
@@ -557,8 +570,8 @@
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.8653234" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32952926" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24972972" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49783784" weight="0.30393586" />
-      <window_info id="Favorites" order="2" sideWeight="0.50072885" side_tool="true" weight="0.12929687" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.49783784" visible="true" weight="0.37099126" />
+      <window_info id="Favorites" order="2" sideWeight="0.50140584" side_tool="true" weight="0.1453125" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
@@ -632,13 +645,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/migrations/0030_auto_20180706_1822.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templatetags/auth_tags.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="312">
@@ -851,23 +857,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/app/manage_ws.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="650">
-          <caret line="25" column="40" selection-start-line="25" selection-start-column="40" selection-end-line="25" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/notify_list.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="572">
-          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/lib/pycharm.jar!/resources/html5-schema/html5/web-forms.rnc">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="364">
@@ -875,35 +864,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/app/notify_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="119" column="17" selection-start-line="119" selection-start-column="17" selection-end-line="119" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/migrations/0044_auto_20180710_2130.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
           <caret line="22" column="64" lean-forward="true" selection-start-line="22" selection-start-column="64" selection-end-line="22" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="31" column="41" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
-          <folding>
-            <element signature="e#468#507#0" expanded="true" />
-            <element signature="e#840#974#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gentelella/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="899">
-          <caret line="75" lean-forward="true" selection-start-line="75" selection-end-line="75" />
         </state>
       </provider>
     </entry>
@@ -917,40 +881,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/excel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="108" column="24" selection-start-line="108" selection-start-column="24" selection-end-line="108" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/manage_ws.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1098">
-          <caret line="112" column="30" selection-start-line="112" selection-start-column="30" selection-end-line="112" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#52#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gentelella/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="650">
           <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="17" column="28" lean-forward="true" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -973,6 +907,71 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/static/build/js/common.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1069">
+          <caret line="51" selection-start-line="51" selection-end-line="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/excel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="602">
+          <caret line="123" column="27" selection-start-line="123" selection-start-column="27" selection-end-line="123" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/manage_ws.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1711">
+          <caret line="85" lean-forward="true" selection-start-line="85" selection-end-line="85" />
+          <folding>
+            <element signature="e#0#52#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="118">
+          <caret line="6" column="47" selection-start-line="6" selection-start-column="47" selection-end-line="6" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/kakao.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="142" column="43" lean-forward="true" selection-start-line="142" selection-start-column="43" selection-end-line="142" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="102" lean-forward="true" selection-start-line="102" selection-end-line="102" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gentelella/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="899">
+          <caret line="75" lean-forward="true" selection-start-line="75" selection-end-line="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/app/manage_ws.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-50">
+          <caret line="25" column="40" selection-start-line="25" selection-start-column="40" selection-end-line="25" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/static/build/js/manage_retailers.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="442">
@@ -980,10 +979,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/static/build/js/common.js">
+    <entry file="file://$PROJECT_DIR$/app/templates/app/notify_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1069">
-          <caret line="51" selection-start-line="51" selection-end-line="51" />
+        <state relative-caret-position="1212">
+          <caret line="92" column="27" selection-start-line="92" selection-start-column="27" selection-end-line="92" selection-end-column="27" />
+          <folding>
+            <element signature="e#1426#1481#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -994,20 +996,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/kakao.py">
+    <entry file="file://$PROJECT_DIR$/app/views/notify_list.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="605">
-          <caret line="163" column="32" selection-start-line="163" selection-start-column="32" selection-end-line="163" selection-end-column="32" />
+        <state relative-caret-position="290">
+          <caret line="35" column="145" selection-start-line="35" selection-start-column="145" selection-end-line="35" selection-end-column="145" />
           <folding>
-            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="374" lean-forward="true" selection-start-line="374" selection-end-line="374" />
+          <folding>
+            <element signature="e#468#507#0" expanded="true" />
+            <element signature="e#840#974#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/manage_orders.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="217" column="47" selection-start-line="217" selection-start-column="47" selection-end-line="217" selection-end-column="47" />
+        <state relative-caret-position="469">
+          <caret line="186" lean-forward="true" selection-start-line="186" selection-end-line="186" />
           <folding>
             <element signature="e#0#46#0" expanded="true" />
           </folding>
@@ -1016,8 +1029,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/app/manage_orders.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="678">
-          <caret line="124" selection-start-line="124" selection-end-line="124" />
+        <state relative-caret-position="327">
+          <caret line="112" selection-start-line="112" selection-end-line="112" />
+          <folding>
+            <element signature="e#9795#16671#0" />
+            <element signature="e#17024#17062#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

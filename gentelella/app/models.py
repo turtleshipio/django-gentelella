@@ -359,6 +359,8 @@ class Order(models.Model):
     pickteam = models.ForeignKey(TCPickteam, on_delete=None, null=True, db_column="pickteam_id" )
     retailer = models.ForeignKey(TCRetailer, on_delete=None, null=True)
 
+    read = models.BooleanField(default=False)
+
 
     def get_order_name(self):
         return '/ '.join([self.ws_name, self.product_name])

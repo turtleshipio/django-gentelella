@@ -35,6 +35,8 @@
           <div class="x_panel">
 
               <!-- start project list -->
+
+              <div class="notify_body" style="overflow:scroll; height:70%; margin-bottom:10px">
               <table class="table table-striped projects">
                 <thead class="text-center">
                   <tr>
@@ -79,8 +81,35 @@
                   </tbody>
 
               </table>
+              </div>
 
-              <div class="col-md-4 text-center">
+              {% if is_paginated %}
+
+                 <div class="row">
+                     <div class="col-xs-12 text-center">
+
+                <ul class="pagination pull-center">
+                    {% if has_previous %}
+                        <li>
+                            <span><a href="?page={{ previous_page_number }}">이전</a></span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>페이지 {{ number}} 중 {{ num_pages }}</span>
+                    </li>
+                    {% if has_next %}
+                        <li>
+                            <span><a href="?page={{next_page_number }}">다음</a></span>
+                        </li>
+                    {% endif %}
+                </ul>
+                     </div>
+                     </div>
+
+                {% endif %}
+
+              <div class="col-md-12 text-center">
+                  <div class="clearfix"></div>
 
                     {% if notify_id %}
                         <input type="hidden" name="notify_id" value="{{notify_id}}">
@@ -94,24 +123,7 @@
 
 
 
-                    {% if is_paginated %}
-                    <ul class="pagination">
-                        {% if page_obj.has_previous %}
-                            <li>
-                                <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
-                            </li>
-                        {% endif %}
-                        <li class="">
-                            <span>페이지 {{ page_obj.number}} 중 {{ page_obj.paginator.num_pages }}</span>
-                        </li>
-                        {% if page_obj.has_next %}
-                            <li>
-                                <span><a href="?page={{page_obj.next_page_number }}">다음</a></span>
-                            </li>
-                        {% endif %}
-                    </ul>
 
-                    {% endif %}
 
 
 

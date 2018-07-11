@@ -159,10 +159,10 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
 
         if self.is_pickteam:
             self.pickteam = TCPickteam.objects.get(main_user=self.request.user)
-            self.orders = Order.objects.exclude(is_deleted=True).filter(pickteam=self.pickteam).order_by('-created_time')
+            self.orders = Order.objects.exclude(is_deleted=True).filter(pickteam=self.pickteam).values('ws_name', 'created_time', 'retailer_name', 'count', 'price', 'status', 'read').order_by('-created_time')
         else:
             self.retailer = TCRetailer.objects.get(main_user=self.request.user)
-            self.orders = Order.objects.exclude(is_deleted=True).filter(retailer=self.retailer).order_by('-created_time')
+            self.orders = Order.objects.exclude(is_deleted=True).filter(retailer=self.retailer).values('ws_name', 'created_time', 'count', 'price', 'status', 'read').order_by('-created_time')
 
 
         return self.orders
@@ -176,7 +176,7 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
         format_str = None
 
         if self.is_pickteam:
-            retailers = TCRetailer.objects.filter(pickteam=self.pickteam)
+            retailers = TCRetailer.objects.filter(pickteam=self.pickteam).values_list('org_name', flat=True)
         else:
             format = self.retailer.order_format
             format_str = format.get_format_str()
