@@ -190,14 +190,17 @@ $("button#submit-order-format").click(function(event){
         return;
     }
 
-    var counter = $(this).val();
-    var select_buildings_id = "select#select-buildings-edit-ws-" + counter;
-    var select_building = $(select_buildings_id);
 
-    var building_org = $('p#edit-ws-building-'+counter).text();
-    var building = $(select_buildings_id).val(building_org);
     data = {};
-    data.building = building_org;
+    data.retailer_name = retailer_name;
+    data.fmt_ws_name = $('input#order-fmt-ws-name').val();
+    data.fmt_product_name= $('input#order-fmt-product-name').val();
+    data.fmt_sizeNcolor= $('input#order-fmt-sizeNcolor').val();
+    data.fmt_color= $('input#order-fmt-color').val();
+    data.fmt_count= $('input#order-fmt-count').val();
+    data.fmt_price= $('input#order-fmt-price').val();
+    data.fmt_request= $('input#order-fmt-request').val();
+
 
 
 
@@ -216,31 +219,11 @@ $("button#submit-order-format").click(function(event){
             type : "POST",
             contentType : 'application/json; charset=utf-8',
             data: JSON.stringify([data]),
-            dataType : "json",
             success:function(result){
 
-                select_floor_id= "select#floor-edit-ws-" + counter;
-                select_floor = $(select_floor_id);
-                select_floor.attr("readonly", false);
-                select_floor.find('option:not(:first)').remove();
+                alert("수정 되었습니다.");
+                $('#order-format-modal .close').click();
 
-                var floors = result['floors'];
-
-                for(var key in floors){
-                    floor = floors[key];
-                    var option = $("<option></option>");
-                    option.text(floor);
-                    option.val(floor);
-                    select_floor.append(option);
-                }
-
-                var option_text = 'option[value="' + building_org + '"]';
-                select_floor.find(option_text).val();
-                select_building.find('option').each(function(index, element){
-                    if(element.value === building_org){
-                        element.attr('selected','selected');
-                    }
-                });
 
             },
             error:function(result){

@@ -37,7 +37,7 @@
     <favorites_list name="gentelella" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.45390624">
+    <splitter split-orientation="horizontal" split-proportion="0.41640624">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
           <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
@@ -65,14 +65,23 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="manage_orders.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="manage_orders.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/app/views/manage_orders.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="435">
-                  <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+                <state relative-caret-position="609">
+                  <caret line="55" column="33" selection-start-line="55" selection-start-column="33" selection-end-line="55" selection-end-column="33" />
                   <folding>
                     <element signature="e#0#46#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="base.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/venv/lib/python3.5/site-packages/django/core/handlers/base.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="528">
+                  <caret line="184" selection-start-line="184" selection-end-line="184" />
                 </state>
               </provider>
             </entry>
@@ -86,11 +95,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="signup.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="signup.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/static/build/js/signup.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="853">
-                  <caret line="271" column="43" selection-start-line="271" selection-start-column="43" selection-end-line="271" selection-end-column="43" />
+                <state relative-caret-position="1727">
+                  <caret line="273" lean-forward="true" selection-start-line="273" selection-end-line="273" />
                 </state>
               </provider>
             </entry>
@@ -144,8 +153,8 @@
           <file leaf-file-name="base.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/views/base.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2834">
-                  <caret line="120" lean-forward="true" selection-start-line="120" selection-end-line="120" />
+                <state relative-caret-position="2616">
+                  <caret line="109" column="12" selection-start-line="109" selection-start-column="12" selection-end-line="109" selection-end-column="12" />
                   <folding>
                     <element signature="e#0#61#0" expanded="true" />
                   </folding>
@@ -153,11 +162,29 @@
               </provider>
             </entry>
           </file>
+          <file leaf-file-name="manage_orders.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/app/static/build/js/manage_orders.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="550">
+                  <caret line="224" column="56" selection-start-line="224" selection-start-column="56" selection-end-line="224" selection-end-column="56" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="manage_orders.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/app/templates/app/manage_orders.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="124">
+                  <caret line="223" column="48" selection-start-line="223" selection-start-column="48" selection-end-line="223" selection-end-column="48" />
+                </state>
+              </provider>
+            </entry>
+          </file>
           <file leaf-file-name="signup.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/views/auth/signup.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1300">
-                  <caret line="50" column="19" selection-start-line="50" selection-start-column="19" selection-end-line="50" selection-end-column="19" />
+                <state relative-caret-position="438">
+                  <caret line="22" column="40" selection-start-line="22" selection-start-column="40" selection-end-line="22" selection-end-column="40" />
                   <folding>
                     <element signature="e#0#24#0" expanded="true" />
                   </folding>
@@ -180,11 +207,8 @@
           <file leaf-file-name="manage_ws.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/views/manage_ws.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="495">
-                  <caret line="21" column="27" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
-                  <folding>
-                    <element signature="e#0#52#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="183">
+                  <caret line="9" column="57" selection-start-line="9" selection-start-column="57" selection-end-line="9" selection-end-column="57" />
                 </state>
               </provider>
             </entry>
@@ -197,24 +221,6 @@
                   <folding>
                     <element signature="e#1426#1481#0" expanded="true" />
                   </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="manage_orders.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/app/templates/app/manage_orders.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="479">
-                  <caret line="324" column="64" selection-start-line="324" selection-start-column="64" selection-end-line="324" selection-end-column="64" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="manage_orders.js" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/app/static/build/js/manage_orders.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="158">
-                  <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
                 </state>
               </provider>
             </entry>
@@ -344,11 +350,11 @@
         <option value="$PROJECT_DIR$/app/views/notify_list.py" />
         <option value="$PROJECT_DIR$/app/views/base.py" />
         <option value="$PROJECT_DIR$/app/views/auth/signup.py" />
-        <option value="$PROJECT_DIR$/app/templates/app/manage_orders.html" />
-        <option value="$PROJECT_DIR$/app/static/build/js/manage_orders.js" />
         <option value="$PROJECT_DIR$/app/urls.py" />
-        <option value="$PROJECT_DIR$/app/views/manage_orders.py" />
         <option value="$PROJECT_DIR$/app/static/build/js/signup.js" />
+        <option value="$PROJECT_DIR$/app/templates/app/manage_orders.html" />
+        <option value="$PROJECT_DIR$/app/views/manage_orders.py" />
+        <option value="$PROJECT_DIR$/app/static/build/js/manage_orders.js" />
       </list>
     </option>
   </component>
@@ -557,7 +563,7 @@
     <frame x="1280" y="-640" width="2560" height="1440" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4985942" visible="true" weight="0.1453125" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4985942" weight="0.1453125" />
       <window_info anchor="bottom" id="TODO" order="7" />
       <window_info anchor="right" id="R Packages" order="5" />
       <window_info anchor="right" id="R Graphics" order="3" />
@@ -566,7 +572,7 @@
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.8653234" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32952926" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24972972" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49783784" visible="true" weight="0.21574344" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.49783784" visible="true" weight="0.3899417" />
       <window_info id="Favorites" order="2" sideWeight="0.50140584" side_tool="true" weight="0.1453125" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -641,13 +647,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/templates/app/top_navigation.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/app/base.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1118">
@@ -931,60 +930,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="75" column="43" selection-start-line="75" selection-start-column="43" selection-end-line="75" selection-end-column="43" />
-          <folding>
-            <element signature="e#468#507#0" expanded="true" />
-            <element signature="e#840#974#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2834">
-          <caret line="120" lean-forward="true" selection-start-line="120" selection-end-line="120" />
-          <folding>
-            <element signature="e#0#61#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/auth/signup.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1300">
-          <caret line="50" column="19" selection-start-line="50" selection-start-column="19" selection-end-line="50" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/app/manage_orders.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="324" column="64" selection-start-line="324" selection-start-column="64" selection-end-line="324" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/app/notify_list.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="959">
           <caret line="92" column="27" selection-start-line="92" selection-start-column="27" selection-end-line="92" selection-end-column="27" />
           <folding>
             <element signature="e#1426#1481#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/manage_orders.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -999,27 +950,79 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/manage_ws.py">
+    <entry file="file://$PROJECT_DIR$/app/views/base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="21" column="27" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
+        <state relative-caret-position="2616">
+          <caret line="109" column="12" selection-start-line="109" selection-start-column="12" selection-end-line="109" selection-end-column="12" />
           <folding>
-            <element signature="e#0#52#0" expanded="true" />
+            <element signature="e#0#61#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/static/build/js/manage_orders.js">
+    <entry file="file://$PROJECT_DIR$/app/views/manage_ws.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+        <state relative-caret-position="183">
+          <caret line="9" column="57" selection-start-line="9" selection-start-column="57" selection-end-line="9" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/auth/signup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="438">
+          <caret line="22" column="40" selection-start-line="22" selection-start-column="40" selection-end-line="22" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/static/build/js/signup.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="853">
-          <caret line="271" column="43" selection-start-line="271" selection-start-column="43" selection-end-line="271" selection-end-column="43" />
+        <state relative-caret-position="1727">
+          <caret line="273" lean-forward="true" selection-start-line="273" selection-end-line="273" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/lib/python3.5/site-packages/django/core/handlers/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="528">
+          <caret line="184" selection-start-line="184" selection-end-line="184" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26">
+          <caret line="75" column="43" selection-start-line="75" selection-start-column="43" selection-end-line="75" selection-end-column="43" />
+          <folding>
+            <element signature="e#468#507#0" expanded="true" />
+            <element signature="e#840#974#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/manage_orders.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="609">
+          <caret line="55" column="33" selection-start-line="55" selection-start-column="33" selection-end-line="55" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/app/manage_orders.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="223" column="48" selection-start-line="223" selection-start-column="48" selection-end-line="223" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/static/build/js/manage_orders.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="224" column="56" selection-start-line="224" selection-start-column="56" selection-end-line="224" selection-end-column="56" />
         </state>
       </provider>
     </entry>

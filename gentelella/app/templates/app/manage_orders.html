@@ -232,19 +232,19 @@
                 </div>
                 <div class="modal-body form-horizontal">
 
+                    {% if retailer_name %}
+                    <input type="hidden" id="input-retailer-name" value="{{retailer_name}}">
+                    {% else %}
                     <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3" for="input-retailer-name">소매명</label>
-
-                        <div class="col-md-5 col-sm-5">
-                            {% if retailer_name %}
-                            <input type="hidden" id="input-retailer-name" value="{{retailer_name}}">
-                            {% endif %}
+                            <label class="control-label col-md-3 col-sm-3" for="input-retailer-name">소매명</label>
+                            <div class="col-md-5 col-sm-5">
                             {% if format %}
                             {% else %}
                             <input  readonly id="input-retailer-name" name="retailer_name" class="form-control col-md-5 col-xs-7">
                             {% endif %}
                         </div>
                     </div>
+                    {% endif %}
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3" for="order-fmt-ws-name">도매명 포맷<span class="required">*</span></label>
                         <div class="col-md-5 col-sm-5">

@@ -18,6 +18,43 @@ from app.kakao import  *
 def edit_order_format(request):
     data_js = json.loads(request.body.decode('utf-8'))[0]
 
+    retailer_name = data_js['retailer_name']
+    fmt_ws_name = data_js['fmt_ws_name']
+    fmt_product_name = data_js['fmt_product_name']
+    fmt_sizeNcolor= data_js['fmt_sizeNcolor']
+    fmt_color= data_js['fmt_color']
+    fmt_price= data_js['fmt_price']
+    fmt_count= data_js['fmt_count']
+    fmt_request = data_js['fmt_request']
+
+    try:
+        retailer = TCRetailer.objects.get(org_name=retailer_name)
+        print("#####")
+        print("#####")
+        print(retailer_name)
+        print("#####")
+        print("#####")
+        print("#####")
+        format = OrderFormats.objects.get(tcretailer=retailer)
+        print("????????")
+        format = retailer.order_format
+
+        format.fmt_ws_name = fmt_ws_name
+        format.fmt_product_name = fmt_product_name
+        format.fmt_sizencolor = fmt_sizeNcolor
+        format.fmt_color = fmt_color
+        format.fmt_price = fmt_price
+        format.fmt_count = fmt_count
+        format.fmt_request = fmt_request
+        format.save()
+        response = HttpResponse("ok")
+        response.status_code = 200
+        return response
+
+    except Exception as e:
+        response = HttpResponse("error")
+        response.status_code = 500
+        return response
 
 
 
