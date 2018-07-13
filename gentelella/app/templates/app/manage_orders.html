@@ -236,6 +236,9 @@
                         <label class="control-label col-md-3 col-sm-3" for="input-retailer-name">소매명</label>
 
                         <div class="col-md-5 col-sm-5">
+                            {% if retailer_name %}
+                            <input type="hidden" id="input-retailer-name" value="{{retailer_name}}">
+                            {% endif %}
                             {% if format %}
                             {% else %}
                             <input  readonly id="input-retailer-name" name="retailer_name" class="form-control col-md-5 col-xs-7">

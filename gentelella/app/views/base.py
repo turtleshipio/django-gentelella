@@ -96,23 +96,19 @@ def signup(request):
 
         data_js = json.loads(request.body.decode('utf-8'))
 
-        success, t_user, token = create_turtlechain_user(data_js)
+        success, user = create_turtlechain_user(data_js)
 
 
         if success:
-            
-            context['t_user'] = t_user
-            request.session['token'] = token
-            org_id = t_user.org_id
-            if Permissions.objects.filter(org_id=org_id, policy_name="wholesale").exists():
-                context['ws_perm'] = True
-            else:
-                context['ws_perm'] = False
-                
-            return HttpResponseRedirect(reverse('home'))
 
+            if user is not None:
+                auth.login(request, user)
+                return redirect('/home/')
+
+            else:
+                return redirect('/')
         else:
-            return render(request, 'app/signup-form.html', context)
+            redirect('/')
     
 
 @require_http_methods(["POST"])

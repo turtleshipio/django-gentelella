@@ -7,7 +7,7 @@ from app.views.credit_list import CreditListView
 from app.views.notify_list import NotifyListView
 from app.views.manage_ws import WSFormMixinListView, delete_wsbygroup, floors_by_building, edit_wsbyuser
 from app.views.manage_retailers import TCRetailersListView
-from app.views.manage_orders import ManageOrderListView, formats_by_retailer, modal_view, bulk_orders
+from app.views.manage_orders import ManageOrderListView, formats_by_retailer, modal_view, bulk_orders, edit_order_format
 urlpatterns = [
     url(r'^super/', admin.site.urls),
     url(r'^$', base.login, name='login'),
@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^manage_retailers/$',TCRetailersListView.as_view(), name='manage_retailers'),
     url(r'^delete_wsbyuser/$', delete_wsbygroup, name='delete_wsbyuser'),
     url(r'^edit_wsbyuser/$', edit_wsbyuser, name='edit_wsbyuser'),
+    url(r'^edit_order_format/$', edit_order_format, name='edit_order_format'),
     url(r'^manage_ws/buildings/$', floors_by_building, name='floors_by_buliding'),
     url(r'^check_duplicate_username/$', checks.check_signup, name='check_signup'),
     url(r'^check_business_number/$', checks.check_business_number, name='check_business_number'),

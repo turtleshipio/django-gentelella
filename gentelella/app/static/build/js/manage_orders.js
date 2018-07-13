@@ -108,6 +108,9 @@ $('form#excel-modal').on('submit', function(event){
 
 
 $('button#submit-edit-ws-modal').click(function(event){
+
+
+
     var data= {};
     var counter = $(this).val();
     var building = $('select#select-buildings-edit-ws-'+counter);
@@ -186,7 +189,6 @@ $("button#submit-order-format").click(function(event){
         alert("소매를 먼저 선택해주세요");
         return;
     }
-    alert("heyhey");
 
     var counter = $(this).val();
     var select_buildings_id = "select#select-buildings-edit-ws-" + counter;
@@ -210,7 +212,7 @@ $("button#submit-order-format").click(function(event){
          });
 
          $.ajax({
-            url : "/manage_ws/buildings/",
+            url : "/edit_order_format/",
             type : "POST",
             contentType : 'application/json; charset=utf-8',
             data: JSON.stringify([data]),

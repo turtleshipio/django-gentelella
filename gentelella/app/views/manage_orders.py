@@ -12,6 +12,15 @@ from app.decorators import ajax_required
 from django.shortcuts import render, redirect
 from app.kakao import  *
 
+
+@login_required()
+@require_http_methods(['POST'])
+def edit_order_format(request):
+    data_js = json.loads(request.body.decode('utf-8'))[0]
+
+
+
+
 @login_required()
 @require_http_methods(['GET', 'POST'])
 def bulk_orders(request):

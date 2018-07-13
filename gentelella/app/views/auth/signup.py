@@ -4,6 +4,7 @@ from app.views.auth import checks
 from app import utils
 
 
+
 def create_turtlechain_user(data_js):
     
     username = data_js['username']
@@ -21,9 +22,8 @@ def create_turtlechain_user(data_js):
     print("name is:\t{0}".format(name))
     print("phone is:\t{0}".format(phone))
     print("styles is:\t{0}".format(styles))
-    
-    enc_password = pwd_context.encrypt(password)
-    
+
+
     exists = Retailer.objects.filter(business_number=business_number).exists()
     if exists:
         return False, None, None
@@ -31,44 +31,31 @@ def create_turtlechain_user(data_js):
     exists = RetailUser.objects.filter(username=username).exists()
     if exists:
         return False, None, None
-    
-    
-    retailer = Retailer(
-        retailer_name=retailer_name,
-        business_number=business_number,
-        business_type="personal",
-        pickteam_id=3,
-        main_user_id=-1,
-        store_type="offline",
-        address=" ",
-        bank_account_num=" ",
-        bank=" ",
-        bank_holder_name=" "
+
+    user = TCUser.objects.create_user(username=username, email=None, password=password, full_name=name)
+    group = Group.objects.get(name='retailer_group')
+    tc_pickteam = TCPickteam.objects.get(main_user_id=3)
+    format = OrderFormats.objects.create(fmt_name=user.full_name, fmt_ws_name="도매명", fmt_product_name="장끼명", fmt_sizeNcolor="사이즈", fmt_color="컬러", fmt_count="수량", fmt_price="도매가", fmt_request="요청사항")
+    tc_group = TCGroup.objects.create(group=group, main_user=user, type="retailer", org_name=retailer_name, account_number="", bank="", bank_account_number="", bank_holder_name="", mobile_phone=phone)
+
+    tc_retailer = TCRetailer.objects.create(
+        group= group,
+        main_user= user,
+        type="personal",
+        org_name=retailer_name,
+        account_number = "",
+        bank = "",
+        bank_account_number = "",
+        bank_holder_name = "",
+        mobile_phone = phone,
+        city = "서울",
+        biz_num = "",
+        biz_type = "",
+        store_type = "",
+        address = "",
+        order_format = format,
+        pickteam = tc_pickteam
+
     )
-    
-    
-    retailer.save()
-    
-    retail_user = RetailUser(
-        username = username,
-        password = enc_password,
-        name = name,
-        phone = phone,
-        retailer_name = retailer_name,
-        retailer = retailer    
-        )
-        
-    retail_user.save()
-    
-    rp = RetailerPickteam(
-        retailer_name=retailer_name,
-        pickteam_id=retailer.pickteam_id
-        )
-        
-    rp.save()
-    
-    t_user = TurtlechainUser(retail_user)
-    token = utils.issue_token(username, retail_user.phone, retail_user.retailer_id, retail_user.retailer_name,
-                                      retail_user.name)
-    return True, t_user, token
+    return True, user
 

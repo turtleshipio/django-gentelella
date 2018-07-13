@@ -263,14 +263,13 @@ $('#signup-form').submit(function(e){
         processData : false,
         contentType: false,
         success : function(result){
-
             alert("회원가입성공");
             window.location.replace("/home/");
 
 
         },
         error : function(result){
-             window.location.replace("/signup/");
+             window.location.replace("/home/");
         }
 
     });
