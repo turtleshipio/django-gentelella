@@ -1,0 +1,72 @@
+<div class="modal fade edit-ws-modal{{counter}}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span> </button>
+                <h4 class="modal-title" id="editWsModal">도매정보 수정하기</h4>
+            </div>
+            <div class="modal-body form-horizontal">
+                <form action="/edit_wsbyuser/" class="form-horizontal form-label-left" method="put">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ws.id}}">
+                    <input type="hidden" name="counter" value="{{counter}}">
+                    <div class="form-group">
+                       <label class="control-label col-md-3" for="edit-ws-name-{{counter}}">도매명 <span class="required">*</span></label>
+                       <div class="col-md-5">
+                           <input type="text" id="edit-ws-name-{{counter}}" value="{{ws.ws_name}}" name="edit_ws_name" required="required" class="form-control col-md-5 col-xs-7" readonly="true">
+                       </div>
+                   </div>
+                    <div class="form-group">
+                       <label class="control-label col-md-3" for="select-buildings-edit-ws-{{counter}}">상가명<span class="required">*</span></label>
+                        {% if data.buildings %}
+
+                        <div class="col-md-5">
+                            <select class="form-control" id="select-buildings-edit-ws-{{counter}}" name="{{forloop.counter}}">
+                            <option value=""  disabled>상가를 골라주세요</option>
+                            {% for building in data.buildings %}
+                                <option value="{{building}}">{{building}}</option>
+                            {% endfor %}
+                        </select>
+                        </div>
+
+                    {% endif %}
+
+                   </div>
+                    <div class="form-group">
+                       <label class="control-label col-md-3" for="floor-edit-ws-{{counter}}">층<span class="required">*</span></label>
+                        <div class="col-md-5">
+                        {% csrf_token %}
+                        <select type="text" readonly="true" id="floor-edit-ws-{{counter}}" name="floor" required="required" class="form-control col-md-5 col-xs-7">
+                        <option id="option-default-edit-ws-{{counter}}" value="" selected disabled>층을 골라주세요</option>
+                        </select>
+                    </div>
+                   </div>
+                    <div class="form-group">
+                       <label class="control-label col-md-3" for="edit-location-{{counter}}">호수<span class="required">*</span></label>
+                       <div class="col-md-5">
+                           <input type="text" value="{{ws.location}}"  id="edit-location-{{counter}}" name="edit_location" required="required" class="form-control col-md-5 col-xs-7">
+                       </div>
+                   </div>
+                     <div class="form-group">
+                       <label class="control-label col-md-3" for="edit-col-{{counter}}">열</label>
+                       <div class="col-md-5">
+                           <input type="text" value="{{ws.col}}"  id="edit-col-{{counter}}" name="edit_location" class="form-control col-md-5 col-xs-7">
+                       </div>
+                   </div>
+
+                    <div class="form-group">
+                       <label class="control-label col-md-3" for="edit-ws-phone-{{counter}}">핸드폰 번호<span class="required">*</span></label>
+                       <div class="col-md-5">
+                           <input type="text" value="{{ws.ws_phone}}" id="edit-ws-phone-{{counter}}" name="edit_ws_phone" required="required" class="form-control col-md-5 col-xs-7" data-inputmask="'mask' : '999-9999-9999'">
+                       </div>
+                   </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                <button type="button" value="{{counter}}" id="submit-edit-ws-modal" class="btn btn-primary">수정하기</button>
+            </div>
+        </div>
+    </div>
+</div>

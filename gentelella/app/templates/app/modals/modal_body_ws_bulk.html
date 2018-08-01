@@ -1,0 +1,32 @@
+{%  include "app/modals/form_group.html" with label_col_size="col-md-3"
+    is_input=True
+    is_select=False
+    data_mask=None
+    input_name=None
+    input_type="text"
+    input_id="input-bulk-ws-format"
+    input_label="도매 대량추가 엑셀 양식"
+    input_required=False
+    input_col_size="col-md-5 col-xs-7"
+    input_value=data.ws_bulk_add_formats
+    readonly=True
+    data_mask=None
+
+
+%}
+
+
+{%  include "app/modals/form_group.html" with label_col_size="col-md-3"
+    is_input=True
+    is_select=False
+    input_name="excel-file"
+    input_id="input-bulk-ws-file"
+    input_label="도매 대량추가 엑셀파일"
+    input_required=True
+    input_col_size="col-md-5 col-xs-7"
+    input_type="file"
+    input_value="my_inpu valut"
+    readonly=False
+    data_mask=None
+
+%}

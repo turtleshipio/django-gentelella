@@ -1,0 +1,101 @@
+{%
+    include "app/modals/form_group.html" with label_col_size="col-md-3"
+    is_input=True
+    is_select=False
+    input_id="ws_name"
+    input_label="도매명"
+    input_required=True
+    input_col_size="col-md-5 col-xs-7"
+    input_value=None
+    input_name=None
+    input_type="text"
+    readonly=False
+    data_mask=None
+%}
+
+{%
+    include "app/modals/form_group.html" with label_col_size="col-md-3"
+    is_input=False
+    is_select=True
+    input_id="select-buildings-add-ws-0"
+    input_required=True
+    input_name=None
+    input_label="상가명"
+    input_col_size="col-md-5 col-xs-7"
+    select_name="0"
+    select_id="select-buildings-add-ws-0"
+    data=data
+    first_option_text="상가를 골라주세요"
+    first_option_value=""
+    data_mask=None
+
+%}
+
+{%
+    include "app/modals/form_group.html" with label_col_size="col-md-3"
+    is_input=False
+    is_select=True
+    input_required=True
+    input_id="floor-add-ws-0"
+    input_name=None
+    input_label="층"
+    input_col_size="col-md-5 col-xs-7"
+    select_name="0"
+    select_id="floor-add-ws-0"
+    buildings=None
+    first_option_text="층을 골라주세요"
+    first_option_value=""
+    data_mask=None
+%}
+
+{%
+    include "app/modals/form_group.html" with label_col_size="col-md-3"
+    is_input=True
+    is_select=False
+    input_id="location"
+    input_label="호수"
+    input_name=None
+    input_type="text"
+    input_required=True
+    input_col_size="col-md-5 col-xs-7"
+    input_name="location"
+    input_value=None
+    input_type="text"
+    readonly=False
+    data_mask=None
+%}
+
+{%
+    include "app/modals/form_group.html" with label_col_size="col-md-3"
+    is_input=True
+    is_select=False
+    input_required=False
+    input_id="col"
+    input_label="열"
+    input_required=False
+    input_type="text"
+    input_name=None
+    input_col_size="col-md-5 col-xs-7"
+    input_value=None
+    input_type="text"
+    input_name="col"
+    readonly=False
+    data_mask=None
+%}
+
+{%
+    include "app/modals/form_group.html" with label_col_size="col-md-3"
+    is_input=True
+    is_select=False
+    input_required=True
+    input_id="ws_phone"
+    input_type="text"
+    input_name="ws_phone"
+    input_label="핸드폰 번호"
+    input_required=True
+    input_col_size="col-md-5 col-xs-7"
+    input_value=None
+    input_type="text"
+    readonly=False
+    data_mask="'mask' : '999-9999-9999'"
+%}

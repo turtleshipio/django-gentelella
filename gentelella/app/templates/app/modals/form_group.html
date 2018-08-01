@@ -1,0 +1,46 @@
+<div class="form-group">
+    <label class="pull-left control-label {{ label_col_size }}" for="{{ input_id }}">{{ input_label }} {% if input_required %} <span class="required"> * </span>{% endif %}</label>
+    <div class="{{ input_col_size }} ">
+
+
+        {% if data_mask != None %}
+            {% include "app/modals/input_element_data_mask.html" with
+                     input_id=input_id
+                     input_required=input_required
+                     input_col_size=input_col_size
+                     input_value=input_value
+                     input_type=input_type
+                     readonly=readonly
+                     data_mask=data_mask
+
+                %}
+
+
+
+        {% elif is_input %}
+
+                {% include "app/modals/input_element.html" with
+                     input_id=input_id
+                     input_required=input_required
+                     input_col_size=input_col_size
+                     input_value=input_value
+                     input_type=input_type
+                     readonly=readonly
+
+                %}
+
+        {% endif %}
+
+        {% if is_select %}
+            {% include "app/modals/select_element.html" with
+                select_name=select_name
+                select_id=select_id
+                data=data
+                first_option_text=first_option_text
+                first_option_value=first_option_value
+            %}
+        {% endif %}
+
+
+    </div>
+</div>

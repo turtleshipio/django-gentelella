@@ -29,14 +29,7 @@ def edit_order_format(request):
 
     try:
         retailer = TCRetailer.objects.get(org_name=retailer_name)
-        print("#####")
-        print("#####")
-        print(retailer_name)
-        print("#####")
-        print("#####")
-        print("#####")
         format = OrderFormats.objects.get(tcretailer=retailer)
-        print("????????")
         format = retailer.order_format
 
         format.fmt_ws_name = fmt_ws_name
@@ -47,6 +40,7 @@ def edit_order_format(request):
         format.fmt_count = fmt_count
         format.fmt_request = fmt_request
         format.save()
+
         response = HttpResponse("ok")
         response.status_code = 200
         return response
@@ -108,7 +102,7 @@ def bulk_orders(request):
                 response = HttpResponse("error")
                 response.status_code=500
                 return response
-
+            """
             notifies = creator.notifies
 
             for ws_name in notifies:
@@ -125,6 +119,7 @@ def bulk_orders(request):
 
                 sender.clear()
 
+            """
             return HttpResponse("Ok")
 
 

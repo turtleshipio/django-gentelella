@@ -1,0 +1,12 @@
+
+<select class="form-control" name="{{ select_name }}" id="{{ select_id }}">
+
+    <option value="{{ first_option_value }}" selected disabled>{{ first_option_text }}</option>
+        {% if data.buildings %}
+            {% for building in data.buildings %}
+                <option id="option-default-add-ws-{{ forloop.counter}}" value="{{ building }}">{{ building }}</option>
+            {% endfor %}
+        {% endif %}
+
+
+</select>

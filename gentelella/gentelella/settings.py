@@ -64,6 +64,7 @@ TEMPLATES = [
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug' : False,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -154,3 +155,4 @@ LOGGING = {
 }
 
 AUTH_USER_MODEL = 'app.TCUser'
+

@@ -13,6 +13,28 @@ from django.shortcuts import get_object_or_404
 import json
 from app.common import *
 
+
+@require_http_methods(["POST"])
+def bulk_add_ws(request):
+
+    file = request.FILES['excel-file']
+    if file is not None:
+        print("HEY!!!")
+        print("HEY!!!")
+        print("HEY!!!")
+        print("HEY!!!")
+        print("HEY!!!")
+        print("HEY!!!")
+        print("HEY!!!")
+        print("HEY!!!")
+        print("HEY!!!")
+        print("HEY!!!")
+        print("HEY!!!")
+        print("HEY!!!")
+
+
+    return "hi"
+
 @require_http_methods(["PUT"])
 def edit_wsbyuser(request):
 
@@ -108,9 +130,17 @@ class WSFormMixinListView(ModelFormMixin, ListView):
         except EmptyPage:
             ws = paginator.page(paginator.num_pages)
 
-        context['buildings'] = buildings
+        ws_bulk_add_formats = BulkAddWsFormat.objects.values_list('format', flat=True)
+        ws_bulk_add_formats = ', '.join(ws_bulk_add_formats)
+
+        data = {
+            'ws_bulk_add_formats' : ws_bulk_add_formats,
+            'buildings' : buildings,
+            'ws_list' : ws_list,
+        }
+
+        context['data'] = data
         context['num_pages'] = paginator.num_pages
-        context['ws_list'] = ws
         context['form'] = self.get_form()
         return context
 

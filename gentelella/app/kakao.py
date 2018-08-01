@@ -144,7 +144,6 @@ class OrderCreator:
             index = str(index)
             product_name = order_js['product_name']
 
-            notify_id = ""
 
             if ws_name not in self.notifies:
                 notify_id = utils.create_notify_id(timestamp, index, ws_name, retailer_name, product_name)

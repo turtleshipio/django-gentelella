@@ -1,0 +1,24 @@
+<div class="modal fade" id="{{ modal_id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span> </button>
+                <h4 class="modal-title">{{ text_modal_header }}</h4>
+            </div>
+            <div class="modal-body form-horizontal">
+                <form action="/{{ form_action }}/" class="form-horizontal form-label-left" method="{{ form_method }}" enctype="{{enctype}}">
+                    {% csrf_token %}
+
+                    {% include modal_body_template with data=data%}
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ modal_footer_close }}</button>
+                <button type="{{ modal_footer_button_type }}" value="{{modal_footer_button_value}}" id="{{ modal_footer_button_id }}" class="btn btn-primary"> {{ modal_footer_submit }}</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

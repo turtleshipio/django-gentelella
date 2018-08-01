@@ -151,6 +151,7 @@ $("button[id^='btn-edit-ws-']").click(function(event){
 });
 
 $("select[id^='select-buildings-']").on('change', function(){
+
     var counter = $(this).attr('name');
     var building = $(this).val();
 
@@ -195,7 +196,7 @@ $("select[id^='select-buildings-']").on('change', function(){
 
                 var floor_add_id = "select#floor-add-ws-" + counter;
                 var floor_edit_id = "select#floor-edit-ws-" + counter;
-                var select_floor =null;
+                var select_floor = null;
 
                 if (select_buildings_id === select_buildings_add_id){
                     select_floor = $(floor_add_id);
@@ -267,6 +268,7 @@ $('button#btn-delete-ws').click(function(event){
 $('button#btn-add-ws-modal').click(function(event){
 
 
+
     var data= {};
     data.ws_name = $('input#ws_name').val();
     if(isWhiteSpace(data.ws_name)){
@@ -300,6 +302,10 @@ $('button#btn-add-ws-modal').click(function(event){
         return;
 
     }
+
+    alert("hihihi");
+
+
     var selected_floor = $('select#floor-add-ws-0');
     var is_not_first = selected_floor.find('option:not(:first)').is(':selected');
     var csrftoken = getCookie('csrftoken');

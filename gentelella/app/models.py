@@ -121,6 +121,19 @@ class OrderFormats(models.Model):
         verbose_name_plural = "Order Formats"
 
 
+class BulkAddWsFormat(models.Model):
+    format = models.CharField(max_length=30, blank=False, null=False, default="")
+    required = models.BooleanField()
+
+    def __str__(self):
+        return self.format
+
+    class Meta:
+        managed = True
+        db_table ="bulk_ws_formats"
+        verbose_name = "Bulk Ws Format"
+        verbose_name_plural = "Bulk Ws Formats"
+
 class TCRetailer(TCGroup):
 
 
@@ -236,6 +249,7 @@ class WsByTCGroup(models.Model):
     group = models.ForeignKey(TCGroup, on_delete=None, default=3)
     updated_time = models.DateTimeField(auto_now_add=True, blank=True)
     is_deleted = models.BooleanField(default=False)
+    ws_phone_second = models.CharField(max_length=30, default="")
 
     def __str__(self):
         return self.ws_name
