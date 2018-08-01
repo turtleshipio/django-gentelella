@@ -89,11 +89,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="modal_body_ws_bulk.html" pinned="false" current-in-tab="true">
+          <file leaf-file-name="modal_body_ws_bulk.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/templates/app/modals/modal_body_ws_bulk.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="168">
-                  <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+                <state relative-caret-position="610">
+                  <caret line="31" column="2" lean-forward="true" selection-start-line="31" selection-start-column="2" selection-end-line="31" selection-end-column="2" />
                 </state>
               </provider>
             </entry>
@@ -110,11 +110,14 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="hacks.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="hacks.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/app/templates/app/hacks.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="26">
-                  <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
+                  <caret line="1" column="32" selection-start-line="1" selection-start-column="32" selection-end-line="2" selection-end-column="56" />
+                  <folding>
+                    <element signature="e#0#9#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -201,26 +204,26 @@
           <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/gentelella/settings.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="477">
-                  <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
+                <state relative-caret-position="1568">
+                  <caret line="63" column="19" lean-forward="true" selection-start-line="63" selection-start-column="19" selection-end-line="63" selection-end-column="19" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="base.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="base.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/venv/lib/python3.5/site-packages/django/template/base.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="451">
-                  <caret line="720" column="52" lean-forward="true" selection-start-line="720" selection-start-column="52" selection-end-line="720" selection-end-column="52" />
+                <state relative-caret-position="1321">
+                  <caret line="1103" lean-forward="true" selection-start-line="1103" selection-end-line="1103" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="manage_ws.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="manage_ws.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/app/views/manage_ws.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="241">
-                  <caret line="19" column="38" lean-forward="true" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
+                <state relative-caret-position="497">
+                  <caret line="29" column="23" lean-forward="true" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
                   <folding>
                     <element signature="e#0#52#0" expanded="true" />
                   </folding>
@@ -311,7 +314,6 @@
         <option value="$PROJECT_DIR$/app/fast.py" />
         <option value="$PROJECT_DIR$/app/views/manage_orders.py" />
         <option value="$PROJECT_DIR$/app/excel.py" />
-        <option value="$PROJECT_DIR$/app/templates/app/hacks.py" />
         <option value="$PROJECT_DIR$/venv/lib/python3.5/site-packages/django/template/__init__.py" />
         <option value="$PROJECT_DIR$/app/templates/app/modals/bulk_add_ws.html" />
         <option value="$PROJECT_DIR$/app/form-group.py" />
@@ -331,6 +333,7 @@
         <option value="$PROJECT_DIR$/app/templates/app/modals/input_element.html" />
         <option value="$PROJECT_DIR$/gentelella/settings.py" />
         <option value="$PROJECT_DIR$/venv/lib/python3.5/site-packages/django/template/base.py" />
+        <option value="$PROJECT_DIR$/app/templates/app/hacks.py" />
       </list>
     </option>
   </component>
@@ -386,12 +389,6 @@
               <item name="gentelella" type="b2602c69:ProjectViewProjectNode" />
               <item name="gentelella" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="gentelella" type="b2602c69:ProjectViewProjectNode" />
-              <item name="gentelella" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="migrations" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="gentelella" type="b2602c69:ProjectViewProjectNode" />
@@ -547,7 +544,7 @@
     <frame x="1280" y="-640" width="2560" height="1440" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4985942" visible="true" weight="0.12226562" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4985942" visible="true" weight="0.12226562" />
       <window_info anchor="bottom" id="TODO" order="7" />
       <window_info anchor="right" id="R Packages" order="5" />
       <window_info anchor="right" id="R Graphics" order="3" />
@@ -556,7 +553,7 @@
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.8653234" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32952926" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24972972" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.49783784" visible="true" weight="0.39431486" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49783784" visible="true" weight="0.39431486" />
       <window_info id="Favorites" order="2" sideWeight="0.50140584" side_tool="true" weight="0.1453125" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -837,13 +834,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/app/hacks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/lib/python3.5/site-packages/django/template/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="754">
@@ -989,23 +979,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/manage_ws.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="19" column="38" lean-forward="true" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#52#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/app/modals/modal_body_ws_bulk.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/app/modals/input_element.html">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1013,17 +986,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/app/modals/modal_body_ws_bulk.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="610">
+          <caret line="31" column="2" lean-forward="true" selection-start-line="31" selection-start-column="2" selection-end-line="31" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/app/hacks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26">
+          <caret line="1" column="32" selection-start-line="1" selection-start-column="32" selection-end-line="2" selection-end-column="56" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/gentelella/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="477">
-          <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
+        <state relative-caret-position="1568">
+          <caret line="63" column="19" lean-forward="true" selection-start-line="63" selection-start-column="19" selection-end-line="63" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/venv/lib/python3.5/site-packages/django/template/base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="720" column="52" lean-forward="true" selection-start-line="720" selection-start-column="52" selection-end-line="720" selection-end-column="52" />
+        <state relative-caret-position="1321">
+          <caret line="1103" lean-forward="true" selection-start-line="1103" selection-end-line="1103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/manage_ws.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="497">
+          <caret line="29" column="23" lean-forward="true" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#52#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
