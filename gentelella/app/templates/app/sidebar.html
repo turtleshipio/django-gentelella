@@ -29,13 +29,16 @@
 
       <ul class="nav side-menu">
         <!-- <li><a href="/home"><i class="fa fa-home"></i> 홈 </a></li> -->
+        {% if user|check_group:'staff' %}
+            <li><a href="/super_stats"><i class="fa fa-area-chart"></i> 대시보드 </a></li>
+        {% endif %}
         <li><a href="/manage_orders"><i class="fa fa-file-excel-o"></i> 주문관리 </a></li>
         <li><a href="/manage_ws"><i class="fa fa-building-o"></i> 도매관리 </a></li>
         {% if user|check_group:'pickteam_group' %}
-          <li><a href="/manage_retailers"><i class="fa fa-laptop"></i> 소매관리 </a></li>
+          <li><a href="/manage_retailers"><i class="fa fa-shopping-bag"></i> 소매관리 </a></li>
         {% endif %}
         <!-- <li><a href="/credits"><i class="fa fa-archive"></i> 미송확인 </a></li> -->
-        <li><a href="/logout"><i class="fa fa-sign-out"></i> 로그아웃 </a></li>
+        <li><a href="/temp"><i class="fa fa-sign-out"></i> 로그아웃 </a></li>
 
       </ul>
     </div>

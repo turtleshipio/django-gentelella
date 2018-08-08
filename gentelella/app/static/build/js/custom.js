@@ -6,6 +6,9 @@
  *     // code here
  * });
  */
+
+ moment.locale('ko');
+
 (function($, sr) {
     // debouncing function from John Hann
     // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
@@ -380,28 +383,20 @@ function init_flot_chart() {
 
     var chart_plot_02_data = [];
 
-    var chart_plot_03_data = [
-        [0, 1],
-        [1, 9],
-        [2, 6],
-        [3, 10],
-        [4, 5],
-        [5, 17],
-        [6, 6],
-        [7, 10],
-        [8, 7],
-        [9, 11],
-        [10, 35],
-        [11, 9],
-        [12, 12],
-        [13, 5],
-        [14, 3],
-        [15, 4],
-        [16, 9]
-    ];
+    var chart_plot_03_data = [];
+
+    for (var i = 0; i < orders_count.length; i++){
+        chart_plot_02_data.push([
+            new Date(orders_count[i][0]).getTime(), orders_count[i][1]
+        ]);
+    }
+
+
+    console.log(chart_plot_02_data);
 
     for (var i = 0; i < 30; i++) {
-        chart_plot_02_data.push([
+
+        chart_plot_03_data.push([
             new Date(Date.today().add(i).days()).getTime(), randNum() + i + i + 10
         ]);
     }
@@ -509,9 +504,9 @@ function init_flot_chart() {
         xaxis: {
             mode: "time",
             minTickSize: [1, "day"],
-            timeformat: "%d/%m/%y",
+            timeformat: "%Y/%m/%d",
             min: chart_plot_02_data[0][0],
-            max: chart_plot_02_data[20][0]
+            max: chart_plot_02_data[orders_count.length-1][0]
         }
     };
 
@@ -523,13 +518,13 @@ function init_flot_chart() {
                 monotonicFit: true
             }
         },
-        colors: ["#26B99A"],
+        colors: ["#EAC784"],
         grid: {
             borderWidth: {
                 top: 0,
                 right: 0,
-                bottom: 1,
-                left: 1
+                bottom: 2,
+                left: 2
             },
             borderColor: {
                 bottom: "#7F8790",
@@ -551,11 +546,12 @@ function init_flot_chart() {
     }
 
 
+
     if ($("#chart_plot_02").length) {
         console.log('Plot2');
 
         $.plot($("#chart_plot_02"), [{
-            label: "Email Sent",
+            label: "누적 주문건수",
             data: chart_plot_02_data,
             lines: {
                 fillColor: "rgba(150, 202, 89, 0.12)"
@@ -572,14 +568,9 @@ function init_flot_chart() {
 
 
         $.plot($("#chart_plot_03"), [{
-            label: "Registrations",
+            label: "\t누적 주문거래액, 단위: 만원",
             data: chart_plot_03_data,
-            lines: {
-                fillColor: "rgba(150, 202, 89, 0.12)"
-            },
-            points: {
-                fillColor: "#fff"
-            }
+
         }], chart_plot_03_settings);
 
     };
@@ -1606,49 +1597,53 @@ function init_daterangepicker() {
 
     var cb = function(start, end, label) {
         console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        $('#reportrange span').html(start.format('YYYY/M/D') + ' - ' + end.format('YYYY/M/D'));
     };
+
+    var today = moment().format("YYYY/MM/DD");
+    console.log(today);
+
 
     var optionSet1 = {
         startDate: moment().subtract(29, 'days'),
         endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
+        minDate: '01/01/2018',
+        maxDate: moment().format("DD/MM/YYYY"),
         dateLimit: {
-            days: 60
+           days : 365,
         },
         showDropdowns: true,
-        showWeekNumbers: true,
+        showWeekNumbers: false,
         timePicker: false,
         timePickerIncrement: 1,
         timePicker12Hour: true,
         ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            '오늘': [moment(), moment()],
+            '어제': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            '지난 7일 간': [moment().subtract(6, 'days'), moment()],
+            '지난 30일 간': [moment().subtract(29, 'days'), moment()],
+            '지난 달': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         },
+        customRangeLabel : "기타",
         opens: 'left',
         buttonClasses: ['btn btn-default'],
         applyClass: 'btn-small btn-primary',
         cancelClass: 'btn-small',
-        format: 'MM/DD/YYYY',
+        format: 'YYYY/MM/DDDD',
         separator: ' to ',
         locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Clear',
+            applyLabel: '검색',
+            cancelLabel: '취소',
             fromLabel: 'From',
             toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            customRangeLabel: '기타',
+            daysOfWeek: ['일', '월', '화', '수', '목', '금', '토'],
+            monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
             firstDay: 1
         }
     };
 
-    $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+    $('#reportrange span').html(moment().subtract(29, 'days').format('YYYY/M/D') + ' - ' + moment().format('YYYY/M/D'));
     $('#reportrange').daterangepicker(optionSet1, cb);
     $('#reportrange').on('show.daterangepicker', function() {
         console.log("show event fired");
@@ -1692,7 +1687,7 @@ function init_daterangepicker_right() {
         minDate: '01/01/2012',
         maxDate: '12/31/2020',
         dateLimit: {
-            days: 60
+            months: 24
         },
         showDropdowns: true,
         showWeekNumbers: true,
@@ -1700,7 +1695,7 @@ function init_daterangepicker_right() {
         timePickerIncrement: 1,
         timePicker12Hour: true,
         ranges: {
-            'Today': [moment(), moment()],
+            '오늘': [moment(), moment()],
             'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
             'Last 7 Days': [moment().subtract(6, 'days'), moment()],
             'Last 30 Days': [moment().subtract(29, 'days'), moment()],
@@ -1714,8 +1709,9 @@ function init_daterangepicker_right() {
         format: 'MM/DD/YYYY',
         separator: ' to ',
         locale: {
+            format: "YYYY/MM/DD",
             applyLabel: 'Submit',
-            cancelLabel: 'Clear',
+            cancelLabel: 'Cancel',
             fromLabel: 'From',
             toLabel: 'To',
             customRangeLabel: 'Custom',
@@ -1725,7 +1721,7 @@ function init_daterangepicker_right() {
         }
     };
 
-    $('#reportrange_right span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+    $('#reportrange_right span').html(moment().subtract(29, 'days').format('YYYY MMMM D') + ' - ' + moment().format('MMMM D, YYYY'));
 
     $('#reportrange_right').daterangepicker(optionSet1, cb);
 

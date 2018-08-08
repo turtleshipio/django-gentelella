@@ -9,31 +9,37 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import  login_required
 from django.views.decorators.http import require_http_methods
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 import json
 from app.common import *
 
+from app.excel import BulkAddWsManager
 
+@login_required()
 @require_http_methods(["POST"])
 def bulk_add_ws(request):
 
     file = request.FILES['excel-file']
+
     if file is not None:
-        print("HEY!!!")
-        print("HEY!!!")
-        print("HEY!!!")
-        print("HEY!!!")
-        print("HEY!!!")
-        print("HEY!!!")
-        print("HEY!!!")
-        print("HEY!!!")
-        print("HEY!!!")
-        print("HEY!!!")
-        print("HEY!!!")
-        print("HEY!!!")
+        try:
+            manager = BulkAddWsManager(request.user)
+            manager.set_file(file)
+            manager.extract()
+
+            response = HttpResponse()
+            return response
+
+        except Exception as e:
+            response = HttpResponse()
+            response.status_code= 500
+            return response
+
+    response = HttpResponse()
+    response.status_code = 200
+    return redirect('/manage_ws')
 
 
-    return "hi"
 
 @require_http_methods(["PUT"])
 def edit_wsbyuser(request):
@@ -71,7 +77,7 @@ def delete_wsbygroup(request):
 
     try:
         group = TCGroup.objects.filter(main_user=user)[0]
-        WsByTCGroup.objects.filter(group=group).exclude(is_deleted=True).update(is_deleted=True)
+        WsByTCGroup.objects.filter(group=group, id=wsbyuser_id).exclude(is_deleted=True).update(is_deleted=True)
         return HttpResponse("ok")
     except Exception as e:
         response = HttpResponse(e)

@@ -12,3 +12,5 @@ def get_retailer_name(user):
     is_retailer = check_group(user, 'retailer_group')
     if is_retailer:
         return TCRetailer.objects.get(main_user=user).org_name
+
+

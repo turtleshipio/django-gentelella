@@ -71,7 +71,7 @@ def notify_success(request):
 
 @require_http_methods(['GET'])
 def temp(request):
-    return render(request, 'app/form.html')
+    return render(request, 'app/form_buttons.html')
 
 
 @require_http_methods(['GET', 'POST'])

@@ -1,7 +1,11 @@
 import xlrd
 from app.models import *
 
-class AddWsBulkManager:
+import hgtk
+
+
+class BulkAddWsManager:
+
 
 
     head_ws_name= 0
@@ -12,17 +16,33 @@ class AddWsBulkManager:
     head_col = 6
     head_location = 5
 
+    required_fmt = {
+        'fmt_ws_name': None,
+        'fmt_building': None,
+        'fmt_floor' : None,
+        'fmt_location' : None,
+        'fmt_col' : None,
+        'fmt_mobile_phone' : None,
+        'fmt_ws_phone' : None,
+    }
+
+    optional_fmt = {
+        'fmt_ws_phone' : None,
+        'fmt_ws_phone_second' : None,
+    }
+
     ws_list = None
     group = None
-    def __init__(self):
-        user = TCUser.objects.get(username='kimbs')
-        self.group = TCGroup.objects.get(group_id=3)
+
+    def __init__(self, user):
+        self.user = user
+        self.group = TCGroup.objects.get(group_id=3, main_user=user)
 
 
-    def set_file(self, fname):
+    def set_file(self, file):
 
         try:
-            self.book = xlrd.open_workbook(filename=fname)
+            self.book = xlrd.open_workbook(file_contents=file.read())
             self.sheet = self.book.sheet_by_index(0)
             self.nrows = self.sheet.nrows
 
@@ -50,37 +70,71 @@ class AddWsBulkManager:
             print(s)
 
 
+    def validate(self):
+
+        try:
+            if self.sheet is None:
+                return False, "엑셀시트가 올바르지 않습니다."
+            header = self.sheet.row_values(0)
+            required_format = BulkAddWsFormat.objects.filter(required=True).values_list("format", flat=True)
+            optional_format = BulkAddWsFormat.objects.filter(required=False).values_list("format", flat=True)
+
+            diff = set(required_format) - set(header)
+
+            if diff != set():
+                cols = ', '.join(diff)
+                return False, "아래의 열 이름들을 확인해주세요\n{cols}".format(cols=cols)
+            else:
+                for fmt in required_format:
+                    for col in header:
+                        if fmt == col:
+                            self.head[fmt] = header.index(col)
+                for fmt in optional_format:
+                    for col in header:
+                        if  fmt == col:
+                            self.head[fmt] = header.index(col)
+
+
+        except Exception as e:
+            return False, str(e)
+
+        return True, "success"
+
+
 
     def extract(self):
         self.ws_list = []
 
         for nrow in range(1, self.sheet.nrows):
+
             row = self.sheet.row_values(nrow)
+            try:
+                ws_name = row[self.head_ws_name]
+                building = row[self.head_building]
+                location = row[self.head_location]
+                location = str(location).split('.')[0]
+                floor = row[self.head_floor]
+                floor = str(floor).split('.')[0]
+                col  = row[self.head_col]
+                col = str(col).split('.')[0]
+                ws_phone = row[self.head_phone]
+                ws_phone_second = row[self.head_second_phone]
 
-            ws_name = row[self.head_ws_name]
-            building = row[self.head_building]
-            location = row[self.head_location]
-            location = str(location).split('.')[0]
-            floor = row[self.head_floor]
-            floor = str(floor).split('.')[0]
-            col  = row[self.head_col]
-            col = str(col).split('.')[0]
-            ws_phone = row[self.head_phone]
-            ws_phone_second = row[self.head_second_phone]
 
+                ws = WsByTCGroup(
+                    ws_name=ws_name,
+                    building=building,
+                    location = location,
+                    floor = floor,
+                    col = col,
+                    ws_phone = ws_phone,
+                    ws_phone_second = ws_phone_second,
+                    group = self.group
+                )
 
-            ws = WsByTCGroup(
-                ws_name=ws_name,
-                building=building,
-                location = location,
-                floor = floor,
-                col = col,
-                ws_phone = ws_phone,
-                ws_phone_second = ws_phone_second,
-                group = self.group
-            )
-
-            self.ws_list.append(ws)
+                self.ws_list.append(ws)
+            except Exception as e:
+                print(', '.join(row))
 
         WsByTCGroup.objects.bulk_create(self.ws_list)
 
@@ -108,13 +162,13 @@ class FastValidator:
     }
     head = {}
 
-    def __init__(self):
-        self.user = TCUser.objects.get(username='kimbs')
+    def __init__(self, user):
+        self.user = user
 
-    def set_file(self, fname):
+    def set_file(self, file):
 
         try:
-            self.book = xlrd.open_workbook(filename=fname)
+            self.book = xlrd.open_workbook(file_contents=file.read())
             self.sheet = self.book.sheet_by_index(0)
             self.nrows = self.sheet.nrows
 
@@ -308,14 +362,7 @@ class OrderExcelValidator:
             #print(header)
 
             diff = set(required) - set(header)
-            #print(diff)
             if diff != set():
-                #diff = list(diff)
-                #print("!!!!!!")
-                #print("!!!!!!")
-                #print(diff)
-                #print("!!!!!!")
-                #print("!!!!!!")
                 cols = ', '.join(diff)
                 return False, "아래의 열 이름들을 확인해주세요\n{cols}".format(cols=cols)
             else:

@@ -86,17 +86,30 @@ WSGI_APPLICATION = 'gentelella.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'turtlechaindev',
-        'USER' : 'dev',
-        'PASSWORD' : 'DEVNapoli2017!',
-        'HOST': 'dev.turtleship.io',
+Prod = True
 
+if Prod:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'turtlechainprod',
+            'USER' : 'dev',
+            'PASSWORD' : 'DEVNapoli2017!',
+            'HOST': 'dev.turtleship.io',
+
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'turtlechaindev',
+            'USER' : 'dev',
+            'PASSWORD' : 'DEVNapoli2017!',
+            'HOST': 'dev.turtleship.io',
 
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

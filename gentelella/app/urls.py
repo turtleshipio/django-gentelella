@@ -8,12 +8,15 @@ from app.views.notify_list import NotifyListView
 from app.views.manage_ws import WSFormMixinListView, delete_wsbygroup, floors_by_building, edit_wsbyuser, bulk_add_ws
 from app.views.manage_retailers import TCRetailersListView
 from app.views.manage_orders import ManageOrderListView, formats_by_retailer, modal_view, bulk_orders, edit_order_format
+from app.views.super_stats import SuperStatsView
+
 urlpatterns = [
     url(r'^super/', admin.site.urls),
     url(r'^$', base.login, name='login'),
     url(r'^login', base.login, name='login'),
     url(r'^signup', base.signup, name="signup"),
     url(r'^home/$', ManageOrderListView.as_view(), name='order_list'),
+    url(r'^super_stats/$', SuperStatsView.as_view(), name='super_stats'),
     url(r'^order_list/$', OrderListView.as_view(), name="order_list"),
     url(r'^upload_bulk/$', bulk_orders, name='bulk'),
     url(r'^excel_modal/$', modal_view , name="excel_modal"),

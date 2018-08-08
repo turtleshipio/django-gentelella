@@ -18,89 +18,32 @@ function isWhiteSpace(str){
     return str.replace(/^\s+|\s+$/gm,'').length == 0;
 };
 
-$('button#submit-edit-ws-modal').click(function(event){
-    var data= {};
+
+
+$("button#submit-order-format").click(function(event){
+
     var counter = $(this).val();
-    var building = $('select#select-buildings-edit-ws-'+counter);
-    var floor = $('select#floor-edit-ws-'+counter);
+    var retailer_name_id = "input#input-retailer-name-" + counter;
+    var retailer_name = $(retailer_name_id).val();
+
+    var fmt_ws_name_id = "input#order-fmt-ws-name-" + counter;
+    var fmt_product_name_id = "input#order-fmt-product-name-" + counter;
+    var fmt_sizencolor_id = "input#order-fmt-sizencolor-" + counter;
+    var fmt_color_id = "input#order-fmt-color-" + counter;
+    var fmt_price_id = "input#order-fmt-price-" + counter;
+    var fmt_count_id = "input#order-fmt-count-" + counter;
+    var fmt_request_id = "input#order-fmt-request-" + counter;
 
 
-    data.ws_name = $('input#edit-ws-name-1').val();
-    data.building = building.val();
-    data.floor = $('select#floor-edit-ws-'+counter).val();
-    data.location = $('input#edit-location-'+counter).val();
-    data.col = $('input#edit-col-'+counter).val();
-    data.ws_phone= $('input#edit-ws-phone-'+counter).val();
-
-
-    if(isWhiteSpace(data.ws_name)){
-        alert("도매명을 입력해주세요");
-        return;
-    }
-
-    if (!building.find('option:not(:first)').is(':selected')){
-        alert('상가를 선택해주세요');
-        return;
-    }
-
-    if (!floor.find('option:not(:first)').is(':selected')){
-        alert('도매점의 층을 선택해주세요');
-        return;
-    }
-
-    if(isWhiteSpace(data.location)){
-        alert('도매점의 호수를 선택해주세요');
-        return;
-    }
-
-    if(isWhiteSpace(data.ws_phone)){
-        alert('핸드폰 번호를 입력해주세요');
-        return;
-
-    }
-
-
-    var csrftoken = getCookie('csrftoken');
-
-    $.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-    }
-    });
-
-    $.ajax({
-        url : "/edit_wsbyuser/",
-        type : "PUT",
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify([data]),
-        dataType: 'text',
-        success : function(result){
-            window.location.href = "/manage_ws/";
-        },
-        error : function(result){
-            alert("에러가 생겼습니다.");
-        },
-
-
-
-    });
-
-
-});
-
-$("button[id^='btn-edit-ws-']").click(function(event){
-    var counter = $(this).val();
-    var select_buildings_id = "select#select-buildings-edit-ws-" + counter;
-    var select_building = $(select_buildings_id);
-
-    var building_org = $('p#edit-ws-building-'+counter).text();
-    var building = $(select_buildings_id).val(building_org);
     data = {};
-    data.building = building_org;
-
-
+    data.retailer_name      = retailer_name;
+    data.fmt_ws_name        = $(fmt_ws_name_id).val();
+    data.fmt_product_name   = $(fmt_product_name_id).val();
+    data.fmt_sizencolor     = $(fmt_sizencolor_id).val();
+    data.fmt_color          = $(fmt_color_id).val();
+    data.fmt_price          = $(fmt_price_id).val();
+    data.fmt_count          = $(fmt_count_id).val();
+    data.fmt_request        = $(fmt_request_id).val();
 
     var csrftoken = getCookie('csrftoken');
 
@@ -113,35 +56,15 @@ $("button[id^='btn-edit-ws-']").click(function(event){
          });
 
          $.ajax({
-            url : "/manage_ws/buildings/",
-            type : "POST",
+            url : "/manage_retailers/",
+            type : "PUT",
             contentType : 'application/json; charset=utf-8',
             data: JSON.stringify([data]),
-            dataType : "json",
+            dataType : "text",
             success:function(result){
-
-                select_floor_id= "select#floor-edit-ws-" + counter;
-                select_floor = $(select_floor_id);
-                select_floor.attr("readonly", false);
-                select_floor.find('option:not(:first)').remove();
-
-                var floors = result['floors'];
-
-                for(var key in floors){
-                    floor = floors[key];
-                    var option = $("<option></option>");
-                    option.text(floor);
-                    option.val(floor);
-                    select_floor.append(option);
-                }
-
-                var option_text = 'option[value="' + building_org + '"]';
-                select_floor.find(option_text).val();
-                select_building.find('option').each(function(index, element){
-                    if(element.value === building_org){
-                        element.attr('selected','selected');
-                    }
-                });
+                var modal_id = "div#modal-" + counter;
+                $(modal_id).modal('hide');
+                alert("수정 되었습니다.");
 
             },
             error:function(result){
@@ -151,7 +74,6 @@ $("button[id^='btn-edit-ws-']").click(function(event){
 });
 
 $("select[id^='select-buildings-']").on('change', function(){
-
     var counter = $(this).attr('name');
     var building = $(this).val();
 
@@ -196,7 +118,7 @@ $("select[id^='select-buildings-']").on('change', function(){
 
                 var floor_add_id = "select#floor-add-ws-" + counter;
                 var floor_edit_id = "select#floor-edit-ws-" + counter;
-                var select_floor = null;
+                var select_floor =null;
 
                 if (select_buildings_id === select_buildings_add_id){
                     select_floor = $(floor_add_id);
@@ -268,7 +190,6 @@ $('button#btn-delete-ws').click(function(event){
 $('button#btn-add-ws-modal').click(function(event){
 
 
-
     var data= {};
     data.ws_name = $('input#ws_name').val();
     if(isWhiteSpace(data.ws_name)){
@@ -302,8 +223,6 @@ $('button#btn-add-ws-modal').click(function(event){
         return;
 
     }
-
-
     var selected_floor = $('select#floor-add-ws-0');
     var is_not_first = selected_floor.find('option:not(:first)').is(':selected');
     var csrftoken = getCookie('csrftoken');
