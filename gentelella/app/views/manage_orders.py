@@ -198,14 +198,21 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
     orders = None
 
     def get_queryset(self):
+        self.orders = []
+
         self.is_pickteam = check_group(self.request.user, 'pickteam_group')
+        self.is_retailer = check_group(self.request.user, 'retailer_group')
+        self.is_staff = check_group(self.request.user, 'is_staff')
+
+
 
         if self.is_pickteam:
             self.pickteam = TCPickteam.objects.get(main_user=self.request.user)
             self.orders = Order.objects.exclude(is_deleted=True).filter(pickteam=self.pickteam).values('ws_name', 'created_time', 'retailer_name', 'count', 'price', 'status', 'read').order_by('-created_time')
         else:
-            self.retailer = TCRetailer.objects.get(main_user=self.request.user)
-            self.orders = Order.objects.exclude(is_deleted=True).filter(retailer=self.retailer).values('ws_name', 'created_time', 'count', 'price', 'status', 'read').order_by('-created_time')
+            if self.is_retailer:
+                self.retailer = TCRetailer.objects.get(main_user=self.request.user)
+                self.orders = Order.objects.exclude(is_deleted=True).filter(retailer=self.retailer).values('ws_name', 'created_time', 'count', 'price', 'status', 'read').order_by('-created_time')
 
 
         return self.orders
@@ -214,6 +221,10 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super(ManageOrderListView, self).get_context_data(*args, **kwargs)
 
+        self.is_pickteam = check_group(self.request.user, 'pickteam_group')
+        self.is_retailer = check_group(self.request.user, 'retailer_group')
+        self.is_staff = check_group(self.request.user, 'staff')
+
         retailers = None
         format = None
         format_str = None
@@ -221,8 +232,9 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
         if self.is_pickteam:
             retailers = TCRetailer.objects.filter(pickteam=self.pickteam).values_list('org_name', flat=True)
         else:
-            format = self.retailer.order_format
-            format_str = format.get_format_str()
+            if self.is_retailer:
+                format = self.retailer.order_format
+                format_str = format.get_format_str()
 
         paginator = Paginator(self.orders, self.paginate_by)
         page = self.request.GET.get('page')
@@ -239,6 +251,8 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
             context['retailers'] = retailers
 
         context['is_pickteam'] = self.is_pickteam
+        context['is_retailer'] = self.is_retailer
+        context['is_staff'] = self.is_staff
         context['format'] = format
         context['format_str'] = format_str
         context['retailer_name'] = self.retailer.org_name if self.retailer else None
