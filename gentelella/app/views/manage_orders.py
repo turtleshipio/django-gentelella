@@ -1,3 +1,4 @@
+from django.utils.dateparse import parse_date
 from django.views.generic.list import ListView
 from django.http import *
 from app.models import *
@@ -93,7 +94,8 @@ def bulk_orders(request):
                 retailer_name = retailer.org_name
                 pickteam = retailer.pickteam
 
-            creator = OrderCreator()
+            date = parse_date("2018-8-3")
+            creator = OrderCreator(date)
             sender = KakaoNotifySender()
 
             success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, group)

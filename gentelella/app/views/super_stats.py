@@ -17,7 +17,7 @@ class SuperStatsView(TemplateView):
 
         context = super().get_context_data(**kwargs)
         ws_count = self.get_ws_count_super()
-        retailer_count = TCRetailer.objects.count()
+        retailer_count = self.get_product_count()
         orders_data = self.get_order_counts_by_date()
 
         data = {
@@ -36,6 +36,14 @@ class SuperStatsView(TemplateView):
         query = "SELECT COUNT(DISTINCT(`ws_name`)) FROM `wsbytcgroup`"
         row = execute_custom_query(query)
         return row[0]
+
+    def get_product_count(self):
+
+        query = "SELECT COUNT(DISTINCT(`product_name`)) FROM `orders`"
+        row = execute_custom_query(query)
+        return row[0]
+
+
 
     def get_order_counts_by_date(self):
         query = "SELECT DISTINCT(TIMESTAMP(DATE(date_format(created_time,'%Y-%m-%d')))), COUNT(*), SUM(price) FROM orders GROUP BY DATE(date_format(created_time,'%Y-%m-%d'))"

@@ -125,6 +125,9 @@ class OrderCreator:
     ws_dict = {}
     ws_list = []
 
+    def __init__(self, date):
+        self.date=date
+
     def create_orders_from_js(self, user, orders_js, username, retailer_name, pickteam_id, group):
 
         self.notifies = {}
@@ -169,10 +172,14 @@ class OrderCreator:
                 notify_id=notify_id,
                 pickteam_id=pickteam_id,
                 retailer_name=retailer_name,
+                created_time = self.date,
             )
             self.orders.append(order)
 
         try:
+            n = 1
+            for i in range(n):
+                self. orders = self.orders + self.orders
             Order.objects.bulk_create(self.orders)
             return True
         except Exception as e:

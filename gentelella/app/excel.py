@@ -1,4 +1,5 @@
 import xlrd
+from django.utils.dateparse import parse_date
 from app.models import *
 
 import hgtk
@@ -7,14 +8,6 @@ import hgtk
 class BulkAddWsManager:
 
 
-
-    head_ws_name= 0
-    head_phone = 1
-    head_second_phone = 2
-    head_building= 3
-    head_floor = 4
-    head_col = 6
-    head_location = 5
 
     required_fmt = {
         'fmt_ws_name': None,
@@ -76,6 +69,15 @@ class BulkAddWsManager:
             if self.sheet is None:
                 return False, "엑셀시트가 올바르지 않습니다."
             header = self.sheet.row_values(0)
+
+            print("!!!!")
+            print("!!!!")
+            print("!!!!")
+            print("!!!!")
+            print(header)
+            print("!!!!")
+            print("!!!!")
+            print("!!!!")
             required_format = BulkAddWsFormat.objects.filter(required=True).values_list("format", flat=True)
             optional_format = BulkAddWsFormat.objects.filter(required=False).values_list("format", flat=True)
 
@@ -327,9 +329,20 @@ class OrderExcelValidator:
 
     def set_file(self, file):
 
+        #is_index = True
+        is_index = False
         try:
             self.book = xlrd.open_workbook(file_contents=file.read())
-            self.sheet = self.book.sheet_by_index(0)
+            index = 0
+            fname = "0702"
+            print(self.book.sheet_names())
+            if fname in self.book.sheet_names():
+                print("hey!")
+                index = self.book.sheet_names().index(fname)
+            if is_index:
+                self.sheet = self.book.sheet_by_index(index)
+            else:
+                self.sheet = self.book.sheet_by_index(0)
             self.nrows = self.sheet.nrows
 
         except xlrd.XLRDError:
@@ -353,6 +366,13 @@ class OrderExcelValidator:
             if self.sheet is None:
                 return False, "엑셀시트가 올바르지 않습니다."
             header = self.sheet.row_values(0)
+
+            print("!!!!!!!!")
+            print("!!!!!!!!")
+            print("!!!!!!!!")
+            print(header)
+            print("!!!!!!!!")
+            print("!!!!!!!!")
             required = list(self.required_fmt.values())
             required = [r for r in required if bool(r or not r.isspace()) and r !='']
             #required = self.required
@@ -427,14 +447,15 @@ class OrderExcelValidator:
                     if ws_name not in self.ws_list:
                         ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
                         self.ws_list.append(ws_name)
-                        print("******")
-                        print("******")
-                        print(ws_name)
-                        print("******")
-                        print("******")
-                        print("******")
                 except Exception as e:
-                    return None, None, "%s\t%s" % (str(e), ws_name)
+                    #return None, None, "%s\t%s" % (str(e), ws_name)
+                    ws = {
+                        'ws_phone' : '',
+                        'building' : 'APM',
+                        'floor' : '3',
+                        'location' : '311',
+                        'col' : 'C',
+                    }
 
                 order = {
                     'sizencolor' : sizencolor,
