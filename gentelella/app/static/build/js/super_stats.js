@@ -251,3 +251,58 @@ $('button#btn-add-ws-modal').click(function(event){
 
     });
 });
+
+function plot_data(){
+
+    var data = [];
+    //console.log(orders_count);
+    console.log(orders_count.length);
+    for (var i = 0; i < orders_count.length; i++){
+        console.log(new Date(orders_count[i][0]).getTime(), orders_count[i][1]);
+        data.push({
+            x: new Date(orders_count[i][0]).getTime(),
+            y: orders_count[i][1]
+        });
+    }
+
+    var ctx = $("#super-chart");
+
+    console.log(ctx);
+
+    var chart = new Chart(ctx, {
+        type: 'line',
+        label: "누적 주문건수",
+        lines: {
+            fillColor: "rgba(150, 202, 89, 0.12)"
+        },
+        points: {
+            fillColor: "#fff"
+        },
+        }], chart_plot_02_settings);
+
+    })
+
+
+}
+
+var flot_settings = {
+}
+
+function init_flot(){
+    $.plot(
+        $("#flot-super-chart"),
+        [{
+            type: 'line',
+            label: "누적 주문건수",
+            lines: {
+                fillColor: "rgba(150, 202, 89, 0.12)"
+            },
+            points: {
+                fillColor: "#fff"
+            },
+        }], flot_settings);
+
+    )
+}
+
+

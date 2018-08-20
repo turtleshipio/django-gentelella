@@ -1,4 +1,5 @@
 from django.views.decorators.http import require_http_methods
+from app.common import check_group
 
 
 from app.models import *
@@ -16,6 +17,19 @@ from django.contrib import auth
 def home(request):
 
     context = {}
+
+    is_staff = check_group(request.user, 'staff')
+    is_pickteam  = check_group(request.user, 'pickteam')
+    is_retailer = check_group(request.user, 'retailer')
+
+    print("!!!!!!!!!")
+    print("!!!!!!!!!")
+    print(is_staff)
+    print("!!!!!!!!!")
+    request.session['is_staff'] = is_staff
+    request.session['is_pickteam'] = is_pickteam
+    request.session['is_retailer'] = is_retailer
+
     context['content'] = None
 
     if request.method == "GET":
@@ -43,6 +57,22 @@ def login(request):
 
         if user is not None:
             auth.login(request, user)
+
+            is_staff = check_group(request.user, 'staff')
+            is_pickteam  = check_group(request.user, 'pickteam_group')
+            is_retailer = check_group(request.user, 'retailer_group')
+
+            print("!!!!")
+            print("!!!!")
+            print(is_pickteam)
+            print("!!!!")
+            print("!!!!")
+            print("!!!!")
+
+            request.session['is_staff'] = is_staff
+            request.session['is_pickteam'] = is_pickteam
+            request.session['is_retailer'] = is_retailer
+
             return redirect('/home/')
 
         else:

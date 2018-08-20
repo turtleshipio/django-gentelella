@@ -94,7 +94,8 @@ def bulk_orders(request):
                 retailer_name = retailer.org_name
                 pickteam = retailer.pickteam
 
-            date = parse_date("2018-8-3")
+
+            date = datetime.datetime.today().strftime('%Y-%m-%d')
             creator = OrderCreator(date)
             sender = KakaoNotifySender()
 

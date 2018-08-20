@@ -430,7 +430,7 @@ function init_flot_chart() {
         colors: ["rgba(38, 185, 154, 0.38)", "rgba(3, 88, 106, 0.38)"],
         xaxis: {
             tickColor: "rgba(51, 51, 51, 0.06)",
-            mode: "time",
+            mode: "index",
             tickSize: [1, "day"],
             //tickLength: 10,
             axisLabel: "Date",
@@ -449,7 +449,7 @@ function init_flot_chart() {
     var chart_plot_02_settings = {
         grid: {
             show: true,
-            aboveData: true,
+            aboveData: false,
             color: "#3f3f3f",
             labelMargin: 10,
             axisMargin: 0,
@@ -488,16 +488,6 @@ function init_flot_chart() {
         },
         colors: ['#96CA59', '#3F97EB', '#72c380', '#6f7a8a', '#f7cb38', '#5a8022', '#2c7282'],
         shadowSize: 0,
-        tooltip: true,
-        tooltipOpts: {
-            content: "%s: %y.0",
-            xDateFormat: "%d/%m",
-            shifts: {
-                x: -30,
-                y: -50
-            },
-            defaultTheme: false
-        },
         yaxis: {
             min: 0
         },
