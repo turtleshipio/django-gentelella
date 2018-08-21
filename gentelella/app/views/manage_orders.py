@@ -12,7 +12,11 @@ from django.views.decorators.http import require_http_methods
 from app.decorators import ajax_required
 from django.shortcuts import render, redirect
 from app.kakao import  *
+<<<<<<< HEAD
 from django.template import RequestContext
+=======
+import datetime
+>>>>>>> 17d818d3569a9cbb7080ac982a67104c38fdb56c
 
 @login_required()
 @require_http_methods(['POST'])
@@ -95,9 +99,15 @@ def bulk_orders(request):
                 pickteam = retailer.pickteam
 
 
+<<<<<<< HEAD
             #date = datetime.datetime.today().strftime('%Y-%m-%d')
             #creator = OrderCreator(date)
             creator = OrderCreator()
+=======
+            date = datetime.datetime.strptime("2018-08-03", "%Y-%m-%d")
+
+            creator = OrderCreator(date)
+>>>>>>> 17d818d3569a9cbb7080ac982a67104c38fdb56c
             sender = KakaoNotifySender()
 
             success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, group)
