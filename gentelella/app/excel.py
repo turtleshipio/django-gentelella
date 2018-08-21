@@ -445,6 +445,7 @@ class OrderExcelValidator:
                     color = None
 
                 ws_name = str(row[self.head[self.required_fmt['fmt_ws_name']]])
+                ws_name = ws_name.strip()
                 product_name = str(row[self.head[self.required_fmt['fmt_product_name']]])
 
                 if color is not None:
