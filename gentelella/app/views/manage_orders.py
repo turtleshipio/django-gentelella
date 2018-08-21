@@ -12,7 +12,7 @@ from django.views.decorators.http import require_http_methods
 from app.decorators import ajax_required
 from django.shortcuts import render, redirect
 from app.kakao import  *
-
+from django.template import RequestContext
 
 @login_required()
 @require_http_methods(['POST'])
@@ -95,8 +95,9 @@ def bulk_orders(request):
                 pickteam = retailer.pickteam
 
 
-            date = datetime.datetime.today().strftime('%Y-%m-%d')
-            creator = OrderCreator(date)
+            #date = datetime.datetime.today().strftime('%Y-%m-%d')
+            #creator = OrderCreator(date)
+            creator = OrderCreator()
             sender = KakaoNotifySender()
 
             success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, group)
@@ -152,18 +153,24 @@ def modal_view(request):
         order_format = retailer.order_format
         success, msg = validator.validate(order_format)
 
-
+        request
         if not success:
             return render(request, 'app/excel_modal.html', context={'orders': None, 'retailer_name':None, 'msg':msg})
 
-        orders, success, msg = validator.extract()
+        orders, has_datetime, success, msg = validator.extract()
 
+        context = {}
+        context['has_datetime'] = has_datetime
+        context['orders'] = orders
+        context['retailer_name'] = retailer_name
+        context['msg'] = msg
+        context['success'] = success
 
         if success:
-            return render(request, 'app/excel_modal.html', context={'orders': orders, 'retailer_name': retailer.org_name, 'msg':None})
+            return render(request, 'app/excel_modal.html', context=context)
         else:
             request.FILES['excel_file'] = None
-            return render(request, 'app/excel_modal.html', context={'orders': None, 'retailer_name':None, 'msg':msg})
+            return render(request, 'app/excel_modal.html', context=context)
 
 
 

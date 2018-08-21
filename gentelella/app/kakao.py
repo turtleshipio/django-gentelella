@@ -125,8 +125,6 @@ class OrderCreator:
     ws_dict = {}
     ws_list = []
 
-    def __init__(self, date):
-        self.date=date
 
     def create_orders_from_js(self, user, orders_js, username, retailer_name, pickteam_id, group):
 
@@ -138,9 +136,20 @@ class OrderCreator:
 
             ws_name = order_js['ws_name']
             if ws_name not in self.ws_list:
-                ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
-                self.ws_list.append(ws_name)
-
+                try:
+                    ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
+                    self.ws_list.append(ws_name)
+                except Exception as e:
+                    print(str(e))
+                    print("!!!!!!!!")
+                    print("!!!!!!!!")
+                    print("!!!!!!!!")
+                    print("!!!!!!!!")
+                    print("!!!!!!!!")
+                    print("!!!!!!!!")
+                    print("!!!!!!!!")
+                    print("!!!!!!!!")
+                    print("!!!!!!!!")
             timestamp = datetime.now().timestamp()
             timestamp *= 1000000
             timestamp = str(int(timestamp))
@@ -172,7 +181,7 @@ class OrderCreator:
                 notify_id=notify_id,
                 pickteam_id=pickteam_id,
                 retailer_name=retailer_name,
-                created_time = self.date,
+                created_time = order_js['datetime'],
             )
             self.orders.append(order)
 

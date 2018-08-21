@@ -318,6 +318,7 @@ class OrderExcelValidator:
     optional_fmt = {
         'fmt_color' : None,
         'fmt_request' : None,
+        'fmt_datetime' : None,
     }
 
     ws_dict = {}
@@ -362,24 +363,20 @@ class OrderExcelValidator:
             else:
                 return False, "다음 항목이 업로드해주신 엑셀파일에 존재하지 않습니다:%s" % fmt
 
+        for fmt in self.optional_fmt:
+            if hasattr(format, fmt):
+                self.optional_fmt[fmt] = getattr(format, fmt)
+
         try:
             if self.sheet is None:
                 return False, "엑셀시트가 올바르지 않습니다."
             header = self.sheet.row_values(0)
 
-            print("!!!!!!!!")
-            print("!!!!!!!!")
-            print("!!!!!!!!")
-            print(header)
-            print("!!!!!!!!")
-            print("!!!!!!!!")
             required = list(self.required_fmt.values())
             required = [r for r in required if bool(r or not r.isspace()) and r !='']
-            #required = self.required
-            #print("*******")
-            #print(required)
-            #print(type(required))
-            #print(header)
+
+            optional = list(self.optional_fmt.values())
+            optional = [o for o in optional if bool(o or not o.isspace()) and o != '']
 
             diff = set(required) - set(header)
             if diff != set():
@@ -390,6 +387,12 @@ class OrderExcelValidator:
                     for col in header:
                         if req == col:
                             self.head[req] = header.index(col)
+
+                for opt in optional:
+                    for col in header:
+                        if opt == col:
+                            self.head[opt] = header.index(col)
+
         except Exception as e:
             return False, str(e)
 
@@ -398,11 +401,15 @@ class OrderExcelValidator:
     def extract(self):
 
         orders = []
-        msg = ""
+        msg = None
         nrow = self.sheet.nrows
         self.ws_dict = {}
         self.ws_list = []
         group = TCGroup.objects.filter(main_user=self.user)[0]
+        has_datetime = False
+        ws_list = WsByTCGroup.objects.exclude(is_deleted=True).filter(group=group).values()
+        ws_list = [dict(ws) for ws in ws_list]
+        ws_name_list = WsByTCGroup.objects.exclude(is_deleted=True).filter(group=group).values_list("ws_name", flat=True)
 
         for nrow in range(1, self.sheet.nrows):
             row = self.sheet.row_values(nrow)
@@ -411,6 +418,8 @@ class OrderExcelValidator:
 
                 count = row[self.head[self.required_fmt['fmt_count']]]
                 price = row[self.head[self.required_fmt['fmt_price']]]
+
+                datetime = row[self.head[self.optional_fmt['fmt_datetime']]] if 'fmt_datetime' in self.optional_fmt else None
 
                 if type(count) == str:
                     count = int(count) if count.isdigit() else count
@@ -443,12 +452,12 @@ class OrderExcelValidator:
                 else:
                     sizencolor = size
 
-                try:
-                    if ws_name not in self.ws_list:
-                        ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
-                        self.ws_list.append(ws_name)
-                except Exception as e:
-                    #return None, None, "%s\t%s" % (str(e), ws_name)
+
+                if ws_name in ws_name_list:
+                    for w in ws_list:
+                        if ws_name == w['ws_name']:
+                            ws = w
+
                     ws = {
                         'ws_phone' : '',
                         'building' : 'APM',
@@ -457,16 +466,19 @@ class OrderExcelValidator:
                         'col' : 'C',
                     }
 
+                has_datetime = (datetime is not None)
                 order = {
                     'sizencolor' : sizencolor,
-                    'ws_phone': ws.ws_phone,
+                    'ws_phone': ws['ws_phone'],
                     'ws_name': ws_name,
                     'product_name': product_name,
-                    'building': ws.building,
-                    'floor': ws.floor,
-                    'location': ws.location,
+                    'building': ws['building'],
+                    'floor': ws['floor'],
+                    'location': ws['location'],
                     'price': price,
-                    'count' : count
+                    'count' : count,
+                    'datetime' :datetime,
+
                 }
 
                 orders.append(order)
@@ -482,7 +494,10 @@ class OrderExcelValidator:
 
         success = True
         if len(orders) < 1:
-            msg = "에러가 생겼습니다"
+            if msg is None:
+                msg = "에러가 생겼습니다"
             success = False
 
-        return orders, success, msg
+        if msg is None:
+            msg = ""
+        return orders, has_datetime, success, msg

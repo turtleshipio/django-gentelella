@@ -44,7 +44,10 @@ $('button#btn-confirm-upload').click(function(event){
         order['sizencolor'] = $(this).find('p[name*="sizencolor"]').text();
         order['price'] = $(this).find('p[name*="price"]').text();
         order['count'] = $(this).find('p[name*="count"]').text();
-
+        datetime =  $(this).find('p[name*="datetime"]').text();
+        if(datetime){
+            order['datetime'] = datetime;
+        }
         orders.push(order)
 
 

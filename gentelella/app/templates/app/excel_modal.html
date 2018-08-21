@@ -15,6 +15,10 @@
                       <th><p class="text-center">사이즈 및 컬러</p></th>
                       <th><p class="text-center">도매가</p></th>
                       <th><p class="text-center">수량</p></th>
+                      {% if has_datetime %}
+                          <th><p class="text-center">날짜</p></th>
+                      {% endif %}
+
                       {% if retailer_name %}
                       <h3 name="retailer_name">{{ retailer_name }}</h3>
                       {% endif %}
@@ -38,6 +42,9 @@
                             <td><p name="sizencolor">{{order.sizencolor}}</p></td>
                             <td><p name="price">{{order.price}}</p></td>
                             <td><p name="count">{{order.count}}</p></td>
+                            {% if order.datetime %}
+                                <td><p name="datetime">{{order.datetime}}</p></td>
+                            {% endif %}
 
                         </tr>
                     {%  endfor %}

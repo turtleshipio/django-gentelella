@@ -84,11 +84,11 @@ class OrderFormats(models.Model):
     fmt_ws_name = models.CharField(null=False, max_length=10, verbose_name="도매명 포맷")
     fmt_product_name = models.CharField(null=False, max_length=10, verbose_name="장끼명 포맷")
     fmt_sizeNcolor = models.CharField(null=False, max_length=10, verbose_name="사이즈 및 컬러 포맷")
-    fmt_color = models.CharField(null=False, max_length=10, verbose_name="컬러 포맷")
+    fmt_color = models.CharField(null=False, blank=True, max_length=10, verbose_name="컬러 포맷")
     fmt_count = models.CharField(null=False, max_length=10, verbose_name="수량 포맷")
     fmt_price = models.CharField(null=False, max_length=10, verbose_name="도매가 포맷")
-    fmt_request = models.CharField(null=True, max_length=10, verbose_name="요청사항 포맷")
-
+    fmt_request = models.CharField(null=True, blank=True, max_length=10, verbose_name="요청사항 포맷")
+    fmt_datetime = models.CharField(null=True, blank=True, max_length=20, verbose_name="날짜")
 
     def __str__(self):
         return self.fmt_name
