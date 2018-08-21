@@ -181,11 +181,7 @@ class OrderCreator:
                 notify_id=notify_id,
                 pickteam_id=pickteam_id,
                 retailer_name=retailer_name,
-<<<<<<< HEAD
                 created_time = order_js['datetime'],
-=======
-                created_time = datetime.strptime("2018-08-03", "%Y-%m-%d"),
->>>>>>> 17d818d3569a9cbb7080ac982a67104c38fdb56c
             )
             self.orders.append(order)
 
