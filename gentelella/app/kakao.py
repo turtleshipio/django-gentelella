@@ -181,7 +181,8 @@ class OrderCreator:
                 notify_id=notify_id,
                 pickteam_id=pickteam_id,
                 retailer_name=retailer_name,
-                created_time = order_js['datetime'],
+                created_time = datetime.now()
+                #created_time = order_js['datetime'],
             )
             self.orders.append(order)
 

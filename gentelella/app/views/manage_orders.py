@@ -127,13 +127,13 @@ def bulk_orders(request):
                 response = HttpResponse("error")
                 response.status_code=500
                 return response
-            """
+
             notifies = creator.notifies
 
             for ws_name in notifies:
                 notify_id = notifies[ws_name]['notify_id']
                 sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id)
-                phones = []
+                phones = ['01088958454']
 
                 ws_phone = notifies[ws_name]['phone']
                 if ws_phone not in phones:
@@ -144,7 +144,6 @@ def bulk_orders(request):
 
                 sender.clear()
 
-            """
             return HttpResponse("Ok")
 
 

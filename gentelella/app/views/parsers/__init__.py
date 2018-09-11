@@ -245,15 +245,7 @@ class FruitsParser(BaseParser):
         if self.has_datetime:
             self.datetime = self.sheet.row_values(4)[self.head['날짜']]
 
-        print("!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!")
-        print(self.has_datetime)
-        print("!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!")
+        self.has_datetime = False
 
         return True, "성공"
 
