@@ -151,6 +151,7 @@ class TCRetailer(TCGroup):
     )
     pickteam = models.ForeignKey(TCPickteam, null=True, on_delete=None, related_name="tc_retailer_pickteam")
 
+    parser = models.CharField(default="BaseParser", max_length=30)
 
     def __str__(self):
         return self.org_name if (self.org_name is not None or self.org_name != "") else "TC Retailer Object"

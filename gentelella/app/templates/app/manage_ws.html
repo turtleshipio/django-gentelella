@@ -26,7 +26,10 @@
 
       </div>
 
-        <div class="clearfix"></div>
+
+
+        <div class="row">
+        </div>
 
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -46,6 +49,15 @@
                         {% endif %}
                         <div class="clearfix"></div>
                         <div class="x_content">
+                            <br />
+                            <div class="search-container">
+                                <form action="/action_page.php">
+                                  <input type="text" placeholder="도매명 검색" name="search">
+                                  <button type="submit"><i class="fa fa-search"></i></button>
+                                </form>
+
+
+                            </div>
                             <br />
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-ws">새로운 도매 추가하기 + </button>
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-bulk-add-ws">엑셀로 한번에 추가하기</button>
@@ -68,17 +80,32 @@
 
                                 {% include "app/modals/base_modal.html" with
                                     modal_id="modal-add-ws"
-                                    text_modal_header="새로운 도매 추가하기"
+                                    text_modal_header="도매 검색하기"
                                     modal_body_template="app/modals/modal_body_ws.html"
                                     modal_footer_close="닫기"
                                     modal_footer_submit="업로드하기"
                                     modal_footer_button_id="btn-add-ws-modal"
                                     modal_footer_button_value="submit"
                                     form_method="post"
-                                    form_action="manage_ws"
+                                    form_action="search_ws"
                                     enctype=None
                                     data=data
                                     modal_footer_button_type="button"
+                                %}
+                                 {%
+                                    include "app/modals/base_modal.html" with
+                                    modal_id="modal-search-ws"
+                                    text_modal_header="도매 검색"
+                                    modal_body_template="app/modals/modal_body_ws_bulk.html"
+                                    modal_footer_close="닫기"
+                                    modal_footer_submit="업로드하기"
+                                    modal_footer_button_id="submit_ws_bulk"
+                                    modal_footer_button_value="submit"
+                                    form_method="post"
+                                    form_action="add_bulkws"
+                                    enctype="multipart/form-data"
+                                    data=data
+                                    modal_footer_button_type="submit"
                                 %}
 
 

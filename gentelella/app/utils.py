@@ -124,3 +124,7 @@ def create_notify_id(timestamp, index, ws_name, retailer_name, product_name):
 
     return notify_id
 
+def check_whitespace(s):
+    s = str(s)
+    return bool(not s or s.isspace() and s == '')
+

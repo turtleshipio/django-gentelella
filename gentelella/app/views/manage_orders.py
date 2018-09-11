@@ -14,6 +14,7 @@ from django.shortcuts import render, redirect
 from app.kakao import  *
 from django.template import RequestContext
 import datetime
+from app.views.parsers import *
 
 @login_required()
 @require_http_methods(['POST'])
@@ -103,6 +104,25 @@ def bulk_orders(request):
 
             success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, group)
 
+            send = False
+
+            if send:
+                notifies = creator.notifies
+
+                for ws_name in notifies:
+                    notify_id = notifies[ws_name]['notify_id']
+                    sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id)
+                    phones = []
+
+                    ws_phone = notifies[ws_name]['phone']
+                    if ws_phone not in phones:
+                        phones.append(ws_phone)
+
+                    for phone in phones:
+                        sender.send_kakao_msg(phone)
+                    sender.clear()
+
+
             if not success:
                 response = HttpResponse("error")
                 response.status_code=500
@@ -130,7 +150,7 @@ def bulk_orders(request):
 
 @login_required()
 @require_http_methods(['POST'])
-def modal_view(request):
+def modal_excel_parse_view(request):
 
     if request.method == "POST":
 
@@ -151,14 +171,21 @@ def modal_view(request):
             retailer = TCRetailer.objects.get(main_user=request.user)
             retailer_name = retailer.org_name
 
-        order_format = retailer.order_format
-        success, msg = validator.validate(order_format)
+        #order_format = retailer.order_format
+        #success, msg = validator.validate(order_format)
 
-        request
-        if not success:
-            return render(request, 'app/excel_modal.html', context={'orders': None, 'retailer_name':None, 'msg':msg})
+        #if not success:
+        #    return render(request, 'app/excel_modal.html', context={'orders': None, 'retailer_name':None, 'msg':msg})
 
-        orders, has_datetime, success, msg = validator.extract()
+        #orders, has_datetime, success, msg = validator.extract()
+
+        # get parser by each retailer from app.views.parsers
+        parser = globals()[retailer.parser]
+        parser = parser(user=request.user, file=file, local=False)
+
+        orders, has_datetime, success, msg = parser.extract()
+
+
 
         context = {}
         context['has_datetime'] = has_datetime

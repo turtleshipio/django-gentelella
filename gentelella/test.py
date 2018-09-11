@@ -1,18 +1,9 @@
-def f(phone):
+from app.models import *
+from app.views.parsers import *
 
-	formatted_phone = []
-	if len(phone) < 11:
-		print(len(phone) < 11)
-		return phone
+parser = None
 
-	for i, p in enumerate(phone):
-		if i != 3 and i != 7:
-			formatted_phone.append(p)
-		elif i == 3 or i == 7:
-			formatted_phone.append('-')
-			formatted_phone.append(p)
-		else:
-			continue
 
-	return ''.join(formatted_phone)
-
+user = TCUser.objects.get(username='kimbs')
+parser = FruitsParser(user=user, file=None, local=True)
+parser.extract()

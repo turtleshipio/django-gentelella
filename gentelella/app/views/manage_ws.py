@@ -16,6 +16,24 @@ from app.common import *
 from app.excel import BulkAddWsManager
 
 @login_required()
+@ajax_required
+def search_ws(request):
+
+    ws_name = request.POST['search_ws']
+    ws_list = []
+
+    try:
+        group = TCGroup.objects.filter(main_user=request.user)[0]
+        ws_list = WsByTCGroup.objects.filter(group=group).exclude(is_deleted=True).values("ws_name", "building", "location", "floor", "col", "ws_phone")
+
+        data = {'ws_list': ws_list}
+        return JsonResponse(data)
+
+    except Exception as e:
+        data = {'ws_list': []}
+        return JsonResponse(data)
+
+@login_required()
 @require_http_methods(["POST"])
 def bulk_add_ws(request):
 
@@ -96,7 +114,7 @@ def floors_by_building(request):
         floors = Wholesalers.objects.filter(building_name=building).values_list('floor', flat=True).distinct()
         floors = list(floors)
         data = {'floors': floors}
-        return JsonResponse(data);
+        return JsonResponse(data)
     except Exception as e:
         response = HttpResponse("error")
         response.status_code = 500
