@@ -48,9 +48,9 @@ class SuperStatsView(TemplateView):
     def get_order_counts_by_date(self):
         query = "SELECT " \
                     "DISTINCT(TIMESTAMP(DATE(date_format(created_time,'%Y-%m-%d')))), " \
-                    "COUNT(*), SUM(price) " \
+                    "COUNT(*), SUM(price * count) " \
                 "FROM orders " \
-                "GROUP BY created_time " \
+                "GROUP BY DATE(date_format(created_time,'%Y-%m-%d'))" \
 
         rs = execute_custom_query(query, fetchone=False)
         li = []

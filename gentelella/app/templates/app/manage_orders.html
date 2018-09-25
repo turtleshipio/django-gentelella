@@ -1,6 +1,7 @@
 {% extends "app/base_site.html" %}
 {% load auth_tags %}
 {% load user_tags %}
+{% load humanize %}
 {% load utils_tags %}
 
 {% block stylesheets %}
@@ -97,124 +98,82 @@
         </div>
         <div class="">
 
-            <div class="col-md-12 col-sm-12 col-xs-12">
-          <div class="x_panel">
-              <div class="x_title">
-                  <h2><i class="fa fa-bars"></i> 주문내역</h2>
-              <div class="clearfix"></div>
-              </div>
-              <!-- start project list -->
-              <table class="table table-striped projects">
-                   {% if is_paginated %}
-                  <ul class="pagination pull-right">
-                      {% if page_obj.has_previous %}
-                      <li>
-                          <span><a href="?page=1">첫 페이지</a></span>
-                      </li>
-                      <li>
-                          <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
-                      </li>
-                      {% endif %}
-                      <li class="">
-                          <span>페이지 {{ page_obj.number}} 중 {{ num_pages }}</span>
-                      </li>
-                      {% if page_obj.has_next %}
-                      <li>
-                          <span><a href="?page={{page_obj.next_page_number }}">다음</a></span>
-                      </li>
-                      {% endif %}
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xl-12">
+                <div class="x_panel">
+                    <!-- HEADER -->
+                    <div class="x_title">
+                        <h2><i class="fa fa-bars"></i> 주문 확인</h2>
+                        <div class="clearfix"></div>
+                    </div>
 
-                  </ul>
-                  {% endif %}
+                    <!-- BODY -->
+                    <table class="table table-striped projects">
+                        {% if is_paginated %}
+                            <ul class="pagination pull-right">
+                                {% if page_obj.has_previous %}
+                                    <li>
+                                        <span><a href="?page=1">첫 페이지</a></span>
+                                    </li>
+                                    <li>
+                                        <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
+                                    </li>
+                                {% endif %}
+                            <li class="">
+                                <span>페이지 {{ page_obj.number}} 중 {{ num_pages }}</span>
+                            </li>
+                                {% if page_obj.has_next %}
+                                    <li>
+                                        <span><a href="?page={{page_obj.next_page_number }}">다음</a></span>
+                                    </li>
+                                {% endif %}
 
-
-
-
-                <thead class="text-center">
-                  <tr>
-                    <th><h4 class="text-center">도매명</h4></th>
-                      {% if is_pickteam %}
-                      <th><h4 class="text-center">소매명</h4></th>
-                      {% endif %}
-                    <th><h4 class="text-center">수량</h4></th>
-                    <th><h4 class="text-center">총 결제금액</h4></th>
-                    <th><h4 class="text-center">상태</h4></th>
-                      <th><h4 class="text-center">읽음</h4></th>
-                  </tr>
-                </thead>
-                 <tbody class="text-center">
-                  {%  for order in orders %}
-                      <tr class="text-center">
-
-                        <td class="text-center">
-                          <a><strong>{{  order.ws_name }}</strong></a>
-                          <br />
-                          <small>{{  order.created_time }}</small>
-                        </td>
-                        {% if is_pickteam %}
-                          <td>
-                              <p> {{ order.retailer_name }}</p>
-                          </td>
-                          {% endif %}
-                          <td>
-                          <p>{{  order.count }}개</p>
-                        </td>
-                        <td class="text-center">
-                            {% load humanize %}
-                          <p>{{  order.price|intcomma}}원</p>
-                        </td>
-                            <td>
-                            {%  if order.status == "approved" %}
-                                <button type="button" class="btn btn-success btn-xs">승인완료</button>
-                            {% elif order.status == "onwait" %}
-                                <button type="button" class="btn btn-warning btn-xs">승인대기</button>
-                            {%  elif order.status == "error" %}
-                                <button type="button" class="btn btn-danger btn-xs">주문실패</button>
-                            {%  elif order.status == "oos" %}
-                                <button type="button" class="btn btn-danger btn-xs">품절</button>
-                            {%  endif %}
-                        </td>
-                          <td>
-                            {% if order.read %}
-
-                              <p><span class="glyphicon glyphicon-record"></span></p>
+                            </ul>
                             {% endif %}
-                          </td>
+
+                     <thead class="text-center">
+                     <tr>
+                      {% if is_pickteam %}
+                          <th><h4 class="text-center">소매명</h4></th>
+                      {% endif %}
+                         <th><h4 class="text-center">날짜</h4></th>
+                         <th><h4 class="text-center">총 주문 도매 수</h4></th>
+                         <th><h4 class="text-center">총 주문 수량</h4></th>
+                         <th><h4 class="text-center">총 결제 금액</h4></th>
+
+
                       </tr>
-                  {%  endfor %}
-                 </tbody>
-
-              </table>
-                  {% if is_paginated %}
-                  <ul class="pagination pull-right">
-                      {% if page_obj.has_previous %}
-                      <li>
-                          <span><a href="?page=1">첫 페이지</a></span>
-                      </li>
-                      <li>
-                          <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
-                      </li>
-                      {% endif %}
-                      <li class="">
-                          <span>페이지 {{ page_obj.number}} 중 {{ num_pages }}</span>
-                      </li>
-                      {% if page_obj.has_next %}
-                      <li>
-                          <span><a href="?page={{page_obj.next_page_number }}">다음</a></span>
-                      </li>
-                      {% endif %}
-
-                  </ul>
-                    {% else %}
-                    <p>주문내역이 아직 없습니다.</p>
-                  {% endif %}
+                    </thead>
+                    <tbody>
+                    {% for order_group in order_groups %}
+                    <tr class="text-center clickable-row">
+                        <td class="text-center">
+                          <a><strong>{{ order_group.retailer_name}}</strong></a>
+                        </td>
+                        <td class="text-center">
+                            <a>{{ order_group.date | date }}</a>
+                        </td>
 
 
+                         <td class="text-center">
+                          <a>{{ order_group.ws_count | intcomma }} 개</a>
+                        </td>
+                         <td class="text-center">
+                          <a>{{ order_group.orders_count | intcomma}} 개</a>
+                        </td>
+                         <td class="text-center">
+                          <a>{{ order_group.total_amt | intcomma }} 원</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
 
-              <!-- end project list -->
+                    </tbody>
+                    </table>
 
+                </div>
             </div>
-          </div>
+        </div>
+
+
         </div>
       </div>
     </div>

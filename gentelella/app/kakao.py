@@ -131,6 +131,7 @@ class OrderCreator:
         self.notifies = {}
         self.orders = []
         self.ws_list = []
+        ws = None
 
         for index, order_js in enumerate(orders_js):
 
@@ -165,15 +166,25 @@ class OrderCreator:
             else:
                 notify_id = self.notifies[ws_name]['notify_id']
 
+            if ws is None:
+                print("#####")
+                print("#####")
+                print("#####")
+                print(ws_name)
+                print("#####")
+                print("#####")
+                print("#####")
+                print("#####")
+                print("#####")
             order = Order(
                 username=username,
                 sizencolor=order_js['sizencolor'],
-                ws_phone=ws.ws_phone,
+                ws_phone=ws.ws_phone if ws is not None else None,
                 ws_name=ws_name,
                 product_name=order_js['product_name'],
-                building=ws.building,
-                floor= ws.floor,
-                location= ws.location,
+                building=ws.building if ws is not None else None,
+                floor= ws.floor if ws is not None else None,
+                location= ws.location if ws is not None else None,
                 count=order_js['count'],
                 price=order_js['price'],
                 is_deleted=False,
@@ -181,15 +192,15 @@ class OrderCreator:
                 notify_id=notify_id,
                 pickteam_id=pickteam_id,
                 retailer_name=retailer_name,
-                created_time = datetime.now()
+                created_time = datetime.strptime('2018-09-21', '%Y-%m-%d'),
+                created_date = datetime.strptime('2018-09-21', '%Y-%m-%d').date(),
+                #created_time = datetime.now(),
+                #created_date = datetime.now().date(),
                 #created_time = order_js['datetime'],
             )
             self.orders.append(order)
 
         try:
-            n = 1
-            for i in range(n):
-                self. orders = self.orders + self.orders
             Order.objects.bulk_create(self.orders)
             return True
         except Exception as e:

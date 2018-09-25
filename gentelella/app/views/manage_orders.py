@@ -15,6 +15,7 @@ from app.kakao import  *
 from django.template import RequestContext
 import datetime
 from app.views.parsers import *
+from app import custom_db
 
 @login_required()
 @require_http_methods(['POST'])
@@ -104,23 +105,6 @@ def bulk_orders(request):
 
             success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, group)
 
-            send = False
-
-            if send:
-                notifies = creator.notifies
-
-                for ws_name in notifies:
-                    notify_id = notifies[ws_name]['notify_id']
-                    sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id)
-                    phones = []
-
-                    ws_phone = notifies[ws_name]['phone']
-                    if ws_phone not in phones:
-                        phones.append(ws_phone)
-
-                    for phone in phones:
-                        sender.send_kakao_msg(phone)
-                    sender.clear()
 
 
             if not success:
@@ -130,19 +114,22 @@ def bulk_orders(request):
 
             notifies = creator.notifies
 
-            for ws_name in notifies:
-                notify_id = notifies[ws_name]['notify_id']
-                sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id)
-                phones = ['01088958454']
+            send = False
 
-                ws_phone = notifies[ws_name]['phone']
-                if ws_phone not in phones:
-                    phones.append(ws_phone)
+            if send:
+                for ws_name in notifies:
+                    notify_id = notifies[ws_name]['notify_id']
+                    sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id)
+                    phones = ['01088958454']
 
-                for phone in phones:
-                    sender.send_kakao_msg(phone)
+                    ws_phone = notifies[ws_name]['phone']
+                    if ws_phone not in phones:
+                        phones.append(ws_phone)
 
-                sender.clear()
+                    for phone in phones:
+                        sender.send_kakao_msg(phone)
+
+                    sender.clear()
 
             return HttpResponse("Ok")
 
@@ -157,9 +144,6 @@ def modal_excel_parse_view(request):
 
         file = request.FILES['excel_file']
 
-        validator = OrderExcelValidator(request.user)
-        validator.set_file(file)
-
         is_pickteam = check_group(request.user, 'pickteam_group')
 
         if is_pickteam:
@@ -170,7 +154,7 @@ def modal_excel_parse_view(request):
             retailer = TCRetailer.objects.get(main_user=request.user)
             retailer_name = retailer.org_name
 
-        #order_format = retailer.order_format
+        order_format = retailer.order_format
         #success, msg = validator.validate(order_format)
 
         #if not success:
@@ -181,9 +165,9 @@ def modal_excel_parse_view(request):
         # get parser by each retailer from app.views.parsers
         parser = globals()[retailer.parser]
         parser = parser(user=request.user, file=file, local=False)
-
+        parser.inspect_header(order_format)
         orders, has_datetime, success, msg = parser.extract()
-
+        parser.clear()
 
 
         context = {}
@@ -221,8 +205,8 @@ def formats_by_retailer(request):
         return response
 
 class ManageOrderListView (LoginRequiredMixin, ListView):
-    model = Order
-    context_object_name = 'orders'
+    model = OrderGroup
+    context_object_name = 'order_groups'
     template_name = "app/manage_orders.html"
     login_url = '/'
     paginate_by = 20
@@ -231,6 +215,7 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
     retailer = None
     pickteam = None
     orders = None
+    order_groups = None
 
     def get_queryset(self):
         self.orders = []
@@ -243,14 +228,16 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
 
         if self.is_pickteam:
             self.pickteam = TCPickteam.objects.get(main_user=self.request.user)
-            self.orders = Order.objects.exclude(is_deleted=True).filter(pickteam=self.pickteam).values('ws_name', 'created_time', 'retailer_name', 'count', 'price', 'status', 'read').order_by('-created_time')
+            #self.orders = Order.objects.exclude(is_deleted=True).filter(pickteam=self.pickteam).values('ws_name', 'created_time', 'retailer_name', 'count', 'price', 'status', 'read').order_by('-created_time')
+            order_group = OrderGroup(self.pickteam.id)
+            self.order_groups = order_group.get_orders_by_pickteam()
         else:
             if self.is_retailer:
                 self.retailer = TCRetailer.objects.get(main_user=self.request.user)
                 self.orders = Order.objects.exclude(is_deleted=True).filter(retailer=self.retailer).values('ws_name', 'created_time', 'count', 'price', 'status', 'read').order_by('-created_time')
-
-
-        return self.orders
+            order_group = OrderGroup(retailer_name=self.retailer.retailer_name)
+            self.order_groups = order_group.get_orders_by_retailer()
+        return self.order_groups
 
 
     def get_context_data(self, *args, **kwargs):

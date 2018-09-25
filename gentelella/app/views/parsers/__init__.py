@@ -33,6 +33,7 @@ class BaseParser(object):
 
     def __init__(self, user, file, sheet_index=0, local=False):
 
+
         self.user = user
         self.group = TCGroup.objects.filter(main_user=user)[0]
         self.file = file
@@ -43,18 +44,16 @@ class BaseParser(object):
     def _get_sheet(self):
 
         try:
-            if not self.local:
-                book = xlrd.open_workbook(file_contents=self.file.read())
-                print("???")
-            else:
-                book = xlrd.open_workbook("test.xlsx", "r")
-                print("!!")
-                print(book)
+            book = xlrd.open_workbook(file_contents=self.file.read())
             sheet = book.sheet_by_index(self.sheet_index)
             return sheet
 
         except xlrd.XLRDError:
             raise xlrd.XLRDError
+
+    def clear(self):
+        self.file = None
+        self.orders = []
 
     def inspect_header(self, format):
         self.required = []
@@ -103,21 +102,17 @@ class BaseParser(object):
         orders = []
 
         ws_list = WsByTCGroup.objects.exclude(is_deleted=True).filter(group=self.group)
+        datetime = None
 
         for nrow in range(1, self.sheet.nrows):
             row = self.sheet.row_values(nrow)
-
             try:
-                datetime = row[self.head[self.optional_fmt['fmt_datetime']]] if 'fmt_datetime' in self.optional_fmt else None
-
+                datetime = row[self.head[self.optional_fmt['fmt_datetime']]] if 'fmt_datetime' in self.head else None
                 count = row[self.head[self.required_fmt['fmt_count']]]
                 price = row[self.head[self.required_fmt['fmt_price']]]
-
                 count = self._format_numeric(count)
                 price = self._format_numeric(price)
-
                 sizencolor = self._format_sizeNcolor(row)
-
                 ws_name = str(row[self.head[self.required_fmt['fmt_ws_name']]]).strip()
                 product_name = str(row[self.head[self.required_fmt['fmt_product_name']]])
 
@@ -125,16 +120,17 @@ class BaseParser(object):
 
                 order = {
                     'sizencolor' : sizencolor,
-                    'ws_phone' : ws_phone,
                     'ws_name' : ws_name,
                     'product_name' : product_name,
-                    'building' : building,
-                    'floor' : floor,
-                    'location' : location,
                     'price' : price,
                     'count' : count,
                     'datetime' : datetime,
                 }
+
+                order['ws_phone'] = ws_phone if ws_phone is not None else ""
+                order['building'] = building if building is not None else ""
+                order['floor'] = floor if floor is not None else ""
+                order['location'] = location if location is not None else ""
 
                 orders.append(order)
                 msg = ""
@@ -152,7 +148,8 @@ class BaseParser(object):
             msg = ""
 
         self.orders = orders
-        return orders, success, msg
+        has_datetime = datetime is not None
+        return orders, has_datetime, success, msg
 
     def verbose(self):
         for order in self.orders:
@@ -164,7 +161,6 @@ class BaseParser(object):
         for w in ws_list:
             if w.ws_name == ws_name:
                 ws = w
-
         ws_phone = building = floor = location = None
 
         if ws is not None:
@@ -219,33 +215,32 @@ class FruitsParser(BaseParser):
     has_datetime = False
     datetime = None
 
-    def __init__(self, user, file, local):
-        super().__init__(user=user, file=None, local=True)
-        self.inspect_header()
+    def __init__(self, user, file, local=False):
+        super().__init__(user=user, file=file)
 
     def inspect_header(self, format=None):
 
-        # We are not going to inspect. This parser is custom to retailers.
+        try:
+            header = self.sheet.row_values(0)
 
-        header = self.sheet.row_values(0)
+            for req in self.required:
+                for col in header:
+                    if req == col:
+                        self.head[req] = header.index(col)
 
-        for req in self.required:
-            for col in header:
-                if req == col:
-                    self.head[req] = header.index(col)
+            for opt in self.optional:
+                for col in header:
+                    if opt == col:
+                        self.head[opt] = header.index(col)
+                    if col == "날짜":
+                        self.has_datetime = True
 
-        for opt in self.optional:
-            for col in header:
-                print(header)
-                if opt == col:
-                    self.head[opt] = header.index(col)
-                if col == "날짜":
-                    self.has_datetime = True
+            if self.has_datetime:
+                self.datetime = self.sheet.row_values(4)[self.head['날짜']]
 
-        if self.has_datetime:
-            self.datetime = self.sheet.row_values(4)[self.head['날짜']]
-
-        self.has_datetime = False
+            self.has_datetime = False
+        except:
+            return False, "문제가 생겼습니다."
 
         return True, "성공"
 
@@ -264,7 +259,8 @@ class FruitsParser(BaseParser):
 
 
             if self._is_sub_header(row):
-                ws_name = self._get_ws_name(row).strip()
+                ws_name = self._get_ws_name(row)
+                ws_name = ws_name.strip()
             elif self._is_order_row(row):
                 product_name = row[self.head['품명']]
                 color = row[self.head['칼라']]
@@ -313,11 +309,68 @@ class FruitsParser(BaseParser):
         return orders, self.has_datetime, success, msg
 
     def _get_ws_name(self, row):
+
+
+        ws_name = ""
+
         row = row[0].split(' ')
 
+        l_pos = -1
+        p_pos = -1
+        li = []
+
+        for i in range(len(row)):
+
+            col = row[i]
+            if self._is_phone(col):
+                if p_pos == -1 :
+                    p_pos = i
+            if col.endswith(")") and not self._is_phone(row[i+1]):
+               if l_pos == -1 :
+                   l_pos = i
+
+        if  p_pos != -1:
+            if l_pos != -1 and l_pos > 0:
+                for i in range(l_pos + 1, p_pos):
+                    li.append(row[i])
+            else:
+                for i in range(1, p_pos):
+                    li.append(row[i])
+            ws_name = ' '.join(li)
+            return ws_name
+
+        # row doesn't have phone
+        r_pos = -1
+        l_pos = -1
+        li = []
+
         for col in row:
-            if col.startswith("010") or col.startswith("02"):
-                return row[row.index(col)-1]
+            if col.startswith("["):
+                r_pos = row.index(col)
+            if col.startswith("("):
+                l_pos = row.index(col)
+
+        if l_pos != -1:
+            for i in range(l_pos + 1, r_pos):
+                s = row[i]
+                if not check_whitespace(s):
+                    li.append(row[i])
+                ws_name = ' '.join(li)
+        else:
+            for i in range(1, r_pos):
+                s = row[i]
+                if not check_whitespace(s):
+                    li.append(row[i])
+                ws_name = ' '.join(li)
+
+        return ws_name
+
+
+
+
+
+    def _is_phone(self, s):
+        return s.startswith("010") or s.startswith("02") or s.startswith("070")
 
     def _is_sub_header(self, row):
 

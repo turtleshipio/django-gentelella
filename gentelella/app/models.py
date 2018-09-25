@@ -8,6 +8,10 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
+from app import custom_db
+
+
+
 
 
 class TCUser(AbstractUser):
@@ -364,6 +368,7 @@ class Order(models.Model):
 
     updated_time = models.DateTimeField()
     created_time = models.DateTimeField()
+    created_date = models.DateField(null=True, default=None)
 
     is_deleted = models.BooleanField(null=False, default=False, name="is_deleted")
 
@@ -457,5 +462,78 @@ class StoreSyles(models.Model):
         managed = False
         db_table = 'store_styles'
 
+
+class OrderGroup():
+
+    pickteam_id = None
+    retailer_name = None
+
+    ws_count= None
+    created_time = None
+    total_count = None
+    total_amount = None
+    orders = None
+
+    def __init__(self, pickteam_id = None, retailer_name=None):
+
+        self.pickteam_id = pickteam_id
+        self.retailer_name = retailer_name
+
+    def get_orders_by_pickteam(self):
+
+        if self.pickteam_id is None:
+            return []
+        try:
+            query = "SELECT " \
+                    "created_date AS date, " \
+                    "retailer_name, " \
+                    "COUNT(DISTINCT(ws_name)) AS ws_count, " \
+                    "COUNT(*) AS orders_count, " \
+                    "SUM(price * count) AS total_amt " \
+                    "FROM orders " \
+                    "WHERE pickteam_id={pickteam_id} AND " \
+                    "created_date > DATE('2018-09-18') " \
+                    "GROUP BY date, retailer_name".format(pickteam_id=self.pickteam_id)
+
+            print(query)
+            rs = custom_db.dict_fetchall(query)
+            return rs
+
+        except Exception as e:
+            print("!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!")
+            print(str(e))
+            print("!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!")
+            return []
+
+    def get_orders_by_retailer(self):
+
+        if self.retailer_name is None:
+            return []
+
+        rs = None
+
+        try:
+
+            query = "SELECT " \
+                    "created_date AS created_date, " \
+                    "COUNT(DISTINCT(ws_name)) AS ws_count, " \
+                    "COUNT(*) AS orders_count, " \
+                    "SUM(price * count) AS total_amt " \
+                    "FROM orders " \
+                    "WHERE retailer_name='{retailer_name}' AND " \
+                    "created_date > DATE('2018-09-18') " \
+                    "GROUP BY created_date ".format(retailer_name=self.retailer_name)
+
+            print(query)
+            rs = custom_db.dict_fetchall(query)
+
+            return rs
+
+        except:
+            return []
 
 
