@@ -132,18 +132,20 @@ class WSFormMixinListView(ModelFormMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(WSFormMixinListView, self).get_context_data(*args, **kwargs)
-        is_retailer = check_group(self.request.user, 'retailer_group')
-        is_pickteam = check_group(self.request.user, 'pickteam_group')
-        is_staff = check_group(self.request.user, 'staff')
+        print("!!!!")
+        print("!!!!")
+        print(self.request.user)
+        print("!!!!")
+        print("!!!!")
+        org = TCOrg.objects.get(main_user=self.request.user)
 
-        if is_pickteam or is_staff:
-            group = TCGroup.objects.get(main_user=self.request.user, type="pickteam")
-        else:
-            group = TCGroup.objects.get(main_user=self.request.user, type="retailer")
+        is_retailer = org.group.name == "retailer_group"
+        is_pickteam = org.group.name == "pickteam_group"
+        is_staff = org.group.name == "staff"
 
         buildings = Buildings.objects.values_list('building_name', flat=True).order_by('building_name')
 
-        ws_list = WsByTCGroup.objects.filter(group=group).exclude(is_deleted=True).order_by('-updated_time')
+        ws_list = WsByTCGroup.objects.filter(org=org).exclude(is_deleted=True).order_by('-updated_time')
         paginator = Paginator(ws_list, self.paginate_by)
 
         page = self.request.GET.get('page')

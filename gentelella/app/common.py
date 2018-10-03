@@ -4,6 +4,9 @@ def check_permission(user, perm):
     return user.has_tcperm(perm)
 
 def check_group(user, group):
+    #if group=="pickteam_group":
+
+
     return user.groups.filter(name=group).exists()
 
 

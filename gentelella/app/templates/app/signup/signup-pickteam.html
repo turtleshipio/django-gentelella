@@ -5,6 +5,7 @@
   {{ block.super }}
   <!-- Ion.RangeSlider -->
   <link href="/static/vendors/normalize-css/normalize.css" rel="stylesheet">
+<link href="/static/build/css/signup-pickteam.css" rel="stylesheet">
 {% endblock stylesheets %}
 
 
@@ -13,34 +14,24 @@
 
 <script src="/static/build/js/signup.js"></script>
   <div class="right_col" role="main">
-    <div class="">
 
 
-      <div class="clearfix"></div>
+      <div class="x_panel">
+          <div class="x_title text-center">
+              <h1>사입자 전용 회원가입</h1>
+          </div>
+          <div class="x_content">
 
-      <div class="row">
-        <!-- form input mask -->
-
-          <div class="x_panel">
-            <div class="x_title text-center">
-              <h1>소매전용 회원가입</h1>
-              <div class="clearfix"></div>
-            </div>
-            <div class="x_content">
-              <br />
-
-
-              <form id="signup-form" action="/signup/" method="post" class="form-horizontal form-label-left">
+              <form id="signup-form" action="/signup_pickteam/" method="post" class="form-horizontal form-label-left">
                 {% csrf_token %}
+
                 <div class="form-group">
                   <label class="control-label col-md-offset-1  col-md-4 col-sm-4 col-xs-4">아이디</label>
                   <div class="col-md-3 col-sm-7 col-xs-7">
                     <input name="username" id="username" placeholder="4자 이상" type="text" class="form-control" minlength="4" maxlength="20" required>
-
                     <div id="duplicate-username" class="btn btn-default btn-sm col-md-4 col-sm-2">중복확인</div>
                     <p></p>
                     <p id="check-username" class="col-md-offset-2"></p>
-
                   </div>
                 </div>
                 <div class="form-group">
@@ -56,58 +47,37 @@
                      <p id="p-password-check"></p>
                   </div>
                 </div>
-                <div class="ln_solid"></div>
-                <div class="form-group">
-                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">소매점 이름</label>
+                      <div class="form-group">
+                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">이용자 이름</label>
                   <div class="col-md-3 col-sm-7 col-xs-7">
-                    <input type="text" id="retailer-name" class="form-control" >
+                    <input type="text" id="full_name" class="form-control" >
                   </div>
                 </div>
-                <div class="form-group">
-                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">사업자 번호</label>
-                  <div class="col-md-3 col-sm-7 col-xs-7">
-                    <input id="business-number" type="text" class="form-control" data-inputmask="'mask' : '999-99-99999'">
-                    <p id="p-business-number-check"></p>
-                  </div>
-
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">대표자 이름</label>
-                  <div class="col-md-3 col-sm-7 col-xs-7">
-                    <input type="text" id="name" class="form-control">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">대표자 휴대폰 번호</label>
+                            <div class="form-group">
+                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">이용자 휴대폰 번호</label>
                   <div class="col-md-3 col-sm-7 col-xs-7">
                     <input type="text" id="phone" class="form-control" data-inputmask="'mask' : '(999) 9999-9999'">
                   </div>
                 </div>
-                <div class="ln_solid"></div>
 
-                <div class="form-group">
+                  <div class="ln_solid"></div>
+                  <div class="form-group">
                   <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 col-md-offset-5">
                     <button type="submit"  value="cancel" class="btn btn-primary" formnovalidate>뒤로가기</button>
                     <button type="submit"  value="confirm" class="btn btn-success" formnovalidate >가입하기</button>
                   </div>
                 </div>
+
               </form>
-            </div>
           </div>
-
-
       </div>
-
-
-
-
-
+  </div>
 {% endblock content %}
 
 {% block javascripts %}
   {{ block.super}}
   <!-- jquery.inputmask -->
   <script src="/static/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
-  <!-- jQuery Knob -->
-  <script src="/static/vendors/jquery-knob/dist/jquery.knob.min.js"></script>
+        <script src="/static/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
+    <script src="/static/build/js/signup_pickteam.js"></script>
 {% endblock javascripts %}

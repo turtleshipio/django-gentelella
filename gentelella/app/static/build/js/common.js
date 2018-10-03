@@ -35,13 +35,21 @@ function isAlphaNumeric(str) {
 function isNumeric(str) {
   var code, i, len;
 
-  for (i = 0, len = str.length; i < len; i++) {
-    code = str.charCodeAt(i);
-
-    if (!(code > 47 && code < 58)) {
-      return false;
+    if (str == null) {
+        return false;
     }
-  }
+    try{
+        for (i = 0, len = str.length; i < len; i++) {
+                code = str.charCodeAt(i);
+
+        if (!(code > 47 && code < 58)) {
+          return false;
+        }
+      }
+    } catch(err){
+        return false;
+    }
+
   return true;
 };
 

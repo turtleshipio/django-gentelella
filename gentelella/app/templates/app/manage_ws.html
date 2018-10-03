@@ -124,6 +124,28 @@
               <div class="clearfix"></div>
               </div>
               <!-- start project list -->
+
+                                {% if is_paginated %}
+                  <ul class="pagination pull-right">
+                      {% if page_obj.has_previous %}
+                      <li>
+                          <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
+                      </li>
+                      {% endif %}
+                      <li class="">
+                          <span>페이지 {{ page_obj.number}} 중 {{ num_pages }}</span>
+                      </li>
+                      {% if page_obj.has_next %}
+                      <li>
+                          <span><a href="?page={{page_obj.next_page_number }}">다음</a></span>
+                      </li>
+                      {% endif %}
+
+                  </ul>
+                    {% else %}
+                  {% endif %}
+
+
               <table class="table table-striped projects">
                 <thead class="text-center">
                   <tr>
@@ -140,24 +162,24 @@
                   {%  for ws in data.ws_list %}
                         <tr id="tr-ws-list{{ws.id}}">
                         <td class="text-center">
-                          <a id="a-ws-name-list{{ws.id}}"><strong>{{  ws.ws_name }}</strong></a>
+                          <span id="a-ws-name-list{{ws.id}}"><strong>{{  ws.ws_name }}</strong></span>
                           <br />
                           <small>{{  ws.updated_time }}</small>
                         </td>
                         <td class="text-center">
-                          <p id="edit-ws-building-{{forloop.counter}}">{{ ws.building}}</p>
+                          <span id="edit-ws-building-{{forloop.counter}}">{{ ws.building}}</span>
                         </td>
                         <td class="text-center">
-                            <p id="edit-ws-floor-{{forloop.counter}}">{{ ws.floor }}층 </p>
+                            <span id="edit-ws-floor-{{forloop.counter}}">{{ ws.floor }}층 </span>
                         </td>
                       <td class="text-center">
-                          <p>{{ ws.location }}호 </p>
+                          <span>{{ ws.location }}호 </span>
                       </td>
                         <td class="text-center">
-                            <p>{{ ws.col}} </p>
+                            <span>{{ ws.col}} </span>
                         </td>
                        <td class="text-center">
-                          <p>{{  ws.ws_phone | format_mobile_phone }}</p>
+                          <span>{{  ws.ws_phone | format_mobile_phone }}</span>
                       </td>
                         <td>
 
@@ -179,25 +201,7 @@
 
 
 
-                  {% if is_paginated %}
-                  <ul class="pagination pull-right">
-                      {% if page_obj.has_previous %}
-                      <li>
-                          <span><a href="?page={{ page_obj.previous_page_number }}">이전</a></span>
-                      </li>
-                      {% endif %}
-                      <li class="">
-                          <span>페이지 {{ page_obj.number}} 중 {{ num_pages }}</span>
-                      </li>
-                      {% if page_obj.has_next %}
-                      <li>
-                          <span><a href="?page={{page_obj.next_page_number }}">다음</a></span>
-                      </li>
-                      {% endif %}
 
-                  </ul>
-                    {% else %}
-                  {% endif %}
                 </tbody>
               </table>
                                 {% if is_paginated %}

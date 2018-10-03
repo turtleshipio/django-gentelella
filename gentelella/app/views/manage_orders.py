@@ -144,7 +144,8 @@ def modal_excel_parse_view(request):
 
         file = request.FILES['excel_file']
 
-        is_pickteam = check_group(request.user, 'pickteam_group')
+        org = TCOrg.objects.get(main_user=request.user)
+        is_pickteam = org.group.name == "pickteam_group"
 
         if is_pickteam:
             retailer_name = request.POST['retailer_name']
@@ -176,7 +177,7 @@ def modal_excel_parse_view(request):
         context['retailer_name'] = retailer_name
         context['msg'] = msg
         context['success'] = success
-
+        context['datetime'] = ""
         if success:
             return render(request, 'app/excel_modal.html', context=context)
         else:
@@ -217,48 +218,46 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
     orders = None
     order_groups = None
 
+    org = None
+
     def get_queryset(self):
-        self.orders = []
 
-        self.is_pickteam = check_group(self.request.user, 'pickteam_group')
-        self.is_retailer = check_group(self.request.user, 'retailer_group')
-        self.is_staff = check_group(self.request.user, 'is_staff')
-
-
-
+        self.org = TCOrg.objects.get(main_user=self.request.user)
         if self.is_pickteam:
-            self.pickteam = TCPickteam.objects.get(main_user=self.request.user)
-            #self.orders = Order.objects.exclude(is_deleted=True).filter(pickteam=self.pickteam).values('ws_name', 'created_time', 'retailer_name', 'count', 'price', 'status', 'read').order_by('-created_time')
-            order_group = OrderGroup(self.pickteam.id)
+            order_group = OrderGroup(self.org.id)
             self.order_groups = order_group.get_orders_by_pickteam()
         else:
             if self.is_retailer:
                 self.retailer = TCRetailer.objects.get(main_user=self.request.user)
                 self.orders = Order.objects.exclude(is_deleted=True).filter(retailer=self.retailer).values('ws_name', 'created_time', 'count', 'price', 'status', 'read').order_by('-created_time')
-            order_group = OrderGroup(retailer_name=self.retailer.retailer_name)
-            self.order_groups = order_group.get_orders_by_retailer()
+                order_group = OrderGroup(retailer_name=self.retailer.retailer_name)
+                self.order_groups = order_group.get_orders_by_retailer()
         return self.order_groups
 
 
     def get_context_data(self, *args, **kwargs):
         context = super(ManageOrderListView, self).get_context_data(*args, **kwargs)
-
-        self.is_pickteam = check_group(self.request.user, 'pickteam_group')
-        self.is_retailer = check_group(self.request.user, 'retailer_group')
-        self.is_staff = check_group(self.request.user, 'staff')
+        self.org = TCOrg.objects.get(main_user=self.request.user)
+        print("!!!!")
+        print("!!!!")
+        print(self.org.id)
+        print("!!!!")
+        self.is_pickteam = self.org.group.name == "pickteam_group"
+        self.is_retailer = self.org.group.name == "retailer_group"
+        self.is_staff = self.org.group.name == "staff"
 
         retailers = None
         format = None
         format_str = None
 
         if self.is_pickteam:
-            retailers = TCRetailer.objects.filter(pickteam=self.pickteam).values_list('org_name', flat=True)
+            retailers = TCRetailer.objects.filter(pickteam_id=self.org.id).values_list('org_name', flat=True)
         else:
             if self.is_retailer:
                 format = self.retailer.order_format
                 format_str = format.get_format_str()
 
-        paginator = Paginator(self.orders, self.paginate_by)
+        paginator = Paginator(self.order_groups, self.paginate_by)
         page = self.request.GET.get('page')
 
 
@@ -305,7 +304,7 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
 
         try:
             pickteam = TCPickteam.objects.get(main_user=self.request.user)
-            retailer = TCRetailer.objects.get(pickteam=pickteam, org_name=retailer_name)
+            retailer = TCRetailer.objects.get(pickteam_id=pickteam.id, org_name=retailer_name)
             format = retailer.order_format
 
             format.fmt_ws_name = fmt_ws_name

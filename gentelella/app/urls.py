@@ -3,24 +3,24 @@ from django.contrib import admin
 from app.views.auth import checks
 from app.views import base, upload
 from app.views.order_list import OrderListView
-from app.views.credit_list import CreditListView
 from app.views.notify_list import NotifyListView
 from app.views.manage_ws import WSFormMixinListView, delete_wsbygroup, floors_by_building, edit_wsbyuser, bulk_add_ws
 from app.views.manage_retailers import TCRetailersListView
 from app.views.manage_orders import ManageOrderListView, formats_by_retailer, modal_excel_parse_view, bulk_orders, edit_order_format
 from app.views.super_stats import SuperStatsView
+from app.views.signup import *
 
 urlpatterns = [
     url(r'^super/', admin.site.urls),
     url(r'^$', base.login, name='login'),
     url(r'^login', base.login, name='login'),
-    url(r'^signup', base.signup, name="signup"),
+    url(r'^signup/$', base.signup, name="signup"),
+    url(r'^signup-pickteam/$', signup_pickteam, name="signup_pickteam"),
     url(r'^home/$', ManageOrderListView.as_view(), name='order_list'),
     url(r'^super_stats/$', SuperStatsView.as_view(), name='super_stats'),
     url(r'^order_list/$', OrderListView.as_view(), name="order_list"),
     url(r'^upload_bulk/$', bulk_orders, name='bulk'),
     url(r'^excel_modal/$', modal_excel_parse_view, name="excel_modal"),
-    url(r'^credits', CreditListView.as_view(), name='credits'),
     url(r'^delete_order', base.delete_order, name='delete_order'),
     url(r'^logout/$', base.logout, name='logout'),
     url(r'^temp/$', base.temp, name='temp'),

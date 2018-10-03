@@ -196,10 +196,7 @@ $('#signup-form').submit(function(e){
     var username = $('#username').val();
     var password = $('#password').val();
     var password_check = $('#password-check').val();
-    var retailer_name = $('#retailer-name').val();
-    var temp = jQuery.extend({}, $('#business-number'));
-    var business_number = temp.inputmask('remove').val();
-    var name = $('#name').val();
+    var full_name = $('#full_name').val();
     var phone = $('#phone').inputmask('remove').val();
 
 
@@ -218,18 +215,8 @@ $('#signup-form').submit(function(e){
         return false;
     }
 
-    if (isWhiteSpace(retailer_name)){
-        alert("소매명을 확인해주세요");
-        return false;
-    }
-
-    if (isWhiteSpace(name)){
-        alert("대표자 이름을 확인해주세요");
-        return false;
-    }
-
-    if (!isNumeric(business_number)|| business_number.length !== 10 ){
-        alert("사업자 등록번호를 확인해주세요");
+    if (isWhiteSpace(full_name)){
+        alert("이용자 이름을 확인해주세요");
         return false;
     }
 
@@ -238,23 +225,15 @@ $('#signup-form').submit(function(e){
         return false;
     }
 
-    var styles = [];
-    $('[id="styles"]:checked').each(function(){ styles.push(this.value); });
-    console.log("styles???");
-    console.log(styles);
-
 
     var data = {};
     data.username = username;
     data.password = password;
-    data.retailer_name = retailer_name;
-    data.business_number = business_number;
-    data.name = name;
+    data.full_name = full_name;
     data.phone = phone;
-    data.styles = styles;
 
     $.ajax({
-        url : "/signup/",
+        url : "/signup-pickteam/",
         type : "POST",
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(data),

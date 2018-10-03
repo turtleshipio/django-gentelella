@@ -3825,6 +3825,8 @@ fieldset {
 .cropper .docs-cropped canvas {
     max-width: 100%
 }
+
+/*
 .form_wizard .stepContainer {
     display: block;
     position: relative;
@@ -3838,7 +3840,7 @@ fieldset {
     list-style: none;
     position: relative;
     width: 100%;
-    margin: 0 0 20px
+    margin:  0 0 20px;
 }
 .wizard_horizontal ul.wizard_steps li {
     display: table-cell;
@@ -3999,6 +4001,7 @@ fieldset {
 .form_wizard .msgBox {
     display: none
 }
+*/
 .progress {
     border-radius: 0
 }

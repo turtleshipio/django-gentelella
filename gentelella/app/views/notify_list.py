@@ -3,7 +3,7 @@ from app.network.turtleship import APIService
 from django.db.models import Sum
 from django.views import generic
 from django import forms
-from app.models import Order, Credits
+from app.models import Order
 from django.core.paginator import  Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin

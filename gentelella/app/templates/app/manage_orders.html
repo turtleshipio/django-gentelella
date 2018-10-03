@@ -132,10 +132,11 @@
 
                      <thead class="text-center">
                      <tr>
+                          <th><h4 class="text-center">날짜</h4></th>
                       {% if is_pickteam %}
                           <th><h4 class="text-center">소매명</h4></th>
                       {% endif %}
-                         <th><h4 class="text-center">날짜</h4></th>
+
                          <th><h4 class="text-center">총 주문 도매 수</h4></th>
                          <th><h4 class="text-center">총 주문 수량</h4></th>
                          <th><h4 class="text-center">총 결제 금액</h4></th>
@@ -146,22 +147,26 @@
                     <tbody>
                     {% for order_group in order_groups %}
                     <tr class="text-center clickable-row">
+
                         <td class="text-center">
-                          <a><strong>{{ order_group.retailer_name}}</strong></a>
-                        </td>
-                        <td class="text-center">
-                            <a>{{ order_group.date | date }}</a>
+                            <span>{{ order_group.date | date }}</span>
                         </td>
 
 
+                        <td class="text-center">
+                          <span><strong>{{ order_group.retailer_name}}</strong></span>
+                        </td>
+
+
+
                          <td class="text-center">
-                          <a>{{ order_group.ws_count | intcomma }} 개</a>
+                          <span>{{ order_group.ws_count | intcomma }} 개</span>
                         </td>
                          <td class="text-center">
-                          <a>{{ order_group.orders_count | intcomma}} 개</a>
+                          <span>{{ order_group.orders_count | intcomma}} 개</span>
                         </td>
                          <td class="text-center">
-                          <a>{{ order_group.total_amt | intcomma }} 원</a>
+                          <span>{{ order_group.total_amt | intcomma }} 원</span>
                         </td>
                     </tr>
                     {% endfor %}

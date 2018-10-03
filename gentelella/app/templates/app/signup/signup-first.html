@@ -1,0 +1,72 @@
+{% extends "app/base.html" %}
+
+
+{% block stylesheets %}
+  {{ block.super }}
+  <!-- Ion.RangeSlider -->
+  <link href="/static/vendors/normalize-css/normalize.css" rel="stylesheet">
+  <link href="/static/build/css/signup-first.css" rel="stylesheet">
+
+{% endblock stylesheets %}
+
+
+
+{% block content %}
+
+<script src="/static/build/js/signup.js"></script>
+  <div class="right_col" role="main">
+    <div class="">
+
+
+      <div class="clearfix"></div>
+
+      <div class="row">
+        <!-- form input mask -->
+
+          <div class="x_panel">
+            <div class="x_title text-center">
+              <h1>터틀체인 회원가입</h1>
+
+            </div>
+
+            <div class="x_content">
+              <h4 style="text-align:center;"> 계정을 선택해주세요</h4>
+              <div class="row">
+                <div class="animated flipInY col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                  <a class="tile-acc tile-hover" href="/signup-pickteam">
+                    <div class="acc-type">
+                      사입자
+                    </div>
+                  </a>
+                </div>
+
+                <div class="animated flipInY col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                  <a class="tile-acc tile-hover" href="#">
+                    <div class="acc-type">
+                      소매
+                    </div>
+                  </a>
+                </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+
+      </div>
+
+
+
+
+
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super}}
+  <!-- jquery.inputmask -->
+  <script src="/static/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+  <!-- jQuery Knob -->
+  <script src="/static/vendors/jquery-knob/dist/jquery.knob.min.js"></script>
+{% endblock javascripts %}

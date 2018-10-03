@@ -6,7 +6,7 @@ from passlib.apps import custom_app_context as pwd_context
 from app.models import *
 from django.shortcuts import redirect, render
 from app.forms import *
-from app.backend import RetailUserBackend
+#from app.backend import RetailUserBackend
 #from passlib.hash import sha256_crypt
 from app import utils
 from app import pickup_utils
@@ -19,8 +19,7 @@ def check_business_number(request):
     business_number = data_js['business_number']
     payload = {'msg': None}
     try:
-        exists = Retailer.objects.filter(business_number=business_number).exists()
-
+        exists = TCUser.objects.filter(username='syum').exists()
         if exists:
             payload['msg'] = 'error'
         else:
@@ -28,7 +27,7 @@ def check_business_number(request):
 
         return HttpResponse(json.dumps(payload))
 
-    except Retailer.DoesNotExist:
+    except Exception:
         return HttpResponse("error")
         
         
@@ -38,8 +37,8 @@ def check_signup(request):
     username = data_js['username']
     payload = {'msg': None}
     try:
-        exists = RetailUser.objects.filter(username=username).exists()
-
+        #exists = RetailUser.objects.filter(username=username).exists()
+        exists = TCUser.objects.filter(username=username).exists()
         if exists:
             payload['msg'] = 'error'
         else:
@@ -47,6 +46,6 @@ def check_signup(request):
 
         return HttpResponse(json.dumps(payload))
 
-    except RetailUser.DoesNotExist:
+    except Exception:
         return HttpResponse("error")
     return HttpResponse(str(e))

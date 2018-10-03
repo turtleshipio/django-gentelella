@@ -18,9 +18,10 @@ def home(request):
 
     context = {}
 
-    is_staff = check_group(request.user, 'staff')
-    is_pickteam  = check_group(request.user, 'pickteam')
-    is_retailer = check_group(request.user, 'retailer')
+    org = TCOrg.objects.get(main_user=request.user)
+    is_staff = org.group.name == "staff"
+    is_retailer = org.group.name == "retailer_group"
+    is_pickteam = org.group.name == "pickteam_group"
 
     print("!!!!!!!!!")
     print("!!!!!!!!!")
@@ -58,9 +59,10 @@ def login(request):
         if user is not None:
             auth.login(request, user)
 
-            is_staff = check_group(request.user, 'staff')
-            is_pickteam  = check_group(request.user, 'pickteam_group')
-            is_retailer = check_group(request.user, 'retailer_group')
+            org = TCOrg.objects.get(main_user = user)
+            is_staff = org.group.name == "staff"
+            is_retailer = org.group.name == "retailer_group"
+            is_pickteam= org.group.name == "pickteam_group"
 
             print("!!!!")
             print("!!!!")
@@ -101,7 +103,7 @@ def notify_success(request):
 
 @require_http_methods(['GET'])
 def temp(request):
-    return render(request, 'app/form_buttons.html')
+    return render(request, 'app/form_wizards.html')
 
 
 @require_http_methods(['GET', 'POST'])
@@ -111,9 +113,7 @@ def signup(request):
 
     if request.method == "GET":
 
-        styles = StoreSyles.objects.values_list('style_en', 'style_kr')
-        context['styles'] = styles
-        return render(request, 'app/signup-form.html', context=context)
+        return render(request, 'app/signup/signup-first.html', context=context)
 
     if request.method == "POST":
         context['login_error'] = ""
