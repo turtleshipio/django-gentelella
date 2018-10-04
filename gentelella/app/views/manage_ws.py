@@ -12,8 +12,26 @@ from django.views.decorators.http import require_http_methods
 from django.shortcuts import get_object_or_404, redirect
 import json
 from app.common import *
-
+from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 from app.excel import BulkAddWsManager
+
+@login_required()
+@ajax_required
+def wsbytcorg(request):
+    print("!!!!!")
+    print("!!!!!")
+    org = TCOrg.objects.get(main_user=request.user)
+    print(org)
+    ws_list = WsByTCGroup.objects.filter(org=org).exclude(is_deleted=True).order_by('-id').values("updated_time", "ws_name", "building", "floor", "location", "col" )
+    print("!!!!!")
+    print("!!!!!")
+    print("!!!!!")
+    print(len(ws_list))
+    print("!!!!!")
+    print("!!!!!")
+    print("!!!!!")
+    return JsonResponse(list(ws_list), safe=False)
 
 @login_required()
 @ajax_required
@@ -145,16 +163,6 @@ class WSFormMixinListView(ModelFormMixin, ListView):
 
         buildings = Buildings.objects.values_list('building_name', flat=True).order_by('building_name')
 
-        ws_list = WsByTCGroup.objects.filter(org=org).exclude(is_deleted=True).order_by('-updated_time')
-        paginator = Paginator(ws_list, self.paginate_by)
-
-        page = self.request.GET.get('page')
-        try:
-            ws = paginator.page(page)
-        except PageNotAnInteger:
-            ws = paginator.page(1)
-        except EmptyPage:
-            ws = paginator.page(paginator.num_pages)
 
         ws_bulk_add_formats = BulkAddWsFormat.objects.values_list('format', flat=True)
         ws_bulk_add_formats = ', '.join(ws_bulk_add_formats)
@@ -162,11 +170,9 @@ class WSFormMixinListView(ModelFormMixin, ListView):
         data = {
             'ws_bulk_add_formats' : ws_bulk_add_formats,
             'buildings' : buildings,
-            'ws_list' : ws_list,
         }
 
         context['data'] = data
-        context['num_pages'] = paginator.num_pages
         context['form'] = self.get_form()
         return context
 
@@ -189,8 +195,8 @@ class WSFormMixinListView(ModelFormMixin, ListView):
         ws_phone= data_js['ws_phone']
 
         try:
-            group = TCGroup.objects.filter(main_user=request.user)[0]
-            ws_bytcuser = WsByTCGroup.objects.create(ws_name=ws_name,col=col, building=building, floor=floor, location=location, ws_phone=ws_phone, group=group)
+            org = TCOrg.objects.get(main_user=self.request.user)
+            ws_bytcuser = WsByTCGroup.objects.create(ws_name=ws_name,col=col, building=building, floor=floor, location=location, ws_phone=ws_phone, org=org)
             msg = "도매가 성공적으로 추가 되었습니다."
             messages.success(request, msg)
         except IntegrityError:

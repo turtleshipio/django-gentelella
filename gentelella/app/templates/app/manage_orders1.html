@@ -107,7 +107,7 @@
                     </div>
 
                     <!-- BODY -->
-                    <table class="table table-striped projects">
+                    <table id="datatable-responsive" class="table table-striped projects table-hover">
                         {% if is_paginated %}
                             <ul class="pagination pull-right">
                                 {% if page_obj.has_previous %}
@@ -146,7 +146,7 @@
                     </thead>
                     <tbody>
                     {% for order_group in order_groups %}
-                    <tr class="text-center clickable-row">
+                    <tr class="text-center clickable-row" style="cursor: pointer;" data-href="/login">
 
                         <td class="text-center">
                             <span>{{ order_group.date | date }}</span>

@@ -332,3 +332,91 @@ $('button#btn-add-ws-modal').click(function(event){
 
     });
 });
+
+$(document).ready(function(){
+    var csrftoken = getCookie('csrftoken');
+    $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+    });
+
+    var index = ['updated_time', 'ws_name', 'building', 'floor', 'location', 'col' ];
+
+    $.ajax({
+        url : "/manage_ws/wsbytcorg/" ,
+        type : "post",
+        contentType : 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function(data){
+            var table = $(".display tbody")
+            table.empty();
+
+            var html = ""
+
+            for(var i=0; i < data.length; i++){
+                html = "<tr>"
+                var flag = false;
+                for(var j=0; j < index.length; j++){
+                    for(key in data[i]){
+                        if(index[j] === key){
+                            if(key === "ws_name"){
+                                html = html + "<td class='text-center'><span><strong>" + data[i][key] + "</strong></span></td>";
+                            } else{
+                                html = html + "<td class='text-center'><span>" +data[i][key] + "</span></td>";
+                            }
+                            flag = true;
+                        }
+
+                    }
+                }
+
+                 var empty = "<td class='text-center'><span></span></td>";
+                    if(!flag){
+                        html = html+empty;
+                    }
+                    html = html + empty;
+                html = html + "</tr>"
+                table.append(html);
+            }
+
+
+
+
+
+            var t = $(".display").DataTable({
+            "language":{
+                "info" : "_TOTAL_ 건의 결과중 _START_ 에서 _END_ ",
+                "lengthMenu" : "_MENU_ 건씩 검색",
+                "zeroRecords": "검색결과가 없습니다.",
+                "search" : "검색:\t",
+                "paginate": {
+                    "first" : "처음",
+                    "last" : "마지막",
+                    "next" : "다음",
+                    "previous" : "이전",
+                },
+                "loadingRecords" : "잠시만 기다려주세요...",
+                "aria" : {
+                    "sortAscending" : ": 오름차순",
+                    "sortDescending" : ": 내림차순",
+                    "paging":true,
+                },
+                "deferRender":true,
+
+
+            },
+        });
+       },
+
+    });
+
+
+
+
+});
+
+
+

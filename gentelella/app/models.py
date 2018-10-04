@@ -172,8 +172,8 @@ class TCRetailer(TCGroup):
         null=True,
 
     )
-    pickteam = models.ForeignKey(TCPickteam, null=True, on_delete=None, related_name="tc_retailer_pickteam")
-    pickteam_test = models.ForeignKey(TCOrg, null=True, on_delete=None, related_name="ret_pt")
+    #pickteam = models.ForeignKey(TCPickteam, null=True, on_delete=None, related_name="tc_retailer_pickteam")
+    pickteam= models.ForeignKey(TCOrg, null=True, on_delete=None, related_name="ret_pt")
     parser = models.CharField(default="BaseParser", max_length=30)
 
     def __str__(self):
@@ -357,4 +357,27 @@ class OrderGroup():
         except:
             return []
 
+class DailyGMV(models.Model):
 
+    created_date = models.DateField()
+    orders_cnt = models.IntegerField()
+    tnsct_vol = models.BigIntegerField()
+
+    class Meta:
+
+        managed=True
+        db_table="dailygmv"
+
+
+class Wholesalers(models.Model):
+    ws_id = models.BigAutoField(primary_key=True)
+    ws_name = models.CharField(max_length=512)
+    building_name = models.CharField(max_length=512)
+    location = models.CharField(max_length=20)
+    product_count = models.IntegerField(blank=True, null=True)
+    updated_time = models.DateTimeField(blank=True, null=True)
+    floor = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'wholesalers'

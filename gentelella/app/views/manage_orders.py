@@ -82,9 +82,11 @@ def bulk_orders(request):
 
             group = TCGroup.objects.filter(main_user=request.user)[0]
             is_pickteam = (group.type == "pickteam")
+            org = TCOrg.objects.get(main_user=request.user)
+            is_pickteam = org.group.name=="pickteam_group"
 
             if is_pickteam:
-                pickteam = TCPickteam.objects.get(main_user = request.user)
+                pickteam = org
                 try:
                     retailer_name = data_js[0]['retailer_name']
                 except:
@@ -92,7 +94,7 @@ def bulk_orders(request):
                     response.status_code = 500
                     return response
 
-            else: # if pickteam
+            else: # if retailer
                 retailer = TCRetailer.objects.get(main_user=request.user)
                 retailer_name = retailer.org_name
                 pickteam = retailer.pickteam
@@ -146,15 +148,16 @@ def modal_excel_parse_view(request):
 
         org = TCOrg.objects.get(main_user=request.user)
         is_pickteam = org.group.name == "pickteam_group"
+        pickteam = None
 
         if is_pickteam:
             retailer_name = request.POST['retailer_name']
             retailer = TCRetailer.objects.get(org_name=retailer_name)
-
+            pickteam = TCOrg.objects.get(main_user=request.user)
         else:
             retailer = TCRetailer.objects.get(main_user=request.user)
             retailer_name = retailer.org_name
-
+            pickteam = TCOrg.objects.get(id=retailer.pickteam_id)
         order_format = retailer.order_format
         #success, msg = validator.validate(order_format)
 
@@ -167,7 +170,7 @@ def modal_excel_parse_view(request):
         parser = globals()[retailer.parser]
         parser = parser(user=request.user, file=file, local=False)
         parser.inspect_header(order_format)
-        orders, has_datetime, success, msg = parser.extract()
+        orders, has_datetime, success, msg = parser.extract(pickteam)
         parser.clear()
 
 
@@ -208,7 +211,7 @@ def formats_by_retailer(request):
 class ManageOrderListView (LoginRequiredMixin, ListView):
     model = OrderGroup
     context_object_name = 'order_groups'
-    template_name = "app/manage_orders.html"
+    template_name = "app/manage_orders1.html"
     login_url = '/'
     paginate_by = 20
 
@@ -238,10 +241,6 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super(ManageOrderListView, self).get_context_data(*args, **kwargs)
         self.org = TCOrg.objects.get(main_user=self.request.user)
-        print("!!!!")
-        print("!!!!")
-        print(self.org.id)
-        print("!!!!")
         self.is_pickteam = self.org.group.name == "pickteam_group"
         self.is_retailer = self.org.group.name == "retailer_group"
         self.is_staff = self.org.group.name == "staff"

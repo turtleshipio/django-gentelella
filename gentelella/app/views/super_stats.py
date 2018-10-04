@@ -41,23 +41,42 @@ class SuperStatsView(TemplateView):
 
         query = "SELECT COUNT(DISTINCT(`product_name`)) FROM `orders`"
         row = execute_custom_query(query)
-        return row[0]
+        return row[0] + 3012
 
 
 
     def get_order_counts_by_date(self):
-        query = "SELECT " \
-                    "DISTINCT(TIMESTAMP(created_date)), " \
+
+
+        query1 = "SELECT " \
+                 "created_date, orders_cnt, tnsct_vol " \
+                 "FROM dailygmv " \
+                 "ORDER BY created_date"\
+
+
+        query2 = "SELECT " \
+                    "DISTINCT(created_date), " \
                     "COUNT(*), SUM(price * count) " \
                 "FROM orders " \
                 "GROUP BY created_date" \
 
-        rs = execute_custom_query(query, fetchone=False)
+
+        rs1 = execute_custom_query(query1, fetchone=False)
+        rs2 = execute_custom_query(query2, fetchone=False)
         li = []
         acc_count = 0
         total_sum = 0
 
-        for dt, count, price_sum in rs:
+
+
+
+        for dt, count, price_sum in rs1:
+            acc_count += count
+            total_sum += price_sum
+
+            li.append([int(time.mktime(dt.timetuple()))*1000, acc_count])
+
+        for dt, count, price_sum in rs2:
             acc_count += count
             total_sum += price_sum
 

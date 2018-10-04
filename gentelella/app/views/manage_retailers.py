@@ -5,17 +5,17 @@ from braces.views import GroupRequiredMixin
 import json
 
 
-class TCRetailersListView(GroupRequiredMixin, ListView):
+class TCRetailersListView(ListView):
     model = TCRetailer
     context_object_name = 'retailers'
     template_name = "app/manage_retailers.html"
-    group_required = [u"pickteam_group", u"staff"]
+    group_required = ["pickteam_group", u"staff"]
     login_url = '/'
     paginate_by = 10
 
     def get_queryset(self):
-        pickteam = TCPickteam.objects.get(main_user=self.request.user)
-        return TCRetailer.objects.filter(pickteam=pickteam)
+        org = TCOrg.objects.get(main_user=self.request.user)
+        return TCRetailer.objects.filter(pickteam=org)
 
     def get_paginate_by(self, queryset):
         return self.request.GET.get('page')
@@ -58,30 +58,3 @@ class TCRetailersListView(GroupRequiredMixin, ListView):
             response.status_code=500
             return response
 
-
-    """ 
-    def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return HttpResponseForbidden
-        if not request.user.has_tcperm('change_tcretailer'):
-            return HttpResponseForbidden
-
-        data_js = json.loads(request.body.decode('utf-8'))[0]
-        ws_name = data_js['ws_name']
-        building= data_js['building']
-        floor   = data_js['floor']
-        location= data_js['location']
-        col = data_js['col']
-        ws_phone= data_js['ws_phone']
-
-        try:
-            group = TCGroup.objects.filter(main_user=request.user)[0]
-            ws_bytcuser = WsByTCGroup.objects.create(ws_name=ws_name,col=col, building=building, floor=floor, location=location, ws_phone=ws_phone, group=group)
-            msg = "도매가 성공적으로 추가 되었습니다."
-            messages.success(request, msg)
-        except IntegrityError:
-            messages.error(request, '도매추가를 실패하였습니다.')
-            return HttpResponse('error')
-
-        return self.get(request, *args, **kwargs)
-"""

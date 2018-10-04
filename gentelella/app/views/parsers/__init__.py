@@ -97,7 +97,7 @@ class BaseParser(object):
 
         return True, "성공"
 
-    def extract(self):
+    def extract(self, pickteam = None):
 
         orders = []
 
@@ -214,10 +214,11 @@ class FruitsParser(BaseParser):
 
     has_datetime = False
     datetime = None
+    org = None
 
     def __init__(self, user, file, local=False):
         super().__init__(user=user, file=file)
-
+        org = TCOrg.objects.get(main_user=user)
     def inspect_header(self, format=None):
 
         try:
@@ -244,11 +245,11 @@ class FruitsParser(BaseParser):
 
         return True, "성공"
 
-    def extract(self):
+    def extract(self, pickteam=None):
 
         orders = []
 
-        ws_list = WsByTCGroup.objects.exclude(is_deleted=True).filter(group=self.group)
+        ws_list = WsByTCGroup.objects.exclude(is_deleted=True).filter(org=pickteam)
         ws_name = None
         msg = ""
 
