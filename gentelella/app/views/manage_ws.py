@@ -15,6 +15,7 @@ from app.common import *
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 from app.excel import BulkAddWsManager
+from datetime import datetime
 
 @login_required()
 @ajax_required
@@ -23,7 +24,12 @@ def wsbytcorg(request):
     print("!!!!!")
     org = TCOrg.objects.get(main_user=request.user)
     print(org)
-    ws_list = WsByTCGroup.objects.filter(org=org).exclude(is_deleted=True).order_by('-id').values("updated_time", "ws_name", "building", "floor", "location", "col" )
+    ws_list = WsByTCGroup.objects.filter(org=org).exclude(is_deleted=True).order_by('-updated_time').values("updated_time", "ws_name", "building", "floor", "location", "col" )
+
+    for ws in ws_list:
+        ws['updated_time'] =ws['updated_time'].strftime('%Y-%m-%d')
+        #ws['updated_time'] =datetime.strptime(str(ws['updated_time']), "%Y-%m-%d")
+
     print("!!!!!")
     print("!!!!!")
     print("!!!!!")

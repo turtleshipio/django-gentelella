@@ -398,6 +398,9 @@ $(document).ready(function(){
                     "next" : "다음",
                     "previous" : "이전",
                 },
+                 "scroller": {
+                    loadingIndicator: true
+                },
                 "loadingRecords" : "잠시만 기다려주세요...",
                 "aria" : {
                     "sortAscending" : ": 오름차순",
