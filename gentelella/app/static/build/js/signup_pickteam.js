@@ -14,7 +14,6 @@ $('#business-number' ).blur(function() {
 
 $('div#duplicate-username').click(function(event){
     console.log("it works!!");
-
     var data= {};
     var username = "";
     username = $('#username').val();
@@ -53,6 +52,7 @@ $( "#password-check" ).blur(function() {
     }
 });
 
+
 function sendAjaxForUserDuplicateCheck(data) {
 
     var csrf = getCookie('csrftoken');
@@ -64,7 +64,6 @@ function sendAjaxForUserDuplicateCheck(data) {
             }
         }
     });
-
     $.ajax({
         url : "/check_duplicate_username/",
         type : "POST",
@@ -82,9 +81,14 @@ function sendAjaxForUserDuplicateCheck(data) {
             if(exists === 'ok'){
                 p.text("사용가능한 아이디입니다.");
                 p.css('color', 'green');
+                var state = $("input#username_state")
+                state.attr("value", "good")
+
             } else{
+                var state = $("input#username_state")
                 p.text("사용할 수 없는 아이디입니다.");
                 p.css('color', 'red');
+                state.attr("value", "bad")
             }
 
         },
@@ -97,6 +101,10 @@ function sendAjaxForUserDuplicateCheck(data) {
     });
 
 }
+
+
+
+
 
 function sendAjaxForUsernameFormCheck(data) {
 
@@ -261,3 +269,133 @@ $('#signup-form').submit(function(e){
 
 
 });
+
+$(document).ready(function(){
+
+    var stepContainer = $("#step-2");
+
+    stepContainer.css("height", 200);
+
+    $("#wizard").smartWizard({
+        onLeaveStep:leaveStepCallBack,
+        onFinish:onFinishCallback,
+    });
+});
+
+function onFinishCallback(obj, context){
+
+    var csrf = getCookie('csrftoken');
+    var username = $('#username').val();
+    var password = $('#password').val();
+    var full_name = $('#full_name').val();
+    var phone = $('#phone').inputmask('remove').val();
+    var data = {};
+
+    data.username = username;
+    data.password= password;
+    data.full_name= full_name;
+    data.phone= phone;
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf);
+            }
+        }
+    });
+
+      $.ajax({
+        url : "/signup-pickteam/",
+        type : "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        processData : false,
+        contentType: false,
+        success : function(result){
+            window.location.replace("/signup-pickteam-done")
+
+        },
+        error : function(result){
+        }
+
+    });
+
+
+
+
+}
+function leaveStepCallBack(obj, context){
+    return usernameCheck() && passwordCheck();
+}
+
+function passwordCheck(){
+    var password = $('#password').val();
+    var password_check = $('#password-check').val();
+    var p = $('#p-password-check');
+
+
+    if (password === password_check){
+        if (password.length < 8){
+            return false;
+        } else {
+            return true;
+        }
+    } else{
+        return false;
+    }
+}
+
+function usernameCheck(){
+
+     var data= {};
+     var username = "";
+     username = $('#username').val();
+     data.username = username;
+
+
+     if (username.length < 4 || !isAlphaNumeric(username)){
+        alert("아이디를 수정해주세요");
+        return false;
+     } else{
+        var exists = $("input#username_state").val();
+        if(exists ==="bad"){
+            alert("중복된 아이디입니다. 중복확인을 눌러 확인해주세요")
+            return false;
+        } else{
+            return true;
+        }
+     }
+     return false;
+}
+
+
+$("p#otp").click(function(){
+
+
+    var csrf = getCookie('csrftoken');
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf);
+            }
+        }
+    });
+
+      $.ajax({
+        url : "/pyotp/",
+        type : "POST",
+        contentType: 'application/json; charset=utf-8',
+        processData : false,
+        contentType: false,
+        success : function(result){
+            window.href.location="/signup-pickteam-done/"
+
+        },
+        error : function(result){
+        }
+
+    });
+});
+
+

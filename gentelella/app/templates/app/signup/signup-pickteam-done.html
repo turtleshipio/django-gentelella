@@ -1,0 +1,37 @@
+{% extends "app/base.html" %}
+
+
+{% block stylesheets %}
+  {{ block.super }}
+  <!-- Ion.RangeSlider -->
+  <link href="/static/vendors/normalize-css/normalize.css" rel="stylesheet">
+<link href="/static/build/css/signup-pickteam.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+
+
+{% block content %}
+
+<input type="hidden" id="sid" value="{{sid}}">
+<script src="/static/build/js/signup.js"></script>
+  <div class="right_col" role="main">
+
+
+      <div class="x_panel">
+          <div class="x_title text-center">
+              <h1>가입이 완료되었습니다</h1>
+              <p>인증이 될때까지 기다려주세요</p>
+          </div>
+
+
+      </div>
+  </div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super}}
+  <!-- jquery.inputmask -->
+<script src="/static/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+<script src="/static/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
+<script src="/static/build/js/signup_pickteam.js"></script>
+{% endblock javascripts %}

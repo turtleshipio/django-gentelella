@@ -28,8 +28,8 @@ def check_business_number(request):
         return HttpResponse(json.dumps(payload))
 
     except Exception:
-        return HttpResponse("error")
-        
+            payload['msg'] = 'error'
+            return HttpResponse(json.dumps(payload))
         
 def check_signup(request):
 
@@ -37,15 +37,16 @@ def check_signup(request):
     username = data_js['username']
     payload = {'msg': None}
     try:
-        #exists = RetailUser.objects.filter(username=username).exists()
         exists = TCUser.objects.filter(username=username).exists()
+
         if exists:
             payload['msg'] = 'error'
         else:
             payload['msg'] = 'ok'
 
-        return HttpResponse(json.dumps(payload))
+        resp = HttpResponse(json.dumps(payload))
+
+        return resp
 
     except Exception:
         return HttpResponse("error")
-    return HttpResponse(str(e))

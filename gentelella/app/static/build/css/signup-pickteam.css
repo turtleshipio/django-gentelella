@@ -6,13 +6,15 @@
     border: 0 solid #CCC;
     overflow-x: hidden
 }
-
+.stepContainer{
+    height:200px;
+}
 .wizard_horizontal ul.wizard_steps {
     display: table;
     list-style: none;
     position: relative;
     width: 100%;
-    margin:  0 0 20px;
+    margin:  0 0 20px
 }
 
 .wizard_horizontal ul.wizard_steps li {

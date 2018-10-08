@@ -38,4 +38,6 @@ urlpatterns = [
     url(r'^check_duplicate_username/$', checks.check_signup, name='check_signup'),
     url(r'^check_business_number/$', checks.check_business_number, name='check_business_number'),
     url(r'^manage_ws/wsbytcorg/$', wsbytcorg, name='wsbytcorg'),
+    url(r'^pyotp/$', get_pyotp, name='get_pyotp'),
+    url(r'^signup-pickteam-done/$', done, name='done'),
 ]

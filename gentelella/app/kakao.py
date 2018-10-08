@@ -37,7 +37,7 @@ class KakaoNotifySender:
         'url_mobile' : ''
     }
 
-    smsMsg = "{retailer_name}에서 주문요청이 들어왔습니다. 링크를 눌러 확인하세요 {link}"
+    smsMsg = "{otp}"
 
     sms_msg = ""
     path = "v1/sender/send"
@@ -57,11 +57,12 @@ class KakaoNotifySender:
         notify_url = self.notify_url.format(notify_id=notify_id)
         self.button1['url_mobile'] = notify_url
 
-    def set_sms(self, retailer_name, notify_id):
-        self.smsMsg = self.smsMsg.format(retailer_name=retailer_name, link=self.notify_url.format(notify_id=notify_id))
-
+    def set_sms(self, otp):
+        self.smsMsg = self.smsMsg.format(otp=otp)
+        return self.smsMsg
     def send_sms(self, sms_msg, phone):
         url = self.target_url['prod'] + self.path
+        headers = {'content-type': 'application/json'}
 
         d = [{
             'userId' : self.userId,
@@ -73,14 +74,14 @@ class KakaoNotifySender:
             'smsKind' : 'L',
             'msgSms' : sms_msg,
             'smsSender' : '01088958454',
-            'smsLmsTit' : '[터틀체인 주문관리]',
+            'smsLmsTit' : '[터틀체인 인증번호]',
             'smsOnly' : 'Y',
 
         }]
 
 
         response = requests.post(url, headers=self.headers, data=json.dumps(d))
-
+        print(response.text)
         return response.text
 
     def send_kakao_msg(self, phn, prod=True):

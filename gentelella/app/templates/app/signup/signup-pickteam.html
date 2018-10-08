@@ -12,6 +12,7 @@
 
 {% block content %}
 
+<input type="hidden" id="sid" value="{{sid}}">
 <script src="/static/build/js/signup.js"></script>
   <div class="right_col" role="main">
 
@@ -21,55 +22,109 @@
               <h1>사입자 전용 회원가입</h1>
           </div>
           <div class="x_content">
+           <div id="wizard" class="form_wizard wizard_horizontal">
+               <ul class="wizard_steps">
+                   <li>
+                       <a href="#step-1">
+                      <span class="step_no">1</span>
+                      <span class="step_descr">
+                                        1단계<br />
+                      </span>
+                    </a>
 
-              <form id="signup-form" action="/signup_pickteam/" method="post" class="form-horizontal form-label-left">
-                {% csrf_token %}
+                   </li>
+                    <li>
+                        <a href="#step-2">
+                       <span class="step_no">2</span>
+                       <span class="step_descr">
+                                       2단계<br />
+                      </span>
+                   </a>
 
-                <div class="form-group">
-                  <label class="control-label col-md-offset-1  col-md-4 col-sm-4 col-xs-4">아이디</label>
-                  <div class="col-md-3 col-sm-7 col-xs-7">
-                    <input name="username" id="username" placeholder="4자 이상" type="text" class="form-control" minlength="4" maxlength="20" required>
-                    <div id="duplicate-username" class="btn btn-default btn-sm col-md-4 col-sm-2">중복확인</div>
-                    <p></p>
-                    <p id="check-username" class="col-md-offset-2"></p>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">비밀번호</label>
-                  <div class="col-md-3 col-sm-7 col-xs-7">
-                    <input id="password" type="password" class="form-control" placeholder="영문, 숫자 8자리 이상" minlength="8" required="">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">비밀번호 재입력</label>
-                  <div class="col-md-3 col-sm-7 col-xs-7">
-                    <input id="password-check" type="password" class="form-control" placeholder="영문, 숫자 8자리 이상" minlength="8" required="">
-                     <p id="p-password-check"></p>
-                  </div>
-                </div>
-                      <div class="form-group">
-                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">이용자 이름</label>
-                  <div class="col-md-3 col-sm-7 col-xs-7">
-                    <input type="text" id="full_name" class="form-control" >
-                  </div>
-                </div>
+                    </li>
+
+               </ul>
+               <div id="step-1">
+                   <form id="signup-form" action="/signup_pickteam/" method="post" class="form-horizontal form-label-left">
+                        {% csrf_token %}
+
                             <div class="form-group">
-                  <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">이용자 휴대폰 번호</label>
-                  <div class="col-md-3 col-sm-7 col-xs-7">
-                    <input type="text" id="phone" class="form-control" data-inputmask="'mask' : '(999) 9999-9999'">
-                  </div>
-                </div>
+                                                       <label class="control-label col-md-offset-1  col-md-4 col-sm-4 col-xs-4">아이디</label>
+                                                       <div class="col-md-3 col-sm-7 col-xs-7">
+                                                       <input name="username" id="username" placeholder="4자 이상" type="text" class="form-control" minlength="4" maxlength="20" required>
+                                                       <div id="duplicate-username" class="btn btn-default btn-sm col-md-4 col-sm-2">중복확인</div>
+                                                       <input type="hidden" id="username_state" value=""/>
+                                                           <p></p>
+                                                       <p id="check-username" class="col-md-offset-2"></p>
+                                                       </div>
+                                                       </div>
+                            <div class="form-group">
+                                                       <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">비밀번호</label>
+                                                       <div class="col-md-3 col-sm-7 col-xs-7">
+                                                       <input id="password" type="password" class="form-control" placeholder="영문, 숫자 8자리 이상" minlength="8" required="">
+                                                       </div>
+                                                       </div>
+                            <div class="form-group">
+                                                       <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">비밀번호 재입력</label>
+                                                       <div class="col-md-3 col-sm-7 col-xs-7">
+                                                       <input id="password-check" type="password" class="form-control" placeholder="영문, 숫자 8자리 이상" minlength="8" required="">
+                                                       <p id="p-password-check"></p>
+                                                       </div>
+                                                       </div>
 
+                    <!--
                   <div class="ln_solid"></div>
                   <div class="form-group">
                   <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 col-md-offset-5">
-                    <button type="submit"  value="cancel" class="btn btn-primary" formnovalidate>뒤로가기</button>
+                    <a href="/signup"  value="cancel" class="btn btn-primary" formnovalidate>뒤로가기</a>
                     <button type="submit"  value="confirm" class="btn btn-success" formnovalidate >가입하기</button>
                   </div>
                 </div>
+                    -->
+                   </form>
+               </div>
+               <div id="step-2">
+                   <div class="form-group">
+                                                       <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">이용자 이름</label>
+                                                       <div class="col-md-3 col-sm-7 col-xs-7">
+                                                       <input type="text" id="full_name" class="form-control" >
+                                                       </div>
+                                                       </div>
+                   <br/>
 
-              </form>
+                      <div class="form-group">
+                       <br/>
+                       <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">이용자 휴대폰 번호</label>
+                       <div class="col-md-3 col-sm-7 col-xs-7">
+                       <input type="text" id="phone" class="form-control" data-inputmask="'mask' : '(999) 9999-9999'">
+                           <!-- <p id="otp" class="btn btn-default btn-sm col-md-4 col-sm-2">인증번호 보내기</p>-->
+                       </div>
+                       <p>
+
+                       </p>
+                   </div>
+                    <br />
+                   <br /><!--
+                   <div class="form-group">
+                       <br/>
+                       <label class="control-label col-md-offset-1 col-md-4 col-sm-4 col-xs-4">인증번호 입력</label>
+                       <div class="col-md-3 col-sm-7 col-xs-7">
+                       <input type="text" id="otp-confirm" class="form-control" minlength="6" maxlength="6">
+                       </div>
+                       <p>
+
+                       </p>
+                   </div>
+                   -->
+                   <br />
+                   <br />
+                   <br />
+               </div>
+               <br />
+               <br />
+           </div>
           </div>
+
       </div>
   </div>
 {% endblock content %}
@@ -77,7 +132,7 @@
 {% block javascripts %}
   {{ block.super}}
   <!-- jquery.inputmask -->
-  <script src="/static/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
-        <script src="/static/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
-    <script src="/static/build/js/signup_pickteam.js"></script>
+<script src="/static/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+<script src="/static/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
+<script src="/static/build/js/signup_pickteam.js"></script>
 {% endblock javascripts %}

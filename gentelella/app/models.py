@@ -381,3 +381,12 @@ class Wholesalers(models.Model):
     class Meta:
         managed = False
         db_table = 'wholesalers'
+
+
+class Temp(models.Model):
+
+    username = models.CharField(max_length=50, default="")
+    full_name= models.CharField(max_length=50, default="")
+    phone= models.CharField(max_length=50, default="")
+    password= models.CharField(max_length=50, default="")
+

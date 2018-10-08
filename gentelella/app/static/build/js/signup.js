@@ -14,7 +14,7 @@ $('#business-number' ).blur(function() {
 
 $('div#duplicate-username').click(function(event){
     console.log("it works!!");
-
+    alert("??")
     var data= {};
     var username = "";
     username = $('#username').val();
@@ -82,9 +82,12 @@ function sendAjaxForUserDuplicateCheck(data) {
             if(exists === 'ok'){
                 p.text("사용가능한 아이디입니다.");
                 p.css('color', 'green');
+                p.value("good")
+
             } else{
                 p.text("사용할 수 없는 아이디입니다.");
                 p.css('color', 'red');
+                p.value("good")
             }
 
         },
