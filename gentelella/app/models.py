@@ -47,7 +47,7 @@ class TCUser(AbstractUser):
 
 class TCOrg(models.Model):
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, default=2)
-    main_user = models.ForeignKey(TCUser, on_delete = models.SET_NULL, null=True)
+    main_user = models.ForeignKey(TCUser, on_delete = models.SET_NULL, null=True, default=1)
     org_name = models.CharField(max_length=191, null=True)
 
     account_number = models.CharField(max_length=191, null=True, default="")
@@ -64,7 +64,6 @@ class TCOrg(models.Model):
         managed=True
         verbose_name = "TC Org"
         verbose_name_plural = "TC Orgs"
-
 
 class TCGroup(models.Model):
     group = models.ForeignKey(Group, on_delete = models.SET_NULL, null=True)
@@ -86,7 +85,6 @@ class TCGroup(models.Model):
         managed=True
         verbose_name = "TC Group"
         verbose_name_plural = "TC Groups"
-
 
 class TCPickteam(TCGroup):
     
@@ -158,26 +156,20 @@ class BulkAddWsFormat(models.Model):
         verbose_name = "Bulk Ws Format"
         verbose_name_plural = "Bulk Ws Formats"
 
-class TCRetailer(TCGroup):
+class TCRetailer(models.Model):
 
-    #city = models.CharField(max_length=10, blank=False, null=False, default="서울")
-    #biz_num = models.CharField(max_length=10, blank=True,null=True)
-    #biz_type = models.CharField(max_length=30, blank=True, null=True)
-    #store_type = models.CharField(max_length=30, blank=True, null=True)
-    #address = models.CharField(max_length=191, blank=True, null=True)
-
+    org = models.ForeignKey(TCOrg, on_delete=models.CASCADE, null=True, default=1)
     order_format = models.ForeignKey(
         OrderFormats,
         on_delete=models.CASCADE,
         null=True,
 
     )
-    #pickteam = models.ForeignKey(TCPickteam, null=True, on_delete=None, related_name="tc_retailer_pickteam")
     pickteam= models.ForeignKey(TCOrg, null=True, on_delete=None, related_name="ret_pt")
     parser = models.CharField(default="BaseParser", max_length=30)
 
     def __str__(self):
-        return self.org_name if (self.org_name is not None or self.org_name != "") else "TC Retailer Object"
+        return self.org.org_name if (self.org.org_name is not None or self.org.org_name != "") else "TC Retailer Object"
     
     class Meta:
         managed = True
@@ -209,7 +201,7 @@ class WsByTCGroup(models.Model):
     floor = models.CharField(max_length=30)
     col = models.CharField(max_length=5, null=True, default="")
     ws_phone = models.CharField(max_length=30)
-    group = models.ForeignKey(TCGroup, on_delete=None, default=3)
+    #group = models.ForeignKey(TCGroup, on_delete=None, default=3)
     updated_time = models.DateTimeField(auto_now_add=True, blank=True)
     is_deleted = models.BooleanField(default=False)
     ws_phone_second = models.CharField(max_length=30, default="")
@@ -264,7 +256,7 @@ class Order(models.Model):
     retailer_name = models.CharField(max_length=30, default="")
     pickteam = models.ForeignKey(TCPickteam, on_delete=None, null=True, db_column="pickteam_id" )
     retailer = models.ForeignKey(TCRetailer, on_delete=None, null=True)
-
+    org = models.ForeignKey(TCOrg, on_delete=None, null=True, db_column='pickteam_org')
     read = models.BooleanField(default=False)
 
 

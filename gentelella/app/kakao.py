@@ -127,7 +127,7 @@ class OrderCreator:
     ws_list = []
 
 
-    def create_orders_from_js(self, user, orders_js, username, retailer_name, pickteam_id, group):
+    def create_orders_from_js(self, user, orders_js, username, retailer_name, pickteam_id, org):
 
         self.notifies = {}
         self.orders = []
@@ -139,7 +139,7 @@ class OrderCreator:
             ws_name = order_js['ws_name']
             if ws_name not in self.ws_list:
                 try:
-                    ws = WsByTCGroup.objects.exclude(is_deleted=True).get(group=group, ws_name=ws_name)
+                    ws = WsByTCGroup.objects.exclude(is_deleted=True).get(org=org, ws_name=ws_name)
                     self.ws_list.append(ws_name)
                 except Exception as e:
                     print(str(e))

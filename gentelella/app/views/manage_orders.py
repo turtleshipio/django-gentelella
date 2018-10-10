@@ -105,7 +105,7 @@ def bulk_orders(request):
             creator = OrderCreator()
             sender = KakaoNotifySender()
 
-            success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, group)
+            success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, org)
 
 
 
@@ -152,7 +152,8 @@ def modal_excel_parse_view(request):
 
         if is_pickteam:
             retailer_name = request.POST['retailer_name']
-            retailer = TCRetailer.objects.get(org_name=retailer_name)
+            org = TCOrg.objects.get(org_name=retailer_name)
+            retailer = TCRetailer.objects.select_related('org').get(org=org)
             pickteam = TCOrg.objects.get(main_user=request.user)
         else:
             retailer = TCRetailer.objects.get(main_user=request.user)
@@ -190,7 +191,8 @@ def modal_excel_parse_view(request):
 def formats_by_retailer(request):
     try:
         retailer_name = request.GET.get('retailer_name')
-        retailer = TCRetailer.objects.get(org_name=retailer_name)
+        org = TCOrg.objects.get(org_name=retailer_name)
+        retailer = TCRetailer.objects.get(org=org)
         format = retailer.order_format
         format_dict = format.get_format_dict()
 
@@ -244,7 +246,7 @@ class ManageOrderListView (LoginRequiredMixin, ListView):
         format_str = None
 
         if self.is_pickteam:
-            retailers = TCRetailer.objects.filter(pickteam_id=self.org.id).values_list('org_name', flat=True)
+            retailers = TCRetailer.objects.select_related('pickteam').filter(pickteam=self.org)
         else:
             if self.is_retailer:
                 format = self.retailer.order_format
