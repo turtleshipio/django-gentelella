@@ -210,15 +210,29 @@ class FruitsParser(BaseParser):
         '수량' : None,
     }
 
+    wrong_cols = []
+
     optional = { '날짜': None}
 
     has_datetime = False
     datetime = None
     org = None
+    start = 0
 
     def __init__(self, user, file, local=False):
         super().__init__(user=user, file=file)
         org = TCOrg.objects.get(main_user=user)
+
+    def preprocess(self):
+
+        self.wrong_cols = [i for i in range(self.sheet.ncols) if self.wrong_column(self.sheet.col_values(i))]
+        print("WRONG COL!!")
+        print(self.wrong_cols)
+
+        if 0 in self.wrong_cols:
+            self.start = 1
+
+
     def inspect_header(self, format=None):
 
         try:
@@ -250,6 +264,8 @@ class FruitsParser(BaseParser):
         orders = []
 
         ws_list = WsByTCGroup.objects.exclude(is_deleted=True).filter(org=pickteam)
+
+        print("ws_list %s" % str(ws_list))
         ws_name = None
         msg = ""
 
@@ -262,6 +278,9 @@ class FruitsParser(BaseParser):
             if self._is_sub_header(row):
                 ws_name = self._get_ws_name(row)
                 ws_name = ws_name.strip()
+                print("!!!!")
+                print(ws_name)
+
             elif self._is_order_row(row):
                 product_name = row[self.head['품명']]
                 color = row[self.head['칼라']]
@@ -288,6 +307,7 @@ class FruitsParser(BaseParser):
                 order['floor'] = floor if floor is not None else ""
                 order['location'] = location if location is not None else ""
 
+                print(order)
                 if self.has_datetime:
                     order['datetime'] = self.datetime
 
@@ -314,8 +334,14 @@ class FruitsParser(BaseParser):
 
         ws_name = ""
 
-        row = row[0].split(' ')
-
+        row = row[self.start].split(' ')
+        print("&&&&&&&&&&&&&&&&&&&&")
+        print("&&&&&&&&&&&&&&&&&&&&")
+        print("&&&&&&&&&&&&&&&&&&&&")
+        print(row)
+        print("&&&&&&&&&&&&&&&&&&&&")
+        print("&&&&&&&&&&&&&&&&&&&&")
+        print("&&&&&&&&&&&&&&&&&&&&")
         l_pos = -1
         p_pos = -1
         li = []
@@ -378,27 +404,45 @@ class FruitsParser(BaseParser):
         for i in range(len(row)):
 
             # first column should not be empty,
-            if i == 0 and check_whitespace(row[i]):
+            if i == self.start and check_whitespace(row[i]):
                 return False
 
             # this runs from second column, and they should all be empty if sub header
-            if i > 0 and not check_whitespace(row[i]):
+            if i > self.start and not check_whitespace(row[i]):
                 return False
 
         return True
 
     def _is_order_row(self, row):
 
+
+
         for i in range(len(row)):
+            if i not in self.wrong_cols:
+                # first column should be empty
+                if i == self.start and not check_whitespace(row[i]):
+                    return False
 
-            # first column should be empty
-            if i == 0 and not check_whitespace(row[i]):
-                return False
-
-            # this runs from second column, and they should all be filled if order
-            if i > 0 and check_whitespace(row[i]):
-                return False
+                # this runs from second column, and they should all be filled if order
+                if i > self.start and check_whitespace(row[i]):
+                    return False
 
         return True
+
+    def wrong_column(self, col):
+
+        count = 0
+
+        for c in col:
+            if check_whitespace(c):
+                count += 1
+            if len(str(c)) > 10:
+                count -=2
+
+        # I assume it is a wrong column is more than 33% of the values in column is blank
+        return count > (len(col) * 0.7)
+
+
+
 
 

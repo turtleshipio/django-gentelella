@@ -163,10 +163,13 @@ def modal_excel_parse_view(request):
 
         # get parser by each retailer from app.views.parsers
         parser = globals()[retailer.parser]
+        print(parser)
         parser = parser(user=request.user, file=file, local=False)
+        parser.preprocess()
         parser.inspect_header(order_format)
         orders, has_datetime, success, msg = parser.extract(pickteam)
         parser.clear()
+
 
 
         context = {}
