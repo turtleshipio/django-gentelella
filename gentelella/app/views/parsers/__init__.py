@@ -437,7 +437,7 @@ class FruitsParser(BaseParser):
             if check_whitespace(c):
                 count += 1
             if len(str(c)) > 10:
-                count -=2
+                count -=10
 
         # I assume it is a wrong column is more than 33% of the values in column is blank
         return count > (len(col) * 0.7)
