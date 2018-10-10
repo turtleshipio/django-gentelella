@@ -80,8 +80,8 @@ def bulk_orders(request):
             data_js = json.loads(request.body.decode('utf-8'))
             orders_js = data_js[0]['orders']
 
-            group = TCGroup.objects.filter(main_user=request.user)[0]
-            is_pickteam = (group.type == "pickteam")
+            #group = TCGroup.objects.filter(main_user=request.user)[0]
+            #is_pickteam = (group.type == "pickteam")
             org = TCOrg.objects.get(main_user=request.user)
             is_pickteam = org.group.name=="pickteam_group"
 
@@ -159,12 +159,6 @@ def modal_excel_parse_view(request):
             retailer_name = retailer.org_name
             pickteam = TCOrg.objects.get(id=retailer.pickteam_id)
         order_format = retailer.order_format
-        #success, msg = validator.validate(order_format)
-
-        #if not success:
-        #    return render(request, 'app/excel_modal.html', context={'orders': None, 'retailer_name':None, 'msg':msg})
-
-        #orders, has_datetime, success, msg = validator.extract()
 
         # get parser by each retailer from app.views.parsers
         parser = globals()[retailer.parser]
