@@ -5,6 +5,7 @@ from .models import *
 from django.contrib.auth.models import Permission
 
 admin.site.register(TCUser, TCUserAdmin)
+admin.site.register(TCOrg)
 admin.site.register(TCRetailer)
 admin.site.register(TCPickteam)
 admin.site.register(WsByTCGroup)

@@ -47,13 +47,13 @@ class TCUser(AbstractUser):
 
 class TCOrg(models.Model):
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, default=2)
-    main_user = models.ForeignKey(TCUser, on_delete = models.SET_NULL, null=True, default=1)
+    main_user = models.ForeignKey(TCUser, on_delete = models.SET_NULL, null=True, default=1, blank=True)
     org_name = models.CharField(max_length=191, null=True)
 
-    account_number = models.CharField(max_length=191, null=True, default="")
-    bank = models.CharField(max_length=191, null=True, default="")
-    bank_account_number = models.CharField(max_length=191, null=True, default="")
-    bank_holder_name = models.CharField(max_length=191, null=True, default="")
+    account_number = models.CharField(max_length=191, null=True, default="", blank=True)
+    bank = models.CharField(max_length=191, null=True, default="", blank=True)
+    bank_account_number = models.CharField(max_length=191, null=True, default="", blank=True)
+    bank_holder_name = models.CharField(max_length=191, null=True, default="", blank=True)
 
 
     def __str__(self):

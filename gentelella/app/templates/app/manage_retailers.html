@@ -43,13 +43,13 @@
                   {%  for retailer in retailers %}
                         <tr>
                         <td class="text-center">
-                            <p id="retailer-name-{{forloop.counter}}"><strong>{{retailer.org_name}}</strong></p>
+                            <p id="retailer-name-{{forloop.counter}}"><strong>{{retailer.org.org_name}}</strong></p>
                         </td>
                         <td class="text-center">
-                            <p id="retailer-city-{{forloop.counter}}">{{retailer.city}}</p>
+                            <p id="retailer-city-{{forloop.counter}}">{{retailer.org.city}}</p>
                         </td>
                         <td class="text-center">
-                            <p id="retailer-mobile-phone-{{forloop.counter}}">{{retailer.mobile_phone | format_mobile_phone}}</p>
+                            <p id="retailer-mobile-phone-{{forloop.counter}}">{{retailer.org.mobile_phone | format_mobile_phone}}</p>
                         </td>
                         <td class="text-center">
                             <button type="button" data-toggle="modal" data-target=".order-format-modal-{{forloop.counter}}" id="btn-order-format-{{forloop.counter}}" value="{{forloop.counter}}" class="btn btn-info" data-dismiss="modal">양식보기</button>
