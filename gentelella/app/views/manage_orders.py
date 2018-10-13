@@ -116,7 +116,7 @@ def bulk_orders(request):
 
             notifies = creator.notifies
 
-            send = True
+            send = False
 
             if send:
                 for ws_name in notifies:

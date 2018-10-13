@@ -24,6 +24,9 @@ function isWhiteSpace(str){
 };
 
 $('button#btn-confirm-upload').click(function(event){
+    var button = $(this);
+    button.attr('disabled', true);
+
 
     console.log("heyheyhey");
     var data= {};
@@ -71,10 +74,15 @@ $('button#btn-confirm-upload').click(function(event){
         data: JSON.stringify([data]),
         dataType: 'text',
         success : function(result){
+
+            alert("주문이 완료되었습니다");
+
             window.location.href = "/manage_orders/";
+            button.attr('disabled', false);
         },
         error : function(result){
             alert("에러가 생겼습니다.");
+            button.attr('disabled', false);
         }
 
 
@@ -367,4 +375,17 @@ $('button#btn-add-ws-modal').click(function(event){
 
 
     });
+});
+
+
+
+$(document).ready(function(){
+    var $loading = $('#loader').hide();
+$(document)
+  .ajaxStart(function () {
+    $loading.show();
+  })
+  .ajaxStop(function () {
+    $loading.hide();
+  });
 });

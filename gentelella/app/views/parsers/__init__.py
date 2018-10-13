@@ -131,6 +131,7 @@ class BaseParser(object):
                 order['building'] = building if building is not None else ""
                 order['floor'] = floor if floor is not None else ""
                 order['location'] = location if location is not None else ""
+                order['issue'] = self._wrong_phone(ws_phone)
 
                 orders.append(order)
                 msg = ""
@@ -196,6 +197,10 @@ class BaseParser(object):
             sizencolor = size
 
         return sizencolor
+
+    def _wrong_phone(self, phone):
+
+        return not phone or not phone.strip().startswith('010')
 
 
 class FruitsParser(BaseParser):
@@ -287,6 +292,9 @@ class FruitsParser(BaseParser):
                 order['building'] = building if building is not None else ""
                 order['floor'] = floor if floor is not None else ""
                 order['location'] = location if location is not None else ""
+                order['issue'] = self._wrong_phone(ws_phone)
+
+
 
                 if self.has_datetime:
                     order['datetime'] = self.datetime
