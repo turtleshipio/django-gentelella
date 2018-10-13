@@ -357,8 +357,12 @@ $(document).ready(function(){
             var html = ""
 
             for(var i=0; i < data.length; i++){
+
                 html = "<tr>"
                 var flag = false;
+                for(key in data[i]){
+                    console.log(key);
+                }
                 for(var j=0; j < index.length; j++){
                     for(key in data[i]){
                         if(index[j] === key){

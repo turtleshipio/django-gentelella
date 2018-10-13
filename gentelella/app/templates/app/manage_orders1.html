@@ -6,6 +6,7 @@
 
 {% block stylesheets %}
   {{ block.super }}
+<link href="/static/build/css/manage_orders.css" rel="stylesheet">
 {% endblock stylesheets %}
 
 {% block content %}
@@ -306,7 +307,7 @@
           {% if retailer_name %}
             <h6 class="modal-title" id="retailerNameLabel">{{retailer_name}}</h6>
           {% endif %}
-         <table class="table table-striped projects">
+         <table class="table ">
                 <thead class="text-center">
                   <tr>
                       <th><p class="text-center">번호</p></th>
@@ -330,8 +331,11 @@
                             {% csrf_token %}
 
 
-                        <tr class="table-row">
-
+                            {% if order.wrong_phone %}
+                                <tr class="table-row wrong-phone">
+                            {% else %}
+                                <tr class="table-hiw ">
+                            {% endif %}
                             <td><p>{{ forloop.counter }}</p></td>
                             <td><p>{{order.product_name}}</p></td>
                             <td><p>{{order.sizencolor}}</p></td>

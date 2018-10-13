@@ -22,6 +22,10 @@
                       {% if retailer_name %}
                       <h3 name="retailer_name">{{ retailer_name }}</h3>
                       {% endif %}
+
+                      {% if wrong_count > 0 %}
+                      <h4 style="color:red">전화번호 오류: {{wrong_count}}개</h4>
+                      {% endif %}
                   </tr>
                 </thead>
                 <tbody class="text-center">
@@ -32,7 +36,7 @@
                         {% if orders %}
                             {% for order in orders %}
 
-                        <tr class="table-row">
+                        <tr class="table-row {% if order.wrong_phone %} tr-wrong-phone {% endif %}" {% if order.wrong_phone %} id="wrong-phone" {% endif %}>
                             <td><p name="building">{{order.building}}</p></td>
                             <td><p name="ws_name">{{order.ws_name}}</p></td>
                             <td><p name="location">{{order.location}}</p></td>

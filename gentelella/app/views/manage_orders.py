@@ -116,7 +116,7 @@ def bulk_orders(request):
 
             notifies = creator.notifies
 
-            send = False
+            send = True
 
             if send:
                 for ws_name in notifies:
@@ -167,7 +167,7 @@ def modal_excel_parse_view(request):
         parser = parser(user=request.user, file=file, local=False)
         parser.preprocess()
         parser.inspect_header(order_format)
-        orders, has_datetime, success, msg = parser.extract(pickteam)
+        orders, has_datetime, success, msg, wrong_count = parser.extract(pickteam)
         parser.clear()
 
 
@@ -179,6 +179,7 @@ def modal_excel_parse_view(request):
         context['msg'] = msg
         context['success'] = success
         context['datetime'] = ""
+        context['wrong_count'] = wrong_count
         if success:
             return render(request, 'app/excel_modal.html', context=context)
         else:

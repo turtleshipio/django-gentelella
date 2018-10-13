@@ -103,6 +103,7 @@ class BaseParser(object):
 
         ws_list = WsByTCGroup.objects.exclude(is_deleted=True).filter(group=self.group)
         datetime = None
+        wrong_count = 0
 
         for nrow in range(1, self.sheet.nrows):
             row = self.sheet.row_values(nrow)
@@ -131,7 +132,9 @@ class BaseParser(object):
                 order['building'] = building if building is not None else ""
                 order['floor'] = floor if floor is not None else ""
                 order['location'] = location if location is not None else ""
-                order['issue'] = self._wrong_phone(ws_phone)
+                order['wrong_phone'] = self._wrong_phone(ws_phone)
+                if order['wrong_phone']:
+                    wrong_count += 1
 
                 orders.append(order)
                 msg = ""
@@ -150,7 +153,7 @@ class BaseParser(object):
 
         self.orders = orders
         has_datetime = datetime is not None
-        return orders, has_datetime, success, msg
+        return orders, has_datetime, success, msg, wrong_count
 
     def verbose(self):
         for order in self.orders:
@@ -225,7 +228,8 @@ class FruitsParser(BaseParser):
     start = 0
 
     def __init__(self, user, file, local=False):
-        super().__init__(user=user, file=file)
+
+        super(FruitsParser, self).__init__(user=user, file=file)
         org = TCOrg.objects.get(main_user=user)
 
     def preprocess(self):
@@ -273,6 +277,8 @@ class FruitsParser(BaseParser):
         print("ws_list %s" % str(ws_list))
         ws_name = None
         msg = ""
+        wrong_count = 0
+
 
         for nrow in range(1, self.sheet.nrows):
 
@@ -283,8 +289,6 @@ class FruitsParser(BaseParser):
             if self._is_sub_header(row):
                 ws_name = self._get_ws_name(row)
                 ws_name = ws_name.strip()
-                print("!!!!")
-                print(ws_name)
 
             elif self._is_order_row(row):
                 product_name = row[self.head['품명']]
@@ -311,11 +315,10 @@ class FruitsParser(BaseParser):
                 order['building'] = building if building is not None else ""
                 order['floor'] = floor if floor is not None else ""
                 order['location'] = location if location is not None else ""
-                order['issue'] = self._wrong_phone(ws_phone)
+                order['wrong_phone'] = self._wrong_phone(ws_phone)
+                if order['wrong_phone']:
+                    wrong_count += 1
 
-
-
-                print(order)
                 if self.has_datetime:
                     order['datetime'] = self.datetime
 
@@ -335,7 +338,7 @@ class FruitsParser(BaseParser):
         self.orders = orders
 
 
-        return orders, self.has_datetime, success, msg
+        return orders, self.has_datetime, success, msg, wrong_count
 
     def _get_ws_name(self, row):
 
