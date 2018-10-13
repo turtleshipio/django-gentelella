@@ -390,7 +390,9 @@ $(document).ready(function(){
 
 
 
-            var t = $(".display").DataTable({
+
+
+            var tableOptions = {
             "language":{
                 "info" : "_TOTAL_ 건의 결과중 _START_ 에서 _END_ ",
                 "lengthMenu" : "_MENU_ 건씩 검색",
@@ -415,7 +417,7 @@ $(document).ready(function(){
 
 
             },
-        });
+        };
        },
 
     });
