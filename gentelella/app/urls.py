@@ -3,7 +3,7 @@ from django.contrib import admin
 from app.views.auth import checks
 from app.views import base, upload
 from app.views.order_list import OrderListView
-from app.views.notify_list import NotifyListView
+from app.views.notify_list import *
 from app.views.manage_ws import *
 from app.views.manage_retailers import TCRetailersListView
 from app.views.manage_orders import ManageOrderListView, formats_by_retailer, modal_excel_parse_view, bulk_orders, edit_order_format
@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^logout/$', base.logout, name='logout'),
     url(r'^temp/$', base.temp, name='temp'),
     url(r'^notify/(?P<notify_id>\w+)', NotifyListView.as_view(), name="notify_list"),
+    url(r'^test', notify_retailer_list, name="notify_retailer_list"),
     url(r'^order_confirm/$', base.order_confirm, name='order_confirm'),
     url(r'^manage_orders/$', ManageOrderListView.as_view(), name='manage_orders'),
     url(r'^manage_orders/formats/$', formats_by_retailer, name='manage_orders'),

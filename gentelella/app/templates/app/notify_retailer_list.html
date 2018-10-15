@@ -1,0 +1,101 @@
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% block stylesheets %}
+        <!-- Bootstrap -->
+        <link href="/static/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="/static/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <!-- NProgress -->
+        <link href="/static/vendors/nprogress/nprogress.css" rel="stylesheet">
+        <!-- bootstrap-progressbar -->
+        <link href="/static/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+
+{% endblock stylesheets %}
+
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="row-center">
+      <div class="page-title">
+        <div class="title-center">
+          <h3 class="text-center">도매명: {{ ws_name }}</h3>
+        </div>
+
+
+      </div>
+
+      <div class="clearfix"></div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="x_panel">
+
+              <div class="notify_body" style="overflow:scroll; height:70%; margin-bottom:10px">
+
+              </div>
+
+              {% if is_paginated %}
+
+                 <div class="row">
+                     <div class="col-xs-12 text-center">
+
+                <ul class="pagination pull-center">
+                    {% if has_previous %}
+                        <li>
+                            <span><a href="?page={{ previous_page_number }}">이전</a></span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>페이지 {{ number}} 중 {{ num_pages }}</span>
+                    </li>
+                    {% if has_next %}
+                        <li>
+                            <span><a href="?page={{next_page_number }}">다음</a></span>
+                        </li>
+                    {% endif %}
+                </ul>
+                     </div>
+                     </div>
+
+                {% endif %}
+
+              <div class="col-md-12 text-center">
+                  <div class="clearfix"></div>
+
+                    {% if notify_id %}
+                        <input type="hidden" name="notify_id" value="{{notify_id}}">
+                    {% endif %}
+              </div>
+
+
+               </div>
+
+
+
+
+
+
+
+              <!-- end project list -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+{% endblock content %}
+
+{% block javascripts %}
+        <!-- jQuery -->
+        <script src="/static/vendors/jquery/dist/jquery.min.js"></script>
+        <!-- Bootstrap -->
+        <script src="/static/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- FastClick -->
+        <script src="/static/vendors/fastclick/lib/fastclick.js"></script>
+        <!-- NProgress -->
+        <script src="/static/vendors/nprogress/nprogress.js"></script>
+        <!-- bootstrap-progressbar -->
+        <script src="/static/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+      {% endblock %}

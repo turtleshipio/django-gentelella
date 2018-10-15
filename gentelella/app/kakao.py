@@ -5,7 +5,76 @@ from app import utils
 from datetime import datetime
 from app.models import *
 
+
+class KakaoMessageSender:
+
+
+
+    def __init__(self, tmplId="5"):
+        self.template = KakaoTemplates.objects.get(tmplId=tmplId)
+        self.kakao_msg = self.template.org_msg
+        self.notify_url = self.template.cta
+        self.smsMsg = ""
+
+    def clear(self):
+        self.kakao_msg = ""
+        self.notify_url = ""
+
+    def set_msg(self, notify_id, retailer_name, ws_name, phone):
+        order_num = notify_id[:7]
+        self.kakao_msg = self.kakao_msg.format(order_num=order_num, retailer_name=retailer_name, ws_name=ws_name, phone=phone)
+        self.kakao_msg = self.kakao_msg.replace("\\n", "\n")
+        self.smsMsg = self.kakao_msg
+        self.notify_url = self.notify_url.format(notify_id=notify_id)
+        self.template.button1['url_mobile'] = self.notify_url
+        self.template.button1['url_pc'] = self.notify_url
+
+        print("!!!!!!!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!!!!!!!")
+        print(self.kakao_msg)
+        print("!!!!!!!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!!!!!!!")
+    def send_kakao_msg(self, phn, prod=True):
+
+        if phn == "010-8895-8454" or phn == "01088958454":
+            self.template.button1['url_mobile'] += "&special=true"
+            self.template.button1['url_pc'] += "&special=true"
+
+        data = [{
+            'userId': self.template.userId,
+            'message_type': self.template.message_type,
+            'profile': self.template.profile,
+            'phn' : self.template.phn,
+            'msg': self.kakao_msg,
+            'smsKind': self.template.smsKind,
+            'tmplId' : self.template.tmplId,
+            'msgSms': self.smsMsg,
+            'smsSender': self.template.smsSender,
+            'reserveDt': self.template.reserveDt,
+            'button1': self.template.button1,
+        }]
+
+
+
+        url = self.template.target_url['prod'] if prod else self.template.target_url['dev']
+
+        try:
+            response = requests.post(url=url, headers=self.template.headers, data=json.dumps(data))
+
+
+        except requests.exceptions.HTTPError as e:
+            print(str(e))
+
 class KakaoNotifySender:
+
+    def __init__(self, tmplId=None):
+        pass
+
 
     target_url = {
         'dev': 'https://dev-alimtalk-api.bizmsg.kr:1443/v1/sender/send',
@@ -50,7 +119,7 @@ class KakaoNotifySender:
         self.phn = ""
 
 
-    def set_msg(self, retailer_name, ws_name, notify_id):
+    def set_msg(self, retailer_name, ws_name, notify_id, phone=None):
 
         order_num = notify_id[:7]
         self.kakao_msg = self.org_msg.format(order_num=order_num, retailer_name=retailer_name, ws_name=ws_name)
@@ -88,8 +157,15 @@ class KakaoNotifySender:
 
         if phn == "010-8895-8454":
             self.button1['url_mobile'] += "&special=true"
-
-        headers = {'content-type': 'application/json'}
+        print("????????????")
+        print("????????????")
+        print("????????????")
+        print(self.kakao_msg)
+        print("????????????")
+        print("????????????")
+        print("????????????")
+        print("????????????")
+        print("????????????")
         data = [{
             'userId': self.userId,
             'message_type': self.message_type,

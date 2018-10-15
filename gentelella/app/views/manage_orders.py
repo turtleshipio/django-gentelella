@@ -103,7 +103,8 @@ def bulk_orders(request):
             #date = datetime.datetime.today().strftime('%Y-%m-%d')
             #creator = OrderCreator(date)
             creator = OrderCreator()
-            sender = KakaoNotifySender()
+            sender = KakaoMessageSender("5")
+            #sender = KakaoNotifySender("5")
 
             success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, org)
 
@@ -118,10 +119,12 @@ def bulk_orders(request):
 
             send = True
 
+            phone = org.phone
+
             if send:
                 for ws_name in notifies:
                     notify_id = notifies[ws_name]['notify_id']
-                    sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id)
+                    sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id, phone=phone)
                     phones = ['01088958454']
 
                     ws_phone = notifies[ws_name]['phone']

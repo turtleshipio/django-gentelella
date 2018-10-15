@@ -55,13 +55,14 @@ class TCOrg(models.Model):
     bank_account_number = models.CharField(max_length=191, null=True, default="", blank=True)
     bank_holder_name = models.CharField(max_length=191, null=True, default="", blank=True)
 
+    phone = models.CharField(max_length=13, null=True, default="", blank=True)
 
     def __str__(self):
         return self.org_name if (self.org_name is not None or self.org_name != "") else "TC Org Object"
 
     class Meta:
         db_table='tc_org'
-        managed=True
+        managed= False
         verbose_name = "TC Org"
         verbose_name_plural = "TC Orgs"
 
@@ -172,7 +173,7 @@ class TCRetailer(models.Model):
         return self.org.org_name if (self.org.org_name is not None or self.org.org_name != "") else "TC Retailer Object"
     
     class Meta:
-        managed = True
+        managed = False
         db_table = 'tc_retailer'
         verbose_name = "TC Retailer"
         verbose_name_plural = "TC Retailers"
@@ -382,3 +383,43 @@ class Temp(models.Model):
     phone= models.CharField(max_length=50, default="")
     password= models.CharField(max_length=50, default="")
 
+
+class KakaoTemplates(models.Model):
+
+    tmplId = models.CharField(primary_key=True, max_length=30)
+    tmplName = models.CharField(max_length=30)
+    org_msg = models.CharField(max_length=255)
+    cta = models.CharField(max_length=255, null=True, blank=True)
+
+    userId = "syum"
+    message_type = "at"
+    profile = '038086c8c247154ec2b8a803ae7322af14cf1d48'
+    target_url = {
+        'dev': 'https://dev-alimtalk-api.bizmsg.kr:1443/v1/sender/send',
+        'prod': 'https://alimtalk-api.bizmsg.kr/v1/sender/send'
+    }
+    path = "v1/sender/send"
+    headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+
+    button1 = {
+        'name': '주문확인',
+        'type': 'WL',
+        'url_mobile' : '',
+        'url_pc' : ''
+    }
+
+
+    phn = '821088958454'
+    # for SMS
+    smsKind = 'S'
+    smsSender = '01088958454'
+    reserveDt = '00000000000000'
+
+
+    def __str__(self):
+        return self.tmplName
+
+    class Meta:
+
+        verbose_name = "Kakao Template"
+        verbose_name_plural = "Kakao Templates"

@@ -10,8 +10,10 @@ from django.views.generic.edit import FormMixin
 from django.views.generic import FormView
 from django.views.generic.list import ListView
 
-class NotifyListForm(forms.Form):
-    order_id = forms.RadioSelect()
+
+def notify_retailer_list(request):
+
+    return render(request, 'app/notify_retailer_list.html')
 
 
 class NotifyListView(ListView):
