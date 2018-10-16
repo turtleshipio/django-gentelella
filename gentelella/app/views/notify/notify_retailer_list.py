@@ -11,24 +11,29 @@ class NotifyRetailerListView(ListView):
     template_name = 'app/notify_retailer_list.html'
 
     def get_context_data(self, *args, **kwargs):
-        print("BBBBBBBBBBBBBBBBB")
         notify_id = self.kwargs['notify_id']
+        print("!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!")
+        print(notify_id)
+        print("!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!")
         context = super(NotifyRetailerListView, self).get_context_data(*args, **kwargs)
 
         orders_dict = {}
-        orders = Order.objects.filter(notify_id=notify_id).order_by("order_id").values("retailer_name", "notify_order_id", "price", "count")
+        #orders = Order.objects.filter(notify_id=notify_id).order_by("order_id").values("retailer_name", "notify_order_id", "price", "count")
 
-        for order in orders:
-            retailer = order['retailer_name']
-            amt = order['price'] * order['count']
-            if retailer in orders_dict:
-                orders_dict[retailer]['amt'] += amt
-                orders_dict[retailer]['count'] += 1
-            else:
-                orders_dict[retailer] = {}
-                orders_dict[retailer]['amt'] = amt
-                orders_dict[retailer]['count'] = 1
+
+        query = "SELECT retailer_name, notify_id, count(*) as count, SUM(price * count) as amt " \
+                "FROM orders " \
+                "WHERE notify_id = '{notify_id}' " \
+                "GROUP BY notify_id " \
+                "ORDER BY order_id DESC ".format(notify_id=notify_id)
+
+        orders = custom_db.dict_fetchall(query)
+
 
         context['orders'] = orders
-        context['orders_dict'] = orders_dict
+        context['notify_id'] = notify_id
         return context
