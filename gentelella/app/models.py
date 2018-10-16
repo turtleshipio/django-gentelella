@@ -252,7 +252,9 @@ class Order(models.Model):
     is_deleted = models.BooleanField(null=False, default=False, name="is_deleted")
 
 
-    notify_id = models.CharField(max_length=100, default="")
+    notify_id = models.CharField(max_length=255, default="")
+    notify_order_id = models.CharField(max_length=255, default="", blank=True, null=True)
+
     building = models.CharField(max_length=100, default="")
     retailer_name = models.CharField(max_length=30, default="")
     pickteam = models.ForeignKey(TCPickteam, on_delete=None, null=True, db_column="pickteam_id" )

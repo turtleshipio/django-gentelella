@@ -4269,3 +4269,11 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 #wrong-phone {
     background: rgba(255, 102, 102, 0.3);
 }
+
+#notify-list ul li:hover {
+
+    background-color : #ccc;
+    transition: 0.3s;
+    padding-left: 30px;
+
+}

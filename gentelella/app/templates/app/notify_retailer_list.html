@@ -10,6 +10,7 @@
         <!-- bootstrap-progressbar -->
         <link href="/static/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
 
+        <link href="/static/build/css/custom.css" rel="stylesheet">
 {% endblock stylesheets %}
 
 {% block content %}
@@ -26,37 +27,32 @@
       <div class="clearfix"></div>
 
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-offset-2 col-md-8 col-lg-offset-2 col-lg-8 col-sm-12 col-xs-12">
           <div class="x_panel">
 
-              <div class="notify_body" style="overflow:scroll; height:70%; margin-bottom:10px">
+              <div class="notify_body" >
+
+                  {% if orders %}
+                    <div id="notify-list">
+                        <ul class="list-group">
+                            {% for order in orders %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span id = "{{order.notify_order_id}}" > {{ order.retailer_name }}  </span>
+                                    <span class="badge badge-primary badge-pill">14</span>
+                                </li>
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+
+
+                  {% endif %}
+
 
               </div>
 
-              {% if is_paginated %}
 
-                 <div class="row">
-                     <div class="col-xs-12 text-center">
-
-                <ul class="pagination pull-center">
-                    {% if has_previous %}
-                        <li>
-                            <span><a href="?page={{ previous_page_number }}">이전</a></span>
-                        </li>
-                    {% endif %}
-                    <li class="">
-                        <span>페이지 {{ number}} 중 {{ num_pages }}</span>
-                    </li>
-                    {% if has_next %}
-                        <li>
-                            <span><a href="?page={{next_page_number }}">다음</a></span>
-                        </li>
-                    {% endif %}
-                </ul>
-                     </div>
-                     </div>
-
-                {% endif %}
 
               <div class="col-md-12 text-center">
                   <div class="clearfix"></div>
@@ -98,4 +94,7 @@
         <script src="/static/vendors/nprogress/nprogress.js"></script>
         <!-- bootstrap-progressbar -->
         <script src="/static/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+
+        <script src="/static/build/js/notify_retailer_list.js"></script>
+
       {% endblock %}

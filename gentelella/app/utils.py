@@ -8,6 +8,9 @@ from app.models import *
 import hashlib
 
 
+
+
+
 def getYesterdayDateAt11pm():
 
     today = datetime.utcnow()
@@ -104,6 +107,20 @@ def get_decoded_token(token):
 '''
 def get_uuid(n):
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
+
+
+def create_order_num(retailer_name, ws_name, building):
+    date = str(datetime.now().date()).encode('utf-8')
+    date = hashlib.md5(date).hexdigest()
+    retailer_name = hashlib.md5(retailer_name.encode('utf-8')).hexdigest()
+    ws_name = hashlib.md5(ws_name.encode('utf-8')).hexdigest()
+    building = hashlib.md5(building.encode('utf-8')).hexdigest()
+
+    order_num = ''.join([date, ws_name, building])
+    order_num = hashlib.md5(order_num.encode('utf-8')).hexdigest()
+    return order_num
+
+
 
 def create_notify_id(timestamp, index, ws_name, retailer_name, product_name):
 

@@ -11,9 +11,6 @@ from django.views.generic import FormView
 from django.views.generic.list import ListView
 
 
-def notify_retailer_list(request):
-
-    return render(request, 'app/notify_retailer_list.html')
 
 
 class NotifyListView(ListView):
@@ -25,17 +22,14 @@ class NotifyListView(ListView):
 
 
     def get_context_data(self, *args, **kwargs):
-        notify_id = self.kwargs['notify_id']
+        notify_order_id = self.kwargs['notify_id']
         context= super(NotifyListView, self).get_context_data(*args, **kwargs)
 
         special = self.request.GET.get('special')
-        print("!!!!")
-        print(special)
         if special is None:
-            print("??????")
-            Order.objects.filter(notify_id=notify_id).update(read=True)
+            Order.objects.filter(notify_order_id=notify_order_id).update(read=True)
 
-        orders = Order.objects.filter(notify_id=notify_id).order_by("order_id").values('order_id', 'product_name', 'sizencolor', 'count', 'price' )
+        orders = Order.objects.filter(notify_order_id=notify_order_id).order_by("order_id").values('order_id', 'product_name', 'sizencolor', 'count', 'price' )
 
         paginator = Paginator(orders, self.paginate_by)
         page = self.request.GET.get('page')
@@ -53,7 +47,7 @@ class NotifyListView(ListView):
         context['has_next'] = paged_orders.has_next()
         context['next_page_number'] = paged_orders.next_page_number() if paged_orders.has_next() else None
         context['num_pages'] = paginator.num_pages
-        context['notify_id'] = notify_id
+        context['notify_order_id'] = notify_order_id
         context['orders'] = paged_orders
         return context
 """ 

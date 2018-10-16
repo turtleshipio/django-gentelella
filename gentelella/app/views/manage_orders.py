@@ -80,8 +80,6 @@ def bulk_orders(request):
             data_js = json.loads(request.body.decode('utf-8'))
             orders_js = data_js[0]['orders']
 
-            #group = TCGroup.objects.filter(main_user=request.user)[0]
-            #is_pickteam = (group.type == "pickteam")
             org = TCOrg.objects.get(main_user=request.user)
             is_pickteam = org.group.name=="pickteam_group"
 
@@ -100,15 +98,10 @@ def bulk_orders(request):
                 pickteam = retailer.pickteam
 
 
-            #date = datetime.datetime.today().strftime('%Y-%m-%d')
-            #creator = OrderCreator(date)
             creator = OrderCreator()
             sender = KakaoMessageSender("5")
-            #sender = KakaoNotifySender("5")
 
             success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, org)
-
-
 
             if not success:
                 response = HttpResponse("error")
@@ -125,7 +118,8 @@ def bulk_orders(request):
                 for ws_name in notifies:
                     notify_id = notifies[ws_name]['notify_id']
                     sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id, phone=phone)
-                    phones = ['01088958454', '01036678070']
+                    #phones = ['01088958454', '01036678070']
+                    phones = ['01088958454']
 
                     ws_phone = notifies[ws_name]['phone']
                     if ws_phone not in phones:

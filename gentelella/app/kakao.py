@@ -9,7 +9,6 @@ from app.models import *
 class KakaoMessageSender:
 
 
-
     def __init__(self, tmplId="5"):
         self.template = KakaoTemplates.objects.get(tmplId=tmplId)
         self.kakao_msg = self.template.org_msg
@@ -29,16 +28,6 @@ class KakaoMessageSender:
         self.template.button1['url_mobile'] = self.notify_url
         self.template.button1['url_pc'] = self.notify_url
 
-        print("!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!")
-        print(self.kakao_msg)
-        print("!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!")
     def send_kakao_msg(self, phn, prod=True):
 
         if phn == "010-8895-8454" or phn == "01088958454":
@@ -60,12 +49,10 @@ class KakaoMessageSender:
         }]
 
 
-
         url = self.template.target_url['prod'] if prod else self.template.target_url['dev']
 
         try:
             response = requests.post(url=url, headers=self.template.headers, data=json.dumps(data))
-
 
         except requests.exceptions.HTTPError as e:
             print(str(e))
@@ -219,40 +206,25 @@ class OrderCreator:
                     self.ws_list.append(ws_name)
                 except Exception as e:
                     print(str(e))
-                    print("!!!!!!!!")
-                    print("!!!!!!!!")
-                    print("!!!!!!!!")
-                    print("!!!!!!!!")
-                    print("!!!!!!!!")
-                    print("!!!!!!!!")
-                    print("!!!!!!!!")
-                    print("!!!!!!!!")
-                    print("!!!!!!!!")
+
             timestamp = datetime.now().timestamp()
             timestamp *= 1000000
             timestamp = str(int(timestamp))
             index = str(index)
             product_name = order_js['product_name']
-
+            notify_order_id = utils.create_notify_id(timestamp, index, ws_name, retailer_name, product_name)
 
             if ws_name not in self.notifies:
-                notify_id = utils.create_notify_id(timestamp, index, ws_name, retailer_name, product_name)
+                notify_id = utils.create_order_num(retailer_name, ws_name, ws.building)
+
                 self.notifies[ws_name] = {
                     'phone': order_js['ws_phone'],
-                    'notify_id': notify_id}
+                    'notify_id': notify_id,
+                }
+
             else:
                 notify_id = self.notifies[ws_name]['notify_id']
 
-            if ws is None:
-                print("#####")
-                print("#####")
-                print("#####")
-                print(ws_name)
-                print("#####")
-                print("#####")
-                print("#####")
-                print("#####")
-                print("#####")
             order = Order(
                 username=username,
                 sizencolor=order_js['sizencolor'],
@@ -267,13 +239,13 @@ class OrderCreator:
                 is_deleted=False,
                 status="onwait",
                 notify_id=notify_id,
+                notify_order_id=notify_order_id,
                 pickteam_id=pickteam_id,
                 retailer_name=retailer_name,
                 #created_time = datetime.strptime('2018-10-11', '%Y-%m-%d'),
                 #created_date = datetime.strptime('2018-10-11', '%Y-%m-%d').date(),
                 created_time = datetime.now(),
                 created_date = datetime.now().date(),
-                #created_time = order_js['datetime'],
             )
             self.orders.append(order)
 
