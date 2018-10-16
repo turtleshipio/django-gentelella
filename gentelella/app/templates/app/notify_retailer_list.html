@@ -18,7 +18,7 @@
     <div class="row-center">
       <div class="page-title">
         <div class="title-center">
-          <h3 class="text-center">도매명: {{ ws_name }}</h3>
+          <h3 class="text-center notify-title" >도매명: {{ ws_name }}</h3>
         </div>
 
 
@@ -38,7 +38,7 @@
                             {% for order in orders%}
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <span class="retailer_name" id = "{{order.notify_id}}" > <strong>{{ order.retailer_name }} </strong> </span>
-                                    <span class="notify-element">{{order.amt | intcomma}} 원 </span>
+                                    <span class="notify-element">주문총액: {{order.amt | intcomma}} 원 </span>
                                     <span class="badge badge-primary badge-pill">{{order.count}}</span>
                                 </li>
 
