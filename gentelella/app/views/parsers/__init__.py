@@ -285,7 +285,11 @@ class FruitsParser(BaseParser):
             order = {}
             row = self.sheet.row_values(nrow)
 
-
+            print("*******************")
+            print("ORDER ROW???")
+            print(self._is_order_row(row))
+            print(row)
+            print("****************")
             if self._is_sub_header(row):
                 ws_name = self._get_ws_name(row)
                 ws_name = ws_name.strip()
@@ -435,7 +439,7 @@ class FruitsParser(BaseParser):
                     return False
 
                 # this runs from second column, and they should all be filled if order
-                if i > self.start and check_whitespace(row[i]):
+                if (i > self.start and i < len(row)-1) and check_whitespace(row[i]):
                     return False
 
         return True
