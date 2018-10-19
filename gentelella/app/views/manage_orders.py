@@ -113,22 +113,33 @@ def bulk_orders(request):
             send = True
 
             phones = ['01088958454', '01036678070']
-            phone = org.phone
+            # phones = ['01088958454']
 
             if send:
                 for ws_name in notifies:
                     notify_id = notifies[ws_name]['notify_id']
-                    sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id, phone=phone)
-                    #phones = ['01088958454']
+                    sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id, phone=org.phone)
+
 
                     ws_phone = notifies[ws_name]['phone']
                     if ws_phone not in phones:
                         phones.append(ws_phone)
 
-                    for phone in phones:
-                        sender.send_kakao_msg(phone)
 
-                    sender.clear()
+            print("????????")
+            print("????????")
+            print("????????")
+            print("PHONES!!!")
+            print(phones)
+            print("????????")
+            print("????????")
+            print("????????")
+
+
+            for phone in phones:
+                sender.send_kakao_msg(phone)
+
+            sender.clear()
 
             return HttpResponse("Ok")
 

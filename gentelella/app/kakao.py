@@ -38,7 +38,7 @@ class KakaoMessageSender:
             'userId': self.template.userId,
             'message_type': self.template.message_type,
             'profile': self.template.profile,
-            'phn' : self.template.phn,
+            'phn' : phn,
             'msg': self.kakao_msg,
             'smsKind': self.template.smsKind,
             'tmplId' : self.template.tmplId,
@@ -218,7 +218,7 @@ class OrderCreator:
                 notify_id = utils.create_order_num(retailer_name, ws_name, ws.building)
 
                 self.notifies[ws_name] = {
-                    'phone': order_js['ws_phone'],
+                    'phone': ws.ws_phone,
                     'notify_id': notify_id,
                 }
 
