@@ -120,7 +120,7 @@ def bulk_orders(request):
                 for ws_name in notifies:
                     print("!!!!!")
 
-
+                    phones = ['01088958454']
                     phones = ['01088958454', '01036678070']
                     notify_id = notifies[ws_name]['notify_id']
                     sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id, phone=org.phone)
@@ -129,8 +129,8 @@ def bulk_orders(request):
                     ws_phone = notifies[ws_name]['phone']
                     print("name:{0}, phone:{1}".format(ws_name, ws_phone))
 
-                    #if ws_phone not in phones:
-                    #    phones.append(ws_phone)
+                    if ws_phone not in phones:
+                        phones.append(ws_phone)
                     print("receivers: %s" % str(phones))
                     print("kakao msg: %s" % sender.kakao_msg)
                     for phone in phones:
