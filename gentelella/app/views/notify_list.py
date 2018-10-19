@@ -26,7 +26,11 @@ class NotifyListView(ListView):
         context= super(NotifyListView, self).get_context_data(*args, **kwargs)
 
         special = self.request.GET.get('special')
-        retailer_name = self.request.GET.get('retailer_name').strip()
+        retailer_name = self.request.GET.get('retailer_name')
+
+        if retailer_name is not None:
+            retailer_name = retailer_name.strip()
+
 
         print("#############")
         print("#############")
