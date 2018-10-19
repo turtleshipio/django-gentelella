@@ -112,13 +112,13 @@ def bulk_orders(request):
 
             send = True
 
+            phones = ['01088958454', '01036678070']
             phone = org.phone
 
             if send:
                 for ws_name in notifies:
                     notify_id = notifies[ws_name]['notify_id']
                     sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id, phone=phone)
-                    phones = ['01088958454', '01036678070']
                     #phones = ['01088958454']
 
                     ws_phone = notifies[ws_name]['phone']
