@@ -242,10 +242,10 @@ class OrderCreator:
                 notify_order_id=notify_order_id,
                 pickteam_id=pickteam_id,
                 retailer_name=retailer_name,
-                #created_time = datetime.strptime('2018-10-11', '%Y-%m-%d'),
-                #created_date = datetime.strptime('2018-10-11', '%Y-%m-%d').date(),
-                created_time = datetime.now(),
-                created_date = datetime.now().date(),
+                created_time = datetime.strptime('2018-10-31', '%Y-%m-%d'),
+                created_date = datetime.strptime('2018-10-31', '%Y-%m-%d').date(),
+                #created_time = datetime.now(),
+                #created_date = datetime.now().date(),
             )
             self.orders.append(order)
 

@@ -110,7 +110,7 @@ def bulk_orders(request):
 
             notifies = creator.notifies
 
-            send = True
+            send = False
 
             phones = ['01088958454', '01036678070']
             # phones = ['01088958454']

@@ -58,6 +58,7 @@ class SuperStatsView(TemplateView):
                     "DISTINCT(created_date), " \
                     "COUNT(*), SUM(price * count) " \
                 "FROM orders " \
+                "WHERE created_date >= date('2018-11-1') " \
                 "GROUP BY created_date" \
 
 
