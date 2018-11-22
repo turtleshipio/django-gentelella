@@ -101,43 +101,45 @@ def bulk_orders(request):
             creator = OrderCreator()
             sender = KakaoMessageSender("5")
 
-            success = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, org)
+            success, notifies = creator.create_orders_from_js(request.user, orders_js, request.user.username, retailer_name, pickteam.id, org)
 
             if not success:
                 response = HttpResponse("error")
                 response.status_code=500
                 return response
 
-            notifies = creator.notifies
+            #notifies = creator.notifies
 
             send = False
 
-            phones = ['01088958454', '01036678070']
+
+            #phones = set(phones)
             # phones = ['01088958454']
 
             if send:
                 for ws_name in notifies:
+                    print("!!!!!")
+
+                    phones = ['01088958454']
+                    phones = ['01088958454', '01036678070']
                     notify_id = notifies[ws_name]['notify_id']
                     sender.set_msg(retailer_name=retailer_name, ws_name=ws_name, notify_id=notify_id, phone=org.phone)
 
 
                     ws_phone = notifies[ws_name]['phone']
+                    print("name:{0}, phone:{1}".format(ws_name, ws_phone))
+
                     if ws_phone not in phones:
                         phones.append(ws_phone)
+                    print("receivers: %s" % str(phones))
+                    print("kakao msg: %s" % sender.kakao_msg)
+                    for phone in phones:
+                        sender.send_kakao_msg(phone)
 
 
-            print("????????")
-            print("????????")
-            print("????????")
-            print("PHONES!!!")
-            print(phones)
-            print("????????")
-            print("????????")
-            print("????????")
 
 
-            for phone in phones:
-                sender.send_kakao_msg(phone)
+
 
             sender.clear()
 

@@ -285,11 +285,7 @@ class FruitsParser(BaseParser):
             order = {}
             row = self.sheet.row_values(nrow)
 
-            print("*******************")
-            print("ORDER ROW???")
-            print(self._is_order_row(row))
-            print(row)
-            print("****************")
+
             if self._is_sub_header(row):
                 ws_name = self._get_ws_name(row)
                 ws_name = ws_name.strip()
@@ -350,13 +346,7 @@ class FruitsParser(BaseParser):
         ws_name = ""
 
         row = row[self.start].split(' ')
-        print("&&&&&&&&&&&&&&&&&&&&")
-        print("&&&&&&&&&&&&&&&&&&&&")
-        print("&&&&&&&&&&&&&&&&&&&&")
-        print(row)
-        print("&&&&&&&&&&&&&&&&&&&&")
-        print("&&&&&&&&&&&&&&&&&&&&")
-        print("&&&&&&&&&&&&&&&&&&&&")
+
         l_pos = -1
         p_pos = -1
         li = []

@@ -26,7 +26,11 @@ class NotifyListView(ListView):
         context= super(NotifyListView, self).get_context_data(*args, **kwargs)
 
         special = self.request.GET.get('special')
-        retailer_name = self.request.GET.get('retailer_name').strip()
+        retailer_name = self.request.GET.get('retailer_name')
+
+        if retailer_name is not None:
+            retailer_name = retailer_name.strip()
+
 
         print("#############")
         print("#############")
@@ -36,23 +40,25 @@ class NotifyListView(ListView):
         print("#############")
         orders = Order.objects.filter(notify_id=notify_id, retailer_name=retailer_name).order_by("order_id").values('order_id', 'product_name', 'sizencolor', 'count', 'price' )
 
-        paginator = Paginator(orders, self.paginate_by)
-        page = self.request.GET.get('page')
+        #paginator = Paginator(orders, self.paginate_by)
+        #page = self.request.GET.get('page')
+        """
+
 
         try:
             paged_orders = paginator.page(page)
         except PageNotAnInteger:
             paged_orders = paginator.page(1)
         except EmptyPage:
-            paged_orders = paginator.page(paginator.num_pages)
+            paged_orders = paginator.page(paginator.num_pages) """
 
-        context['has_previous'] = paged_orders.has_previous()
-        context['previous_page_number'] = paged_orders.previous_page_number() if paged_orders.has_previous() else None
-        context['number'] = paged_orders.number
-        context['has_next'] = paged_orders.has_next()
-        context['next_page_number'] = paged_orders.next_page_number() if paged_orders.has_next() else None
-        context['num_pages'] = paginator.num_pages
-        context['orders'] = paged_orders
+        #context['has_previous'] = paged_orders.has_previous()
+        #context['previous_page_number'] = paged_orders.previous_page_number() if paged_orders.has_previous() else None
+        #context['number'] = paged_orders.number
+        #context['has_next'] = paged_orders.has_next()
+        #context['next_page_number'] = paged_orders.next_page_number() if paged_orders.has_next() else None
+        #context['num_pages'] = paginator.num_pages
+        context['orders'] = orders
         return context
 """ 
     def post(self, request, *args, **kwargs):

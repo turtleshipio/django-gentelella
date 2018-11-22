@@ -21,10 +21,16 @@ class KakaoMessageSender:
 
     def set_msg(self, notify_id, retailer_name, ws_name, phone):
         order_num = notify_id[:7]
-        self.kakao_msg = self.kakao_msg.format(order_num=order_num, retailer_name=retailer_name, ws_name=ws_name, phone=phone)
+        print("insides of set_msg")
+        print(ws_name)
+        self.kakao_msg = self.template.org_msg.format(order_num=order_num, retailer_name=retailer_name, ws_name=ws_name, phone=phone)
+        print("kakao_msg 1 %s" %  self.kakao_msg)
+
         self.kakao_msg = self.kakao_msg.replace("\\n", "\n")
+        print("kakao_msg 2 %s " % self.kakao_msg)
         self.smsMsg = self.kakao_msg
-        self.notify_url = self.notify_url.format(notify_id=notify_id)
+        self.notify_url = self.template.cta.format(notify_id=notify_id)
+        print("notify_url %s " % self.notify_url[:14])
         self.template.button1['url_mobile'] = self.notify_url
         self.template.button1['url_pc'] = self.notify_url
 
@@ -214,6 +220,7 @@ class OrderCreator:
             product_name = order_js['product_name']
             notify_order_id = utils.create_notify_id(timestamp, index, ws_name, retailer_name, product_name)
 
+
             if ws_name not in self.notifies:
                 notify_id = utils.create_order_num(retailer_name, ws_name, ws.building)
 
@@ -250,8 +257,8 @@ class OrderCreator:
             self.orders.append(order)
 
         try:
-            Order.objects.bulk_create(self.orders)
-            return True
+            Order.objects.bulk_create(self.orders),
+            return True, self.notifies
         except Exception as e:
             print("!!!!")
             print("!!!!")
@@ -260,5 +267,5 @@ class OrderCreator:
             print("!!!!")
             print("!!!!")
             print("!!!!")
-            return False
+            return False, None
 
