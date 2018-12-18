@@ -10,5 +10,5 @@ pyotp
 
 
 # requires yum install mysql-devel
-mysqlclient
+mysql-client
 
